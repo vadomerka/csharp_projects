@@ -5,12 +5,13 @@
     {
         private MainFunc mainFunc;
 
-        public Function() 
+        public Function()
         {
             mainFunc = (double x) => x;
         }
 
-        public Function(MainFunc newMainFunc) {
+        public Function(MainFunc newMainFunc)
+        {
             // Костыль, могут бить.
             mainFunc = (double x) => newMainFunc?.Invoke(x) ?? x;
         }

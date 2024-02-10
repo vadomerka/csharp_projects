@@ -1,5 +1,5 @@
 ﻿// Пронюшкин Радомир БПИ234-1
-using ConsoleApp2;
+using TestPreparing1;
 using System;
 using System.Globalization;
 using System.IO;
@@ -22,14 +22,17 @@ namespace Pronyushkin_CWH
             {
                 Console.Clear();
                 Circle circle = new Circle();
-                while (true) {
-                    try {
+                while (true)
+                {
+                    try
+                    {
                         Console.WriteLine("Введите значение диаметра: ");
                         double D = double.Parse(Console.ReadLine());
                         circle = new Circle(D);
                         break;
                     }
-                    catch {
+                    catch
+                    {
                         Console.WriteLine("Данные неверны.");
                     }
                 }
