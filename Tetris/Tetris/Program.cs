@@ -1,2 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using GameClasses;
+
+namespace Tetris
+{
+    public static class MainProgram
+    {
+        public static void Main(string[] args)
+        {
+            bool program = true;
+            while (program)
+            {
+                Game game = new Game();
+            }
+        }
+    }
+}
