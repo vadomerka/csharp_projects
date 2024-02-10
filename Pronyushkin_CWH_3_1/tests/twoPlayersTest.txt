@@ -1,0 +1,45 @@
+[
+  {
+    "player_id": 1,
+    "username": "ymclaughlin",
+    "level": 7,
+    "game_score": 8327,
+    "achievements": [
+      "chance",
+      "again",
+      "mind"
+    ],
+    "inventory": [
+      "college",
+      "voice",
+      "final",
+      "tough",
+      "front",
+      "that"
+    ],
+    "guild": "which"
+  },
+  {
+    "player_id": 2,
+    "username": "stephenpalmer",
+    "level": 30,
+    "game_score": 9320,
+    "achievements": [
+      "among",
+      "join",
+      "morning"
+    ],
+    "inventory": [
+      "man",
+      "style",
+      "mouth",
+      "various",
+      "bit",
+      "he",
+      "send",
+      "read",
+      "fish"
+    ],
+    "guild": "base"
+  }
+]

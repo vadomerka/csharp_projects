@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pronyushkin_CWH", "Pronyushkin_CWH\Pronyushkin_CWH.csproj", "{EDFC23A7-1F08-4F63-AB35-8F890B7B70DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessingClasses", "CsvProcessing\ProcessingClasses.csproj", "{D18E438B-F1F9-4644-B3C9-2C1FF7F32818}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDFC23A7-1F08-4F63-AB35-8F890B7B70DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDFC23A7-1F08-4F63-AB35-8F890B7B70DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDFC23A7-1F08-4F63-AB35-8F890B7B70DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDFC23A7-1F08-4F63-AB35-8F890B7B70DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D18E438B-F1F9-4644-B3C9-2C1FF7F32818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18E438B-F1F9-4644-B3C9-2C1FF7F32818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18E438B-F1F9-4644-B3C9-2C1FF7F32818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18E438B-F1F9-4644-B3C9-2C1FF7F32818}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CBC9E1A2-85E8-4B3B-872C-283C0E553A82}
+	EndGlobalSection
+EndGlobal

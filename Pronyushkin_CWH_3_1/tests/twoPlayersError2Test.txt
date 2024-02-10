@@ -1,0 +1,23 @@
+[
+  {
+    "player_id": 1,
+    "username": "ymclaughlin",
+    "level": 7,
+    "game_score": 8327,
+    "achievements": [
+      "chance",
+      "again",
+      "mind"
+    ],
+    "inventory": [
+      "college",
+      "voice",
+      "final",
+      "tough",
+      "front",
+      "that"
+    ],
+    "guild": "which"
+  },
+
+]
