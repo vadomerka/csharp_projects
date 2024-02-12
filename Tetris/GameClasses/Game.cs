@@ -31,7 +31,7 @@
             {
                 Update();
                 PrintMap();
-                Console.ReadKey();
+                // Console.ReadKey();
             }
         }
 
