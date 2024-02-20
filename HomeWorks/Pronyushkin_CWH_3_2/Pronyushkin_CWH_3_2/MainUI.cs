@@ -1,18 +1,21 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.IO;
-using DataProcessing;
-using System.Text.Json;
-using System.Numerics;
+﻿using System.Text.Json;
+using DataProcessing.PatientProcessing;
+using DataProcessing.EventProcessing;
+using DataProcessing.Objects;
+using DataProcessing.DataProcessing;
 
 namespace MainProgram
 {
     /// <summary>
-    /// Класс MainUI обеспечивает связь межжду пользователем и библиотекой классов.
+    /// Обеспечивает связь межжду пользователем и библиотекой классов.
     /// </summary>
     public static class MainUI
     {
+        /// <summary>
+        /// Считывает данные из файла. Работает с пользователем.
+        /// </summary>
+        /// <param name="patients">Список пациентов</param>
+        /// <param name="doctors">Словарь докторов</param>
         public static void GetData(out List<Patient>? patients, out Dictionary<int, Doctor>? doctors)
         {
             Console.WriteLine("Введите путь к файлу для чтения и записи данных.");
@@ -20,14 +23,26 @@ namespace MainProgram
             {
                 try
                 {
+                    // Попытка считывания списка объектов из файла.
                     string fPath = Console.ReadLine() ?? "";
                     string jsonTextData = File.ReadAllText(fPath);
                     patients = JsonSerializer.Deserialize<List<Patient>>(jsonTextData);
                     if (patients == null) throw new ArgumentException();
 
+                    // Создание словаря уникальных докторов.
                     doctors = new Dictionary<int, Doctor>();
                     PatientsProcessing.DoctorSeparator(patients, doctors);
+
+                    // Подписка autoSaver на изменение объектов.
+                    AutoSaver autoSaver = new AutoSaver(patients, fPath);
+                    UpdateSubscriber.UpdateSubscribe(patients, autoSaver);
+                    UpdateSubscriber.UpdateSubscribe(doctors.Values, autoSaver);
                     break;
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine("Произошла ошибка при считывании объектов.");
+                    Console.WriteLine("Повторите попытку.");
                 }
                 catch (ArgumentException ex)
                 {
@@ -48,130 +63,131 @@ namespace MainProgram
                 {
                     Console.WriteLine("Произошла непредвиденная ошибка при считывании данных.");
                     Console.WriteLine("Повторите попытку.");
+                    Console.WriteLine(ex);
                 }
             } while (true);
         }
-        /*
+
         /// <summary>
-        /// Метод FilterData фильтрует данные по полю и значению от пользователя.
+        /// Выводит данные в консоль или файл. Работает с пользователем.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static List<Patient> FilterData(List<Patient> data)
+        /// <param name="patients">Список пациентов.</param>
+        public static void WriteData(List<Patient>? patients)
         {
-            // Если пользователь еще не ввел данные, сообщаем об этом.
-            if (data is null)
+            if (patients == null)
             {
-                Console.WriteLine("Данные не обнаружены.");
-                return null;
+                Console.WriteLine("Список объектов пуст.");
+                return;
             }
+            bool consoleWriteChoice = false;
             bool choiceLoop = true;
-            // Пользователь должен выбрать одну из 7ми функций для фильтрации.
-            // Результат сохраняем в делегат.
-            DataFilterDelegate filterRule = DataFilter.IdFilterRule;
             while (choiceLoop)
             {
                 choiceLoop = false;
-                Console.WriteLine("Выберете вариант из списка:");
-                Console.WriteLine("1) Отфильтровать по playerId.");
-                Console.WriteLine("2) Отфильтровать по userName.");
-                Console.WriteLine("3) Отфильтровать по level.");
-                Console.WriteLine("4) Отфильтровать по gameScore.");
-                Console.WriteLine("5) Отфильтровать по achievements.");
-                Console.WriteLine("6) Отфильтровать по inventory.");
-                Console.WriteLine("7) Отфильтровать по guild.");
+                Console.WriteLine("Куда вы хотите вывести данные?");
+                Console.WriteLine("1) Консоль.");
+                Console.WriteLine("2) Файл.");
                 ConsoleKey inpKey = Console.ReadKey().Key;
                 Console.WriteLine();
                 switch (inpKey)
                 {
                     case ConsoleKey.D1:
-                        filterRule = DataFilter.IdFilterRule;
+                        consoleWriteChoice = true;
                         break;
                     case ConsoleKey.D2:
-                        filterRule = DataFilter.UserNameFilterRule;
-                        break;
-                    case ConsoleKey.D3:
-                        filterRule = DataFilter.LevelFilterRule;
-                        break;
-                    case ConsoleKey.D4:
-                        filterRule = DataFilter.ScoreFilterRule;
-                        break;
-                    case ConsoleKey.D5:
-                        filterRule = DataFilter.AchievementsFilterRule;
-                        break;
-                    case ConsoleKey.D6:
-                        filterRule = DataFilter.InventoryFilterRule;
-                        break;
-                    case ConsoleKey.D7:
-                        filterRule = DataFilter.GuildFilterRule;
+                        consoleWriteChoice = false;
                         break;
                     default:
                         choiceLoop = true;
                         break;
                 }
             }
-            // Значение для фильтра.
-            Console.WriteLine("Введите значение, по которому хотите отфильтровать данные:");
-            string filterValue = Console.ReadLine() ?? "";
-            // Фильтрация.
-            data = DataFilter.FilterPlayers(data, filterRule, filterValue);
-            // Сохранение.
-            MainUI.SaveData(data);
-            return data;
+
+            // Запись данных в консоль.
+            if (consoleWriteChoice)
+            {
+                Console.WriteLine("Пациенты:");
+                DataWriter.Write(patients);
+                return;
+            }
+
+            // Запись данных в файл.
+            Console.WriteLine("Введите путь к файлу, куда вы хотите записать результаты.");
+            while (true)
+            {
+                string fileName = Console.ReadLine() ?? "";
+                try
+                {
+                    DataWriter.Write(patients, fileName);
+                    Console.WriteLine("Данные успешно записаны.");
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Произошла непредвиденная ошибка при записи данных в файл. Повторите попытку.");
+                }
+            }
         }
 
         /// <summary>
-        /// Метод SortData сортирует данные по полю и порядку от пользователя.
+        /// Метод SortData сортирует данные по полю и порядку, введенные пользователем.
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static List<Patient> SortData(List<Patient> data)
+        /// <param name="patients">Список пациентов</param>
+        public static void SortData(List<Patient>? patients)
         {
-            // Если пользователь еще не ввел данные, сообщаем об этом.
-            if (data is null)
+            if (patients is null)
             {
-                Console.WriteLine("Данные не обнаружены.");
-                return null;
+                Console.WriteLine("Список объектов пуст.");
+                return;
             }
-            bool choiceLoop = true;
-            // Пользователь должен выбрать одну из 7ми функций для сортировки.
+
+            // Пользователь должен выбрать одну из функций для сортировки.
             // Результат сохраняем в делегат.
-            Comparison<Patient> sortRule = DataSorter.PlayerIdSort;
+            bool choiceLoop = true;
+            Comparison<Patient> sortRule = DataSorter.PatientIdSort;
             while (choiceLoop)
             {
                 choiceLoop = false;
                 Console.WriteLine("Выберете вариант из списка:");
-                Console.WriteLine("1) Отсортировать по playerId.");
-                Console.WriteLine("2) Отсортировать по userName.");
-                Console.WriteLine("3) Отсортировать по level.");
-                Console.WriteLine("4) Отсортировать по gameScore.");
-                Console.WriteLine("5) Отсортировать по achievements.");
-                Console.WriteLine("6) Отсортировать по inventory.");
-                Console.WriteLine("7) Отсортировать по guild.");
+                Console.WriteLine("1) Отсортировать по _patientId.");
+                Console.WriteLine("2) Отсортировать по _name.");
+                Console.WriteLine("3) Отсортировать по _age.");
+                Console.WriteLine("4) Отсортировать по _gender.");
+                Console.WriteLine("5) Отсортировать по _diagnosis.");
+                Console.WriteLine("6) Отсортировать по _heartRate.");
+                Console.WriteLine("7) Отсортировать по _temperature.");
+                Console.WriteLine("8) Отсортировать по _oxygenSaturation.");
+                Console.WriteLine("9) Отсортировать по _doctors.");
                 ConsoleKey inpKey = Console.ReadKey().Key;
                 Console.WriteLine();
                 switch (inpKey)
                 {
                     case ConsoleKey.D1:
-                        sortRule = DataSorter.PlayerIdSort;
+                        sortRule = DataSorter.PatientIdSort;
                         break;
                     case ConsoleKey.D2:
-                        sortRule = DataSorter.PlayerNameSort;
+                        sortRule = DataSorter.PatientNameSort;
                         break;
                     case ConsoleKey.D3:
-                        sortRule = DataSorter.PlayerLevelSort;
+                        sortRule = DataSorter.PatientAgeSort;
                         break;
                     case ConsoleKey.D4:
-                        sortRule = DataSorter.PlayerGameScoreSort;
+                        sortRule = DataSorter.PatientGenderSort;
                         break;
                     case ConsoleKey.D5:
-                        sortRule = DataSorter.PlayerAchievementsSort;
+                        sortRule = DataSorter.PatientDiagnosisSort;
                         break;
                     case ConsoleKey.D6:
-                        sortRule = DataSorter.PlayerInventorySort;
+                        sortRule = DataSorter.PatientHeartRateSort;
                         break;
                     case ConsoleKey.D7:
-                        sortRule = DataSorter.PlayerGuildSort;
+                        sortRule = DataSorter.PatientTemperatureSort;
+                        break;
+                    case ConsoleKey.D8:
+                        sortRule = DataSorter.PatientOxygenSaturationSort;
+                        break;
+                    case ConsoleKey.D9:
+                        sortRule = DataSorter.PatientDoctorsSort;
                         break;
                     default:
                         choiceLoop = true;
@@ -206,29 +222,41 @@ namespace MainProgram
             // Переворачиваем правило, если необходимо.
             if (reversed) sorterDelegate = (x, y) => -sortRule(x, y);
             // Сортируем.
-            data.Sort(sorterDelegate);
-            // Сохраняем.
-            // MainUI.SaveData(data);
-            return data;
+            patients.Sort(sorterDelegate);
+            // Выводим результат на экран.
+            DataWriter.Write(patients);
         }
-        */
 
-        private static bool IsPatient(List<Patient> patients, int id, out int ind)
+        /// <summary>
+        /// Вспомогательный метод. Проверяет, есть ли пациент с нужным id.
+        /// Возвращает bool. Возвращает идентификатор этого пациента в массиве через out.
+        /// </summary>
+        /// <param name="patients">Список пациентов</param>
+        /// <param name="id">id искомого пациента</param>
+        /// <param name="arrayInd">Идентификатор искомого пациента в списке</param>
+        /// <returns>true если пациент найден, иначе false</returns>
+        private static bool IsPatient(List<Patient> patients, int id, out int arrayInd)
         {
             bool patientFound = false;
-            ind = 0;
+            arrayInd = 0;
             for (int i = 0; i < patients.Count; i++)
             {
+                // Если искомый id совпал с пациентом, возвращаем true.
                 if (patients[i].PatientId == id)
                 {
                     patientFound = true;
-                    ind = i;
+                    arrayInd = i;
                     break;
                 }
             }
             return patientFound;
         }
 
+        /// <summary>
+        /// Метод ChangeObject изменяет выбранный пользователем объект.
+        /// </summary>
+        /// <param name="patients">Список пациентов</param>
+        /// <param name="doctors">Словарь докторов</param>
         public static void ChangeObject(List<Patient>? patients, Dictionary<int, Doctor>? doctors)
         {
             if (patients == null || doctors == null)
@@ -260,78 +288,93 @@ namespace MainProgram
                         break;
                 }
             }
-
+            // Перенаправление на отдельные методы.
             if (patientChoice) PatientChange(patients);
+            else DoctorChange(doctors);
         }
 
+        /// <summary>
+        /// Вспомогательный метод. Изменяет выбранного пациента. Работает с пользователем.
+        /// </summary>
+        /// <param name="patients">Список пациентов</param>
         private static void PatientChange(List<Patient> patients)
         {
-            int pId = 0;
-            int ind = 0;
+            // ind - id пациента в массиве.
+            // pId - значение поля patientId.
+            int ind;
+            // Пока пациент не найден, запрашиваем pId у пользователя.
             Console.WriteLine("Введите id пациента, данные которого хотите отредактировать.");
-            while (!int.TryParse(Console.ReadLine(), out pId) || !(IsPatient(patients, pId, out ind)))
+            while (true)
             {
+                if (!int.TryParse(Console.ReadLine(), out int pId))
+                {
+                    Console.WriteLine("Введите натуральное число.");
+                    continue;
+                }
                 if (!(IsPatient(patients, pId, out ind)))
                 {
                     Console.WriteLine("Пациент с этим id не найден.");
+                    continue;
                 }
-                else
-                {
-                    Console.WriteLine("Введите натуральное число.");
-                }
+                break;
             }
 
+            Console.WriteLine("Пациент найден:");
+            Console.WriteLine(patients[ind].ToJSON());
+
+            // Пользователь выбирает делегат для изменения нужного поля.
             bool choiceLoop = true;
             ChangerDelegate changeRule = PatientChanger.PatientNameChange;
             while (choiceLoop)
             {
                 choiceLoop = false;
                 Console.WriteLine("Выберите поле, которое хотите отредактировать.");
-                Console.WriteLine("1) _name.");
-                Console.WriteLine("2) _age.");
-                Console.WriteLine("3) _gender.");
-                Console.WriteLine("4) _diagnosis.");
-                Console.WriteLine("5) _heartRate.");
-                Console.WriteLine("6) _temperature.");
-                Console.WriteLine("7) _oxygenSaturation.");
+                Console.WriteLine("1) name.");
+                Console.WriteLine("2) age.");
+                Console.WriteLine("3) gender.");
+                Console.WriteLine("4) diagnosis.");
+                Console.WriteLine("5) heartRate.");
+                Console.WriteLine("6) temperature.");
+                Console.WriteLine("7) oxygenSaturation.");
                 ConsoleKey inpKey = Console.ReadKey().Key;
                 Console.WriteLine();
                 switch (inpKey)
                 {
                     case ConsoleKey.D1:
                         changeRule = PatientChanger.PatientNameChange;
-                        Console.WriteLine($"_name пациента: {patients[ind].Name}");
+                        Console.WriteLine($"name пациента: {patients[ind].Name}");
                         break;
                     case ConsoleKey.D2:
                         changeRule = PatientChanger.PatientAgeChange;
-                        Console.WriteLine($"_age пациента: {patients[ind].Age}");
+                        Console.WriteLine($"age пациента: {patients[ind].Age}");
                         break;
                     case ConsoleKey.D3:
                         changeRule = PatientChanger.PatientGenderChange;
-                        Console.WriteLine($"_gender пациента: {patients[ind].Gender}");
+                        Console.WriteLine($"gender пациента: {patients[ind].Gender}");
                         break;
                     case ConsoleKey.D4:
                         changeRule = PatientChanger.PatientDiagnosisChange;
-                        Console.WriteLine($"_diagnosis пациента: {patients[ind].Diagnosis}");
+                        Console.WriteLine($"diagnosis пациента: {patients[ind].Diagnosis}");
                         break;
                     case ConsoleKey.D5:
                         changeRule = PatientChanger.PatientHeartRateChange;
-                        Console.WriteLine($"_heartRate пациента: {patients[ind].HeartRate}");
+                        Console.WriteLine($"heartRate пациента: {patients[ind].HeartRate}");
                         break;
                     case ConsoleKey.D6:
                         changeRule = PatientChanger.PatientTemperatureChange;
-                        Console.WriteLine($"_temperature пациента: {patients[ind].Temperature}");
+                        Console.WriteLine($"temperature пациента: {patients[ind].Temperature}");
                         break;
                     case ConsoleKey.D7:
                         changeRule = PatientChanger.PatientOxygenSaturationChange;
-                        Console.WriteLine($"_oxygenSaturation пациента: {patients[ind].OxygenSaturation}");
+                        Console.WriteLine($"oxygenSaturation пациента: {patients[ind].OxygenSaturation}");
                         break;
                     default:
                         choiceLoop = true;
                         break;
                 }
             }
-            Console.WriteLine("Введите значение, на которое вы хотите заменить поле.");
+
+            Console.WriteLine("Введите новое значение поля.");
             while (true)
             {
                 try
@@ -352,7 +395,53 @@ namespace MainProgram
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("Произошла непредвиденная ошибка. Повторите попытку.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Вспомогательный метод. Изменяет выбранного доктора. Работает с пользователем.
+        /// </summary>
+        /// <param name="doctors">Словарь докторов</param>
+        private static void DoctorChange(Dictionary<int, Doctor> doctors)
+        {
+            int dId;
+            Doctor? resDoc;
+            Console.WriteLine("Введите id доктора, данные которого хотите отредактировать.");
+            while (true)
+            {
+                if (!int.TryParse(Console.ReadLine(), out dId))
+                {
+                    Console.WriteLine("Введите натуральное число.");
+                    continue;
+                }
+                if (!(doctors.TryGetValue(dId, out resDoc)))
+                {
+                    Console.WriteLine("Доктор с этим id не найден.");
+                    continue;
+                }
+                break;
+            }
+
+            Console.WriteLine("Доктор найден:");
+            Console.WriteLine(resDoc.ToJSON());
+
+            // По условию пользователь может изменять только имя доктора.
+            Console.WriteLine("Введите новое имя доктора.");
+            while (true)
+            {
+                try
+                {
+                    string value = Console.ReadLine() ?? "";
+                    resDoc.Name = value;
+                    Console.WriteLine("Результат:");
+                    Console.WriteLine(resDoc.ToJSON());
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Произошла непредвиденная ошибка. Повторите попытку.");
                 }
             }
         }

@@ -3,15 +3,19 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
+using DataProcessing.EventProcessing;
 
-namespace DataProcessing
+namespace DataProcessing.Objects
 {
     /// <summary>
-    /// Класс Player - объект, считываемый из json формата.
+    /// Класс Доктор. Находится в отношении Ассоциации с Пациентами.
     /// </summary>
     public class Patient : IUpdate
     {
         public event EventHandler<EventTime>? Updated;
+        public event EventHandler<EventTime>? HeartRateUpdated;
+        public event EventHandler<EventTime>? TemperatureUpdated;
+        public event EventHandler<EventTime>? OxygenSaturationUpdated;
 
         private int _patientId;
         private string _name;
@@ -23,7 +27,7 @@ namespace DataProcessing
         private int _oxygenSaturation;
         private List<Doctor> _doctors;
 
-        public Patient() 
+        public Patient()
         {
             _name = "";
             _gender = "";
@@ -46,11 +50,12 @@ namespace DataProcessing
             _doctors = doctors ?? new List<Doctor>();
         }
 
-        // Свойства.
+        // Свойства для JsonSerializer. При изменении вызывают событие.
         [JsonPropertyName("patient_id")]
-        public int PatientId { 
-            get => _patientId; 
-            set => _patientId = value; 
+        public int PatientId
+        {
+            get => _patientId;
+            set => _patientId = value;
         }
         [JsonPropertyName("name")]
         public string Name
@@ -59,6 +64,7 @@ namespace DataProcessing
             set
             {
                 _name = value ?? "";
+                Updated?.Invoke(this, new EventTime());
             }
         }
         [JsonPropertyName("age")]
@@ -68,6 +74,7 @@ namespace DataProcessing
             set
             {
                 _age = value;
+                Updated?.Invoke(this, new EventTime());
             }
         }
         [JsonPropertyName("gender")]
@@ -77,6 +84,7 @@ namespace DataProcessing
             set
             {
                 _gender = value ?? "";
+                Updated?.Invoke(this, new EventTime());
             }
         }
         [JsonPropertyName("diagnosis")]
@@ -86,8 +94,10 @@ namespace DataProcessing
             set
             {
                 _diagnosis = value ?? "";
+                Updated?.Invoke(this, new EventTime());
             }
         }
+        // Жизненно важные свойства вызывают дополнительные события для докторов.
         [JsonPropertyName("heart_rate")]
         public int HeartRate
         {
@@ -95,6 +105,7 @@ namespace DataProcessing
             set
             {
                 _heartRate = value;
+                HeartRateUpdated?.Invoke(this, new EventTime());
                 Updated?.Invoke(this, new EventTime());
             }
         }
@@ -105,6 +116,7 @@ namespace DataProcessing
             set
             {
                 _temperature = value;
+                TemperatureUpdated?.Invoke(this, new EventTime());
                 Updated?.Invoke(this, new EventTime());
             }
         }
@@ -115,6 +127,7 @@ namespace DataProcessing
             set
             {
                 _oxygenSaturation = value;
+                OxygenSaturationUpdated?.Invoke(this, new EventTime());
                 Updated?.Invoke(this, new EventTime());
             }
         }
@@ -125,6 +138,7 @@ namespace DataProcessing
             set
             {
                 _doctors = value ?? new List<Doctor>();
+                Updated?.Invoke(this, new EventTime());
             }
         }
 

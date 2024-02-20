@@ -5,21 +5,27 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace DataProcessing
+namespace DataProcessing.EventProcessing
 {
-    interface IUpdate
+    /// <summary>
+    /// Интерфейс для всех объектов, которые могут обновляться.
+    /// </summary>
+    public interface IUpdate
     {
         public event EventHandler<EventTime> Updated;
     }
 
+    /// <summary>
+    /// Наследник EventArgs. Хранит дату и время.
+    /// </summary>
     public class EventTime : EventArgs
     {
         private DateTime _time = DateTime.Now;
 
         public EventTime() { }
 
-        public EventTime(DateTime userTime) 
-        { 
+        public EventTime(DateTime userTime)
+        {
             _time = userTime;
         }
 

@@ -1,5 +1,5 @@
-﻿// Пронюшкин Радомир БПИ234-1 КДЗ-3-1 Вариант 17
-using DataProcessing;
+﻿// Пронюшкин Радомир БПИ234-1 КДЗ-3-2 Вариант 15
+using DataProcessing.Objects;
 
 namespace MainProgram
 {
@@ -9,7 +9,7 @@ namespace MainProgram
     public class Program
     {
         /// <summary>
-        /// Метод Main - основной метод программы.
+        /// Основной метод программы.
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -26,7 +26,8 @@ namespace MainProgram
                 Console.WriteLine("1) Считать данные.");
                 Console.WriteLine("2) Сортировка.");
                 Console.WriteLine("3) Отредактировать объект.");
-                Console.WriteLine("4) Выход из программы.");
+                Console.WriteLine("4) Вывести данные.");
+                Console.WriteLine("5) Выход из программы.");
 
                 // Выбор пользователя.
                 ConsoleKey inpKey = Console.ReadKey().Key;
@@ -36,29 +37,20 @@ namespace MainProgram
                     case ConsoleKey.D1:
                         // Считывание данных.
                         MainUI.GetData(out patients, out doctors);
-                        
-                        /*
-                        Console.WriteLine("Пациенты");
-                        foreach (Patient? p in patients)
-                        {
-                            Console.WriteLine(p);
-                        }
-                        Console.WriteLine("Доктора");
-                        foreach (KeyValuePair<int, Doctor> item in doctors)
-                        {
-                            Console.WriteLine(item.Value);
-                        }
-                        */
                         break;
                     case ConsoleKey.D2:
                         // Сортировка.
-                        // data = MainUI.FilterData(data);
+                        MainUI.SortData(patients);
                         break;
                     case ConsoleKey.D3:
-                        // Отредактирование объекта.
+                        // Редактирование объекта.
                         MainUI.ChangeObject(patients, doctors);
                         break;
                     case ConsoleKey.D4:
+                        // Вывод данных.
+                        MainUI.WriteData(patients);
+                        break;
+                    case ConsoleKey.D5:
                         // Выход из основного цикла программы.
                         program = false;
                         Console.WriteLine("Завершение работы программы..");
