@@ -1,5 +1,6 @@
 ﻿using GameClasses;
 using System.IO;
+using System.Text;
 
 namespace Tetris
 {
@@ -7,33 +8,48 @@ namespace Tetris
     {
         public static void Main(string[] args)
         {
-            long n1 = C(4, 2) + C(4, 1);
-            long n2 = C(4, 3) + C(4, 1) + A(4, 2);
-            long n3 = C(4, 1) + A(4, 2) + A(4, 2) +
-                C(4, 2) + A(4, 3) + C(4, 3) +
-                C(4, 2) + C(4, 1) + A(4, 3) / 2;
-
-            Console.WriteLine(n1);
-            Console.WriteLine(n2);
-            Console.WriteLine(n3);
-
-
-            long A(long n, long k)
+            /*bool program = true;
+            while (program)
             {
-                return F(n) / F(n - k);
-            }
-
-            long C(long n, long k)
+                Game game = new Game();
+            }*/
+            int n = 0;
+            int d = 1;
+            try
             {
-                return F(n) / (F(k) * F(n - k));
-            }
-
-            // Factorial
-            long F(long n)
+                Console.WriteLine("Введите длину множества и глубину");
+                n = int.Parse(Console.ReadLine() ?? "0");
+                d = int.Parse(Console.ReadLine() ?? "1");
+            } catch { }
+            List<int> sets = new List<int>();
+            for (int i = 0; i < n; i++)
             {
-                if (n <= 1) return 1;
-                return n * F(n - 1);
+                sets.Add(n - i - 1);
             }
+            List<List<int>> underSets = new List<List<int>>();
+            for (long i = (long)Math.Pow(2, n); i < Math.Pow(2, n + 1); i++)
+            {
+                List<int> newUnderSet = new List<int>();
+                string commands = Convert.ToString(i, d + 1)[1..];
+                for (int nc = 0; nc < n; nc++)
+                { 
+                    char command = commands[nc];
+                    if (command == '1') newUnderSet.Add(sets[nc]);
+                }
+                underSets.Add(newUnderSet);
+            }
+            Console.WriteLine($"Количество подмножеств глубины {}");
+            /*
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var set in underSets)
+            {
+                foreach (var num in set)
+                {
+                    stringBuilder.Append($"{num} ");
+                }
+                stringBuilder.AppendLine();
+            }
+            Console.WriteLine(stringBuilder.ToString());*/
         }
     }
 }
