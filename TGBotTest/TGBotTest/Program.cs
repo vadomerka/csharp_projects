@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using System.IO;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -43,8 +44,10 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
     var chatId = message.Chat.Id;
 
     Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+    // var a = update.Message.Document;  # ff
     if (update.Message.Photo is not null)
     {
+        
         var fileId = update.Message.Photo.Last().FileId;
         if (fileId is not null)
         {
@@ -52,11 +55,25 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
             var filePath = fileInfo.FilePath.Substring(7);
             string destinationFilePath = "../../../../" + filePath;
 
-            await using Stream fileStream = System.IO.File.Create(destinationFilePath);
-            var file = await botClient.GetInfoAndDownloadFileAsync(
-                fileId: fileId,
-                destination: fileStream,
-                cancellationToken: cancellationToken);
+            using (Stream fileStream = System.IO.File.Create(destinationFilePath))
+            {
+                var file = await botClient.GetInfoAndDownloadFileAsync(
+                    fileId: fileId,
+                    destination: fileStream,
+                    cancellationToken: cancellationToken);
+                Message sentMessage = await botClient.SendPhotoAsync(
+                    chatId: chatId,
+                    photo: InputFile.FromStream(stream: fileStream, fileName: "file_2.jpg"),
+                    caption: "You have sendads to me:");
+            }
+
+            
+            /*Message sentMessage = await botClient.SendDocumentAsync(
+                chatId: chatId,
+                document: InputFile.FromStream(stream: stream, fileName: "file_2.jpg"),
+                caption: "You have sendads to me:");*/
+
+
         }
     }
     /*

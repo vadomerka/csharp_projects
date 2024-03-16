@@ -6,8 +6,8 @@ namespace Program
     {
         public static void Main(string[] args)
         {
-            Rectangle.RectangleList rects = null;
-            const string path = "../../../../data/data-2.txt";
+            Rhombus.RhombusList rombs = null;
+            string path = System.IO.Path.Combine("..", "..", "..", "..", "data", "data-9.txt");
             while (true)
             {
                 Console.Clear();
@@ -25,7 +25,7 @@ namespace Program
                     case ConsoleKey.D1:
                         try
                         {
-                            rects = new Rectangle.RectangleList(path);
+                            rombs = new Rhombus.RhombusList(path);
                             Console.WriteLine("Данные успешно считаны");
                         }
                         catch (FileNotFoundException e)
@@ -41,7 +41,7 @@ namespace Program
                     case ConsoleKey.D2:
                         try
                         {
-                            Rectangle.RectangleSaver.SaveOG(rects);
+                            Rhombus.RhombusSaver.SaveOG(rombs);
                             Console.WriteLine("Данные сохранены.");
                         }
                         catch
@@ -52,7 +52,8 @@ namespace Program
                     case ConsoleKey.D3:
                         try
                         {
-                            Rectangle.RectangleSaver.SaveSorted(rects);
+                            
+                            Rhombus.RhombusSaver.SaveSorted(rombs);
                             Console.WriteLine("Данные сохранены.");
                         }
                         catch
@@ -63,8 +64,12 @@ namespace Program
                     case ConsoleKey.D4:
                         try
                         {
-                            Rectangle.RectangleSaver.SaveSortedReverse(rects);
-                            Console.WriteLine("Данные сохранены.");
+                            if (rombs is not null)
+                            {
+                                var newRombs = rombs.Where(x => 5 < x.Space() && x.Space() < 40);
+                                Rhombus.RhombusSaver.SaveSortedReverse(new Rhombus.RhombusList(newRombs.ToArray()));
+                                Console.WriteLine("Данные сохранены.");
+                            }
                         }
                         catch
                         {
@@ -73,23 +78,23 @@ namespace Program
                         break;
                     case ConsoleKey.D5:
                         double minVal = 15;
-                        if (rects is not null)
+                        if (rombs is not null)
                         {
-                            var newRects = rects.Where(x => x.Perimetre() > minVal);
-                            foreach (var r in newRects)
+                            var newRombs = rombs.Where(x => x.Space() > minVal);
+                            foreach (var rect in newRombs)
                             {
-                                Console.WriteLine(r);
+                                Console.WriteLine($"{rect}");
                             }
                         }
                         break;
                     case ConsoleKey.D6:
-                        if (rects is not null && rects.OGRectangles.Count() > 0)
+                        if (rombs is not null && rombs.OGRhombuses.Count() > 0)
                         {
-                            double avge = rects.Average(x => x.Perimetre());
-                            var newRects = rects.Where(x => x.Perimetre() <= avge);
-                            var enumer = rects.GetBackEnumerator();
+                            double avge = rombs.Average(x => x.Space());
+                            var newRombs = rombs.OGRhombuses.Where(x => x.Space() <= avge);
+                            var enumer = newRombs.GetEnumerator();
                             while (enumer.MoveNext())
-                            { 
+                            {
                                 Console.WriteLine($"{enumer.Current}");
                             }
                         }

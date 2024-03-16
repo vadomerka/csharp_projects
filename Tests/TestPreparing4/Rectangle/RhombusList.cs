@@ -5,42 +5,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rectangle
+namespace Rhombus
 {
-    public class RectangleList : IEnumerable<Rectangle>
+    public class RhombusList : IEnumerable<Rhombus>
     {
-        private Rectangle[] _rectangles = new Rectangle[0];
-        private Rectangle[] _og_rectangles = new Rectangle[0];
+        private Rhombus[] _rhombuses = new Rhombus[0];
+        private Rhombus[] _og_rhombuses = new Rhombus[0];
         private string _fileName = "";
 
-        public RectangleList() { }
+        public RhombusList() { }
 
-        public RectangleList(Rectangle[] rectangles)
+        public RhombusList(Rhombus[] rhombuses)
         {
-            _og_rectangles = rectangles;
-            List<Rectangle> listOfBlacks = new List<Rectangle>(rectangles);
-            listOfBlacks.Sort((Rectangle x, Rectangle y) =>
+            _og_rhombuses = rhombuses;
+            List<Rhombus> listOfBlacks = new List<Rhombus>(rhombuses);
+            listOfBlacks.Sort((Rhombus x, Rhombus y) =>
             {
-                if (x.Perimetre() < y.Perimetre()) return -1;
-                if (x.Perimetre() == y.Perimetre()) return 0;
+                if (x.Space() < y.Space()) return -1;
+                if (x.Space() == y.Space()) return 0;
                 return 1;
             });
-            _rectangles = listOfBlacks.ToArray();
+            _rhombuses = listOfBlacks.ToArray();
         }
 
-        public RectangleList(string fileName)
+        public RhombusList(string fileName)
         {
             if (!File.Exists(fileName))
             {
                 throw new FileNotFoundException();
             }
             string[] lines = File.ReadAllLines(fileName);
-            List<Rectangle> listOfBlacks = new List<Rectangle>();
+            List<Rhombus> listOfBlacks = new List<Rhombus>();
             for (int i = 0; i < lines.Length; i++)
             {
                 try
                 {
-                    listOfBlacks.Add(new Rectangle(lines[i]));
+                    listOfBlacks.Add(new Rhombus(lines[i]));
                 }
                 catch (FormatException e)
                 {
@@ -53,22 +53,22 @@ namespace Rectangle
                     Console.WriteLine($"Файл содержит пустые строки.");
                 }
             }
-            _og_rectangles = listOfBlacks.ToArray();
-            listOfBlacks.Sort((Rectangle x, Rectangle y) =>
+            _og_rhombuses = listOfBlacks.ToArray();
+            listOfBlacks.Sort((Rhombus x, Rhombus y) =>
             {
-                if (x.Perimetre() < y.Perimetre()) return -1;
-                if (x.Perimetre() == y.Perimetre()) return 0;
+                if (x.Space() < y.Space()) return -1;
+                if (x.Space() == y.Space()) return 0;
                 return 1;
             });
             _fileName = fileName;
-            _rectangles = listOfBlacks.ToArray();
+            _rhombuses = listOfBlacks.ToArray();
         }
 
-        public Rectangle this[int index] { get => _rectangles[index]; }
+        public Rhombus this[int index] { get => _rhombuses[index]; }
 
-        public Rectangle[] OGRectangles
+        public Rhombus[] OGRhombuses
         {
-            get => _og_rectangles;
+            get => _og_rhombuses;
         }
 
         public string FileName
@@ -76,19 +76,19 @@ namespace Rectangle
             get => _fileName;
         }
 
-        public IEnumerator<Rectangle> GetEnumerator()
+        public IEnumerator<Rhombus> GetEnumerator()
         {
-            for (int i = 0; i < _rectangles.Length; i++)
+            for (int i = 0; i < _rhombuses.Length; i++)
             {
-                yield return _rectangles[i];
+                yield return _rhombuses[i];
             }
         }
 
-        public IEnumerator<Rectangle> GetBackEnumerator()
+        public IEnumerator<Rhombus> GetBackEnumerator()
         {
-            for (int i = _rectangles.Length - 1; i > -1; i--)
+            for (int i = _rhombuses.Length - 1; i > -1; i--)
             {
-                yield return _rectangles[i];
+                yield return _rhombuses[i];
             }
         }
 
