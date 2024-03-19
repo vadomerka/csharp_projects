@@ -10,7 +10,6 @@ namespace DataProcessing
 
     public class Plant : ICSVItem
     {
-
         private int _id;
         private string _name = "";
         private string _latinName = "";
@@ -67,16 +66,56 @@ namespace DataProcessing
             }
         }
 
-        public int Id { get { return _id; } }
-        public string Name { get { return _name; } }
-        public string LatinName { get { return _latinName; } }
-        public string Photo { get { return _photo; } }
-        public string LandscapingZone { get { return _landscapingZone; } }
-        public string ProsperityPeriod { get { return _prosperityPeriod; } }
-        public string Description { get { return _description; } }
-        public string LocationPlace { get { return _locationPlace; } }
-        public string ViewForm { get { return _viewForm; } }
-        public int GlobalId { get { return _global_id; } }
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        public string LatinName
+        {
+            get { return _latinName; }
+            set { _latinName = value; }
+        }
+        public string Photo
+        {
+            get { return _photo; }
+            set { _photo = value; }
+        }
+        public string LandscapingZone
+        {
+            get { return _landscapingZone; }
+            set { _landscapingZone = value; }
+        }
+        public string ProsperityPeriod
+        {
+            get { return _prosperityPeriod; }
+            set { _prosperityPeriod = value; }
+        }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+        public string LocationPlace
+        {
+            get { return _locationPlace; }
+            set { _locationPlace = value; }
+        }
+        public string ViewForm
+        {
+            get { return _viewForm; }
+            set { _viewForm = value; }
+        }
+        public int GlobalId
+        {
+            get { return _global_id; }
+            set { _global_id = value; }
+        }
 
         public override string ToString()
         {
@@ -108,7 +147,18 @@ namespace DataProcessing
         private string _viewForm = "";
         private string _global_id = "";
         
-        public Header() { }
+        public Header() 
+        {
+            _id = "id";
+            _latinName = "latinName";
+            _photo = "photo";
+            _landscapingZone = "landscapingZone";
+            _prosperityPeriod = "prosperityPeriod";
+            _description = "description";
+            _locationPlace = "locationPlace";
+            _viewForm = "viewForm";
+            _global_id = "global_id";
+        }
 
         public Header(string id, string name, string latinName, string photo, string landscapingZone, 
             string prosperityPeriod, string description, string locationPlace, 
@@ -154,16 +204,57 @@ namespace DataProcessing
             }
         }
 
-        public string Id { get { return _id; } }
-        public string Name { get { return _name; } }
-        public string LatinName { get { return _latinName; } }
-        public string Photo { get { return _photo; } }
-        public string LandscapingZone { get { return _landscapingZone; } }
-        public string ProsperityPeriod { get { return _prosperityPeriod; } }
-        public string Description { get { return _description; } }
-        public string LocationPlace { get { return _locationPlace; } }
-        public string ViewForm { get { return _viewForm; } }
-        public string GlobalId { get { return _global_id; } }
+        public string Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        public string LatinName
+        {
+            get { return _latinName; }
+            set { _latinName = value; }
+        }
+        public string Photo
+        {
+            get { return _photo; }
+            set { _photo = value; }
+        }
+        public string LandscapingZone
+        {
+            get { return _landscapingZone; }
+            set { _landscapingZone = value; }
+        }
+        public string ProsperityPeriod
+        {
+            get { return _prosperityPeriod; }
+            set { _prosperityPeriod = value; }
+        }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+        public string LocationPlace
+        {
+            get { return _locationPlace; }
+            set { _locationPlace = value; }
+        }
+        public string ViewForm
+        {
+            get { return _viewForm; }
+            set { _viewForm = value; }
+        }
+        public string GlobalId
+        {
+            get { return _global_id; }
+            set { _global_id = value; }
+        }
+
 
         public override string ToString()
         {

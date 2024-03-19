@@ -1,7 +1,5 @@
 ﻿using DataProcessing;
-using Microsoft.VisualBasic;
-using System.IO;
-using System.Security.Claims;
+using System.Numerics;
 using System.Threading;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -16,7 +14,6 @@ namespace TelegramBot
     {
         private TelegramBotClient? botClient = null;
         private List<ChatData> chatsData = new List<ChatData>();
-        CSVProcessing cp = new CSVProcessing();
         private ReplyKeyboardMarkup menuKeyboard = new(new[]
         {
             new KeyboardButton[] {
@@ -31,7 +28,7 @@ namespace TelegramBot
             ResizeKeyboard = true
         };
 
-        public TGBot() 
+        public TGBot()
         {
             botClient = new TelegramBotClient("7188316095:AAECrzMzGiqOY3uhQSiTwyoQWBGxBL1f46k");
             using CancellationTokenSource cts = new();
@@ -50,157 +47,213 @@ namespace TelegramBot
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            if (update.Message is not { } message)
-                return;
-            long chatId = update.Message.Chat.Id;
-            var curChat = chatsData.Find(x => x.Id == chatId);
-            if (curChat is null)
+            long chatId = 0;
+            ChatData? curChat = null;
+            List<Plant> plants = new List<Plant>();
+            switch (update.Type)
             {
-                curChat = new ChatData(chatId);
-                chatsData.Add(curChat);
-            }
+                case UpdateType.CallbackQuery:
+                    if (update.CallbackQuery is null || update.CallbackQuery.Message is null) return;
+                    chatId = update.CallbackQuery.Message.Chat.Id;
+                    curChat = await TGHelper.GetCurChat(chatId, botClient, chatsData, cancellationToken);
 
-            string messageText = "";
-            if (message.Text is not null)
-                messageText = message.Text;
-            Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
-
-            // Если пользователь прислал файл.
-            Message? sentMessage = null;
-            if (update.Message.Document is not null && 
-                update.Message.Document.FileId is not null)
-            {
-                var fileId = update.Message.Document.FileId;
-                var fileName = update.Message.Document.FileName;
-                using (Stream fileStream = new MemoryStream())
-                {
-                    var file = await botClient.GetInfoAndDownloadFileAsync(
-                        fileId: fileId,
-                        destination: fileStream,
-                        cancellationToken: cancellationToken);
-                    fileStream.Seek(0, SeekOrigin.Begin);
-                    try
+                    if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) 
+                        || curChat.Data is null) return;
+                    plants = curChat.GetPlants();
+                    switch (update.CallbackQuery.Data)
                     {
-                        curChat.BufferData = await cp.ReadAsync(fileStream);
-                        fileStream.Seek(0, SeekOrigin.Begin);
-                    }
-                    catch (Exception ex)
-                    {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: $"Произошла ошибка.\n{ex.Message}",
+                        case "sort/straight":
+                            plants.Sort((Plant x, Plant y) =>
+                            {
+                                return x.LatinName.CompareTo(y.LatinName);
+                            });
+                            await botClient.SendTextMessageAsync(
+                            chatId: curChat.Id,
+                            text: "Данные отсортированы.",
                             cancellationToken: cancellationToken);
+                            break;
+                        case "sort/reverse":
+                            plants.Sort((Plant x, Plant y) =>
+                            {
+                                return y.LatinName.CompareTo(x.LatinName);
+                            });
+                            await botClient.SendTextMessageAsync(
+                            chatId: curChat.Id,
+                            text: "Данные отсортированы.",
+                            cancellationToken: cancellationToken);
+                            break;
+                        case "fetch/LandscapingZone":
+                            curChat.FetchCount = 1;
+                            curChat.FetchedValues = new List<string>();
+                            curChat.FetchedCols = new string[] { "LandscapingZone", "" };
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "Введите значение по которому нужно отфильтровать данные.",
+                                cancellationToken: cancellationToken);
+                            break;
+                        case "fetch/LocationPlace":
+                            curChat.FetchCount = 1;
+                            curChat.FetchedValues = new List<string>();
+                            curChat.FetchedCols = new string[] { "LocationPlace", "" };
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "Введите значение по которому нужно отфильтровать данные.",
+                                cancellationToken: cancellationToken);
+                            break;
+                        case "fetch/LandscapingZone&ProsperityPeriod":
+                            curChat.FetchCount = 2;
+                            curChat.FetchedValues = new List<string>();
+                            curChat.FetchedCols = new string[] { "LandscapingZone", "ProsperityPeriod" };
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "Введите значение по которому нужно отфильтровать данные.",
+                                replyMarkup: null,
+                                cancellationToken: cancellationToken);
+                            break;
                     }
-                }
-                if (curChat.Data is not null)
-                {
-                    ReplyKeyboardMarkup yesNoChoice = new(new[]
+                    curChat.UpdatePlants(plants);
+                    break;
+                case UpdateType.Message:
+                    if (update.Message is null) return;
+                    chatId = update.Message.Chat.Id;
+                    curChat = await TGHelper.GetCurChat(chatId, botClient, chatsData, cancellationToken);
+
+                    string messageText = "";
+                    if (update.Message.Text is not null)
+                        messageText = update.Message.Text;
+                    Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+
+                    // Если пользователь прислал файл.
+                    if (!await HandleUploadedDocuments(update, cancellationToken, curChat)) return;
+
+                    if (!await HandleFetchingMessages(update, cancellationToken, curChat)) return;
+
+                    // Ответный центр.
+                    switch (messageText)
                     {
-                        new KeyboardButton[] {
-                            "Перезаписать.",
-                            "Отменить."
-                        }
-                    })
-                    {
-                        ResizeKeyboard = true
-                    };
-                    sentMessage = await botClient.SendTextMessageAsync(
+                        case "Произвести выборку.":
+                            if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) || 
+                                curChat.Data is null) return;
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "По какому полю вы хотите провести выборку?",
+                                replyMarkup: new InlineKeyboardMarkup(new InlineKeyboardButton[][] {
+                                    new[] {
+                                        InlineKeyboardButton.WithCallbackData("LandscapingZone.", "fetch/LandscapingZone"),
+                                        InlineKeyboardButton.WithCallbackData("LocationPlace.", "fetch/LocationPlace"),
+                                    },
+                                    new[]
+                                    {
+                                        InlineKeyboardButton.WithCallbackData("LandscapingZone + ProsperityPeriod.",
+                                        "fetch/LandscapingZone&ProsperityPeriod")
+                                    }
+                                }),
+                                cancellationToken: cancellationToken);
+                            return;
+                        case "Отсортировать данные.":
+                            if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) || curChat.Data is null) return;
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "В каком порядке вы хотите отсортировать объекты?\nСортировка будет происходить по полю LatinName",
+                                replyMarkup: new InlineKeyboardMarkup(new InlineKeyboardButton[][] {
+                                    new[] {
+                                        InlineKeyboardButton.WithCallbackData("В прямом.", "sort/straight"),
+                                        InlineKeyboardButton.WithCallbackData("В обратном.", "sort/reverse"),
+                                    }}),
+                                cancellationToken: cancellationToken);
+                            return;
+                        case "Скачать данные.":
+                            if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) || curChat.Data is null) return;
+                            ReplyKeyboardMarkup formatChoice = new(new[]
+                            {
+                                new KeyboardButton[] {
+                                    "Скачать в формате csv.",
+                                    "Скачать в формате json."
+                                }
+                            })
+                            {
+                                ResizeKeyboard = true
+                            };
+                            await botClient.SendTextMessageAsync(
+                                chatId: curChat.Id,
+                                text: "В каком формате вы хотите скачать данные?",
+                                replyMarkup: formatChoice,
+                                cancellationToken: cancellationToken);
+                            return;
+                        case "Скачать в формате csv.":
+                            if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) || curChat.Data is null) return;
+                            try
+                            {
+                                using (Stream fileStream = await cp.WriteAsync(curChat.Data))
+                                {
+                                    if (fileStream is null) throw new ArgumentNullException();
+                                    await TGHelper.SendStreamFile(fileStream, curChat, botClient);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await botClient.SendTextMessageAsync(
                                     chatId: chatId,
-                                    text: "Вы загрузили новый файл.\nВы хотите перезаписать данные?",
-                                    replyMarkup: yesNoChoice,
+                                    text: $"Произошла ошибка.\n{ex.Message}",
                                     cancellationToken: cancellationToken);
-                    return;
-                }
-                else
-                {
-                    curChat.Data = curChat.BufferData;
-                    sentMessage = await botClient.SendTextMessageAsync(
-                        chatId: chatId,
-                        text: "Данные сохранены.",
-                        cancellationToken: cancellationToken);
-                }
-            }
-            // Ответный центр.
-            switch (messageText)
-            {
-                case "Произвести выборку.":
-                    if (curChat.Data is null)
-                    {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Загрузите файл с данными.",
-                            cancellationToken: cancellationToken);
-                        return;
+                            }
+                            break;
+                        case "Скачать в формате json.":
+                            if (await TGHelper.CurChatCheck(curChat, botClient, chatsData, cancellationToken) || curChat.Data is null) return;
+                            try
+                            {
+                                plants = curChat.GetPlants();
+                                using (Stream fileStream = await jp.WriteAsync(plants))
+                                {
+                                    if (fileStream is null) throw new ArgumentNullException();
+                                    await TGHelper.SendStreamFile(fileStream, curChat, botClient, "plants.json");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                await botClient.SendTextMessageAsync(
+                                    chatId: chatId,
+                                    text: $"Произошла ошибка.\n{ex.Message}",
+                                    cancellationToken: cancellationToken);
+                            }
+                            break;
+                        case "Перезаписать.":
+                            if (botClient is null) return;
+                            if (curChat.BufferData is null)
+                            {
+                                await botClient.SendTextMessageAsync(
+                                    chatId: curChat.Id,
+                                    text: "Нет данных для перезаписи.",
+                                    cancellationToken: cancellationToken);
+                                return;
+                            }
+                            curChat.Data = curChat.BufferData;
+                            curChat.BufferData = null;
+                            await botClient.SendTextMessageAsync(
+                                    chatId: chatId,
+                                    text: "Данные перезаписаны.",
+                                    cancellationToken: cancellationToken);
+                            break;
+                        case "Отменить.":
+                            curChat.BufferData = null;
+                            break;
+                        default:
+                            break;
                     }
-                    break;
-                case "Отсортировать данные.":
-                    if (curChat.Data is null)
+                    if (curChat.Data is not null)
                     {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Загрузите файл с данными.",
-                            cancellationToken: cancellationToken);
-                        return;
-                    }
-                    break;
-                case "Скачать данные.":
-                    if (curChat.Data is null)
-                    {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Загрузите файл с данными.",
-                            cancellationToken: cancellationToken);
-                        return;
-                    }
-                    try
-                    {
-                        using (Stream fileStream = await cp.WriteAsync(curChat.Data))
-                        {
-                            fileStream.Seek(0, SeekOrigin.Begin);
-                            sentMessage = await botClient.SendDocumentAsync(
+                        await botClient.SendTextMessageAsync(
                                 chatId: chatId,
-                                document: InputFile.FromStream(stream: fileStream, fileName: "plants.csv"),
-                                caption: "Обработанные данные:");
-                            fileStream.Seek(0, SeekOrigin.Begin);
-                        }
+                                text: "Выберите действие с данными.",
+                                replyMarkup: menuKeyboard,
+                                cancellationToken: cancellationToken);
                     }
-                    catch (Exception ex)
-                    {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: $"Произошла ошибка.\n{ex.Message}",
-                            cancellationToken: cancellationToken);
-                    }
-                    break;
-                case "Перезаписать.":
-                    if (curChat.BufferData is null)
-                    {
-                        sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Нет данных для перезаписи.",
-                            cancellationToken: cancellationToken);
-                        break;
-                    }
-                    curChat.Data = curChat.BufferData;
-                    curChat.BufferData = null;
-                    sentMessage = await botClient.SendTextMessageAsync(
-                            chatId: chatId,
-                            text: "Данные перезаписаны.",
-                            cancellationToken: cancellationToken);
-                    break;
-                case "Отменить.":
-                    curChat.BufferData = null;
-                    break;
-                default:
                     break;
             }
-            sentMessage = await botClient.SendTextMessageAsync(
-                        chatId: chatId,
-                        text: "Выберите действие с данными.",
-                        replyMarkup: menuKeyboard,
-                        cancellationToken: cancellationToken);
         }
 
+        
+        
         Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
