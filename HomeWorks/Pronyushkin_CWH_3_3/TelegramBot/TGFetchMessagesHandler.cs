@@ -9,7 +9,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramBot
 {
-    public class TGMessageHandler
+    public class TGFetchMessagesHandler
     {
         private static ReplyKeyboardMarkup menuKeyboard = new(new[]
         {
@@ -33,8 +33,8 @@ namespace TelegramBot
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <param name="curChat">Текущий чат.</param>
         /// <returns>Нужно ли продолжать главный цикл программы.</returns>
-        public static async Task<bool> HandleFetchingMessages(Update update, ITelegramBotClient botClient,
-            CancellationToken cancellationToken, ChatData curChat)
+        public static async Task<bool> HandleFetchingMessages(ITelegramBotClient botClient, Update update, 
+            ChatData curChat, CancellationToken cancellationToken)
         {
             if (botClient is null ||
                 update.Message is null ||

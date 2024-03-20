@@ -36,7 +36,7 @@ namespace TelegramBot
             return plants;
         }
 
-        public static async Task<ChatData> GetCurChat(long chatId, ITelegramBotClient botClient, List<ChatData> chatsData,
+        public static async Task<ChatData> GetCurChat(ITelegramBotClient botClient, long chatId, List<ChatData> chatsData,
                                                         CancellationToken cancellationToken)
         {
             var curChat = chatsData.Find(x => x.Id == chatId);
@@ -54,9 +54,8 @@ namespace TelegramBot
             return curChat;
         }
 
-        public static async Task<bool> CurChatCheck(ChatData curChat, ITelegramBotClient botClient, List<ChatData> chatsData, 
-                                                        CancellationToken cancellationToken,
-            string message = "Загрузите данные.")
+        public static async Task<bool> CurChatCheck(ITelegramBotClient botClient, ChatData curChat,
+                                                        CancellationToken cancellationToken, string message = "Загрузите данные.")
         {
             if (botClient is null) return true;
             if (curChat.Data is null)

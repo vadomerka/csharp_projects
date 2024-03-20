@@ -12,8 +12,8 @@ namespace TelegramBot
 {
     public static class TGDocumentHandler
     {
-        public static async Task<bool> HandleUploadedDocuments(Update update, ITelegramBotClient botClient,
-            CancellationToken cancellationToken, ChatData curChat)
+        public static async Task<bool> HandleUploadedDocuments(ITelegramBotClient botClient, Update update, 
+            ChatData curChat, CancellationToken cancellationToken)
         {
             CSVProcessing cp = new CSVProcessing();
             JSONProcessing jp = new JSONProcessing();
