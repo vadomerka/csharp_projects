@@ -3,12 +3,18 @@ using System.Text;
 
 namespace DataProcessing
 {
-    public interface ICSVItem
+    /// <summary>
+    /// Интерфейс объектов потока. Позволяет удобно работать с csv форматом.
+    /// </summary>
+    public interface IStreamItem
     {
         public string ToJSON() { return ""; }
     }
 
-    public class Plant : ICSVItem
+    /// <summary>
+    /// Класс растения.
+    /// </summary>
+    public class Plant : IStreamItem
     {
         private int _id;
         private string _name = "";
@@ -42,6 +48,7 @@ namespace DataProcessing
 
         public Plant(string? wkt)
         {
+            // Попытка парсинга строки.
             if (wkt == null) throw new ArgumentNullException();
             if (string.IsNullOrWhiteSpace(wkt)) throw new ArgumentNullException();
             wkt = wkt.Trim('"');
@@ -134,7 +141,10 @@ namespace DataProcessing
         }
     }
 
-    public class Header : ICSVItem
+    /// <summary>
+    /// Класс заголовка
+    /// </summary>
+    public class Header : IStreamItem
     {
         private string _id = "";
         private string _name = "";
@@ -147,17 +157,34 @@ namespace DataProcessing
         private string _viewForm = "";
         private string _global_id = "";
         
-        public Header() 
+        public Header(bool rus = false)
         {
-            _id = "id";
-            _latinName = "latinName";
-            _photo = "photo";
-            _landscapingZone = "landscapingZone";
-            _prosperityPeriod = "prosperityPeriod";
-            _description = "description";
-            _locationPlace = "locationPlace";
-            _viewForm = "viewForm";
-            _global_id = "global_id";
+            if (!rus)
+            {
+                _id = "ID";
+                _name = "Name";
+                _latinName = "LatinName";
+                _photo = "Photo";
+                _landscapingZone = "LandscapingZone";
+                _prosperityPeriod = "ProsperityPeriod";
+                _description = "Description";
+                _locationPlace = "LocationPlace";
+                _viewForm = "ViewForm";
+                _global_id = "global_id";
+            }
+            else
+            {
+                _id = "Код";
+                _name = "Название";
+                _latinName = "Латинское название";
+                _photo = "Фотография";
+                _landscapingZone = "Ландшафтная зона";
+                _prosperityPeriod = "Период цветения";
+                _description = "Описание";
+                _locationPlace = "Расположение в парке";
+                _viewForm = "Форма осмотра";
+                _global_id = "global_id";
+            }
         }
 
         public Header(string id, string name, string latinName, string photo, string landscapingZone, 
@@ -165,6 +192,7 @@ namespace DataProcessing
             string viewForm, string global_id)
         {
             _id = id;
+            _name = name;
             _latinName = latinName;
             _photo = photo;
             _landscapingZone = landscapingZone;

@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using TelegramBot.InnerHandlers;
 
-namespace TelegramBot
+namespace TelegramBot.UpdateHandlers
 {
+    /// <summary>
+    /// Вспомогательный класс. Обрабатывает Messages.
+    /// </summary>
     public static class TGUpdateMessageHandler
     {
+        /// <summary>
+        /// Метод обрабатывает Messages.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="update">Информация о сообщении.</param>
+        /// <param name="chatsData">Информация о чатах.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task HandleMessagesAsync(ITelegramBotClient botClient, Update update,
             List<ChatData> chatsData, CancellationToken cancellationToken)
         {
@@ -22,8 +28,7 @@ namespace TelegramBot
             string messageText = "";
             if (update.Message.Text is not null)
                 messageText = update.Message.Text;
-            Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
-
+            
             // Если пользователь прислал файл.
             if (!await TGDocumentHandler.HandleUploadedDocuments(botClient, update, curChat, cancellationToken)) return;
 
@@ -34,22 +39,22 @@ namespace TelegramBot
             switch (messageText)
             {
                 case "Произвести выборку.":
-                    if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
+                    if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
                     await TGCommandHandler.FetchCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Отсортировать данные.":
-                    if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
+                    if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
                     await TGCommandHandler.SortCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Скачать данные.":
-                    if (await TGHelper.CurChatCheck(botClient, curChat,cancellationToken) || curChat.Data is null) return;
+                    if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
                     await TGCommandHandler.DownloadCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Скачать в формате csv.":
                     await TGCommandHandler.DownloadCSVCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Скачать в формате json.":
-                    if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
+                    if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
                     await TGCommandHandler.DownloadJSONCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Перезаписать.":

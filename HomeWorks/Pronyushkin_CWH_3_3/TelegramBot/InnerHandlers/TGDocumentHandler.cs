@@ -1,20 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types.ReplyMarkups;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using DataProcessing;
 
-namespace TelegramBot
+namespace TelegramBot.InnerHandlers
 {
+    /// <summary>
+    /// Вспомогательный класс. Обрабатывает команды.
+    /// </summary>
     public static class TGDocumentHandler
     {
-        public static async Task<bool> HandleUploadedDocuments(ITelegramBotClient botClient, Update update, 
+        /// <summary>
+        /// Метод обрабатывает загрузку документов.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="update">Информация о сообщении.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Нужно ли продолжать главный цикл программы.</returns>
+        public static async Task<bool> HandleUploadedDocuments(ITelegramBotClient botClient, Update update,
             ChatData curChat, CancellationToken cancellationToken)
         {
+            // Создание обработчиков документов.
             CSVProcessing cp = new CSVProcessing();
             JSONProcessing jp = new JSONProcessing();
             if (botClient is null) return false;
@@ -22,17 +29,19 @@ namespace TelegramBot
                 update.Message.Document is not null &&
                 update.Message.Document.FileId is not null)
             {
-                var fileId = update.Message.Document.FileId;
-                using (Stream fileStream = new MemoryStream())
+                try
                 {
-                    var file = await botClient.GetInfoAndDownloadFileAsync(
-                        fileId: fileId,
-                        destination: fileStream,
-                        cancellationToken: cancellationToken);
-                    fileStream.Seek(0, SeekOrigin.Begin);
-                    string fileType = update.Message.Document.MimeType ?? "";
-                    try
+                    var fileId = update.Message.Document.FileId;
+                    using (Stream fileStream = new MemoryStream())
                     {
+                        // Попытка чтения файла.
+                        var file = await botClient.GetInfoAndDownloadFileAsync(
+                            fileId: fileId,
+                            destination: fileStream,
+                            cancellationToken: cancellationToken);
+                        fileStream.Seek(0, SeekOrigin.Begin);
+
+                        string fileType = update.Message.Document.MimeType ?? "";
                         if (fileType == "text/csv")
                         {
                             curChat.BufferData = await cp.ReadAsync(fileStream);
@@ -43,6 +52,7 @@ namespace TelegramBot
                         }
                         else
                         {
+                            // Если формат неверный, сообщаем пользователю.
                             await botClient.SendTextMessageAsync(
                                 chatId: curChat.Id,
                                 text: "Неверный формат файла.",
@@ -51,15 +61,22 @@ namespace TelegramBot
                         }
                         fileStream.Seek(0, SeekOrigin.Begin);
                     }
-                    catch (Exception ex)
-                    {
-                        await botClient.SendTextMessageAsync(
-                            chatId: curChat.Id,
-                            text: $"Произошла непредвиденная ошибка. Повторите попытку позже.",
-                            cancellationToken: cancellationToken);
-                        return true;
-                    }
                 }
+                catch (FormatException)
+                {
+                    await botClient.SendTextMessageAsync(
+                        chatId: curChat.Id,
+                        text: $"Произошла ошибка при чтении файла. Файл неверного формата.",
+                        cancellationToken: cancellationToken);
+                }
+                catch
+                {
+                    await botClient.SendTextMessageAsync(
+                        chatId: curChat.Id,
+                        text: $"Произошла ошибка при чтении файла. Повторите попытку позже.",
+                        cancellationToken: cancellationToken);
+                }
+                // Если пользователь загрузил файл, но данные уже есть.
                 if (curChat.Data is not null)
                 {
                     ReplyKeyboardMarkup yesNoChoice = new(new[]
@@ -79,6 +96,7 @@ namespace TelegramBot
                                     cancellationToken: cancellationToken);
                     return false;
                 }
+                // Если нет, сразу сохраняем данные в базу данных.
                 else
                 {
                     curChat.Data = curChat.BufferData;

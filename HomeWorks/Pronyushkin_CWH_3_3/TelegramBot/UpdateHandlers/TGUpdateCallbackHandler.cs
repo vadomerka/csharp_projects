@@ -1,32 +1,40 @@
-﻿using DataProcessing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using TelegramBot.InnerHandlers;
 
-namespace TelegramBot
+namespace TelegramBot.UpdateHandlers
 {
+    /// <summary>
+    /// Вспомогательный класс. Обрабатывает Callbacks
+    /// </summary>
     public static class TGUpdateCallbackHandler
     {
+        /// <summary>
+        /// Метод обрабатывает Callbacks.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="update">Информация о сообщении.</param>
+        /// <param name="chatsData">Информация о чатах.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task HandleCallbacksAsync(ITelegramBotClient botClient, Update update,
             List<ChatData> chatsData, CancellationToken cancellationToken)
         {
             if (update.CallbackQuery is null || update.CallbackQuery.Message is null) return;
+            // Находим чат в базе данных.
             var chatId = update.CallbackQuery.Message.Chat.Id;
             var curChat = await TGHelper.GetCurChat(botClient, chatId, chatsData, cancellationToken);
+            // Проверяем загружены ли данные в чат.
+            if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
 
-            if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken)
-                || curChat.Data is null) return;
+            // Получаем список объектов.
             var plants = curChat.GetPlants();
             switch (update.CallbackQuery.Data)
             {
+                // Проводим сортировку сразу.
                 case "sort/straight":
-                    plants.Sort((Plant x, Plant y) =>
+                    plants.Sort((x, y) =>
                     {
                         return x.LatinName.CompareTo(y.LatinName);
                     });
@@ -36,7 +44,7 @@ namespace TelegramBot
                         cancellationToken: cancellationToken);
                     break;
                 case "sort/reverse":
-                    plants.Sort((Plant x, Plant y) =>
+                    plants.Sort((x, y) =>
                     {
                         return y.LatinName.CompareTo(x.LatinName);
                     });
@@ -45,9 +53,13 @@ namespace TelegramBot
                         text: "Данные отсортированы.",
                         cancellationToken: cancellationToken);
                     break;
+                // Запускаем выборку, настроив, сколько значений нужно получить от пользователя.
                 case "fetch/LandscapingZone":
+                    // Количество значений.
                     curChat.FetchCount = 1;
+                    // Список, в который будут заноситься значения пользователя.
                     curChat.FetchedValues = new List<string>();
+                    // Столбцы, по которым пройдет выборка.
                     curChat.FetchedCols = new string[] { "LandscapingZone", "" };
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
@@ -75,9 +87,10 @@ namespace TelegramBot
                         replyMarkup: new ReplyKeyboardRemove(),
                         cancellationToken: cancellationToken);
                     break;
-                default: 
+                default:
                     break;
             }
+            // Обновляем значения в базе данных.
             curChat.UpdatePlants(plants);
             await botClient.AnswerCallbackQueryAsync(update.CallbackQuery.Id, cancellationToken: cancellationToken);
         }

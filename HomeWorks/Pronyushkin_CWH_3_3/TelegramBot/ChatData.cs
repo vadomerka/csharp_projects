@@ -8,13 +8,21 @@ using System.Threading.Tasks;
 
 namespace TelegramBot
 {
+    /// <summary>
+    /// Класс, который хранит информацию о чатах.
+    /// </summary>
     public class ChatData
     {
         private long _chatId;
-        private List<ICSVItem>? _data = null;
-        private List<ICSVItem>? _bufferData = null;
+        // Список данных.
+        private List<IStreamItem>? _data = null;
+        // Список считанных данных, которые могут перезаписать основной.
+        private List<IStreamItem>? _bufferData = null;
+        // Столбцы, по которым будет проходить выборка.
         private string[] _fetchCols = new string[2];
+        // Считанные данные для выборки от пользователя.
         private List<string> _fetchedValues = new List<string>();
+        // Необходимое количество данных, которое нужно считать.
         private int _fetchCount = 0;
 
         public ChatData() { }
@@ -23,15 +31,23 @@ namespace TelegramBot
         public string[] FetchedCols { get => _fetchCols; set { _fetchCols = value; } }
         public List<string> FetchedValues { get => _fetchedValues; set { _fetchedValues = value; } }
         public int FetchCount { get => _fetchCount; set { _fetchCount = value; } }
-        public List<ICSVItem>? Data { get => _data; set { _data = value; } }
-        public List<ICSVItem>? BufferData { get => _bufferData; set { _bufferData = value; } }
+        public List<IStreamItem>? Data { get => _data; set { _data = value; } }
+        public List<IStreamItem>? BufferData { get => _bufferData; set { _bufferData = value; } }
 
+        /// <summary>
+        /// Метод сообщает, нужно ли отлавливать значения для выборки.
+        /// </summary>
+        /// <returns>true - если да, иначе - false</returns>
         public bool IsFetching()
-        { 
+        {
             if (_fetchedValues.Count < _fetchCount) return true;
             return false;
         }
 
+        /// <summary>
+        /// Возвращает все растения в данных.
+        /// </summary>
+        /// <returns>Список растений.</returns>
         public List<Plant> GetPlants()
         {
             if (_data == null) return new List<Plant>();
@@ -39,6 +55,10 @@ namespace TelegramBot
                             new List<Plant>();
         }
 
+        /// <summary>
+        /// Возвращает все заголовки в данных.
+        /// </summary>
+        /// <returns>Список заголовков.</returns>
         public List<Header> GetHeaders()
         {
             if (_data == null) return new List<Header>();
@@ -46,9 +66,13 @@ namespace TelegramBot
                             new List<Header>();
         }
 
+        /// <summary>
+        /// Обновляет сохраненные данные
+        /// </summary>
+        /// <param name="plants">Список объектов на которые нужно обновить данные.</param>
         public void UpdatePlants(List<Plant> plants)
         {
-            var res = new List<ICSVItem>();
+            var res = new List<IStreamItem>();
             foreach (var item in GetHeaders())
             {
                 res.Add(item);

@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace DataProcessing
 {
+    /// <summary>
+    /// Класс для работы с потоком.
+    /// </summary>
     public class CSVProcessing
     {
         public CSVProcessing() { }
 
-        public async Task<Stream> WriteAsync(List<ICSVItem> plants)
+        /// <summary>
+        /// Метод записывает список данных в поток.
+        /// </summary>
+        /// <param name="plants">Список данных для записи.</param>
+        /// <returns>Поток с данными.</returns>
+        public async Task<Stream> WriteAsync(List<IStreamItem> plants)
         {
             var stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
@@ -26,18 +34,23 @@ namespace DataProcessing
             return stream;
         }
 
-        public async Task<List<ICSVItem>> ReadAsync(Stream stream)
+        /// <summary>
+        /// Метод считывает список данных из потока.
+        /// </summary>
+        /// <param name="stream">Поток с данными.</param>
+        /// <returns>Список данных.</returns>
+        /// <exception cref="ArgumentException">Ошибка чтения файла.</exception>
+        /// <exception cref="FormatException">Файл неверного формата.</exception>
+        public async Task<List<IStreamItem>> ReadAsync(Stream stream)
         {
-            // StreamWriter writer = new StreamWriter(stream);
-            string? fileData = null;
-            var res = new List<ICSVItem>();
+            var res = new List<IStreamItem>();
             try
             {
                 StreamReader reader = new StreamReader(stream);
-                fileData = await reader.ReadToEndAsync();
+                string? fileData = await reader.ReadToEndAsync();
                 fileData = fileData.Replace("\r\n", "\n");
                 string[] lines = (fileData ?? "").Split(";\n", StringSplitOptions.RemoveEmptyEntries);
-                res = new List<ICSVItem>()
+                res = new List<IStreamItem>()
                 {
                     new Header(lines[0]),
                     new Header(lines[1])
@@ -48,15 +61,21 @@ namespace DataProcessing
                     {
                         res.Add(new Plant(lines[i]));
                     }
-                    catch { }
+                    catch 
+                    {
+                        throw new FormatException();
+                    }
                 }
                 stream.Seek(0, SeekOrigin.Begin);
             }
-            catch (Exception e)
+            catch (FormatException)
             {
-                Console.WriteLine(e.Message);
+                throw new FormatException();
             }
-            
+            catch
+            {
+                throw new ArgumentException();
+            }
             return res;
         }
     }

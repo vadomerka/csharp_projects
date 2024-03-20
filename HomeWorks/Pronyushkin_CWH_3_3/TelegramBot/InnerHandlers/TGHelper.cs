@@ -3,10 +3,19 @@ using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 
-namespace TelegramBot
+namespace TelegramBot.InnerHandlers
 {
+    /// <summary>
+    /// Вспомогательный класс. Хранит дополнительные методы.
+    /// </summary>
     public static class TGHelper
     {
+        /// <summary>
+        /// Метод отфильтровывает список по собранным значениям пользователя.
+        /// </summary>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <returns>Отфильтрованный список.</returns>
+        /// <exception cref="ArgumentNullException">Если результат пуст, возвращаем ошибку.</exception>
         public static List<Plant> FetchPlants(ChatData curChat)
         {
             var plants = curChat.GetPlants();
@@ -31,15 +40,25 @@ namespace TelegramBot
             return plants;
         }
 
+        /// <summary>
+        /// Метод ищет чат в базе данных. Если не находит, создает его.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="chatId">Id чата.</param>
+        /// <param name="chatsData">Информация о чатах.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Ссылку на текущий чат.</returns>
         public static async Task<ChatData> GetCurChat(ITelegramBotClient botClient, long chatId, List<ChatData> chatsData,
                                                         CancellationToken cancellationToken)
         {
             var curChat = chatsData.Find(x => x.Id == chatId);
             if (curChat is null)
             {
+                // Если чата не существовало, создаем его.
                 curChat = new ChatData(chatId);
                 chatsData.Add(curChat);
                 if (botClient is null) return curChat;
+                // Посылаем приветственное сообщение.
                 await botClient.SendTextMessageAsync(
                         chatId: chatId,
                         text: "Вас приветствует телеграм бот!\nЧтобы начать работу, отправьте файл с данными.",
@@ -49,7 +68,14 @@ namespace TelegramBot
             return curChat;
         }
 
-        public static async Task<bool> CurChatCheck(ITelegramBotClient botClient, ChatData curChat,
+        /// <summary>
+        /// Метод проверяет, загружен ли файл в базу данных. И если нет - отправляет предупреждение
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>true если файл не загружен, иначе false.</returns>
+        public static async Task<bool> CurChatDataCheck(ITelegramBotClient botClient, ChatData curChat,
                                                         CancellationToken cancellationToken)
         {
             if (botClient is null) return true;
@@ -65,6 +91,15 @@ namespace TelegramBot
             return false;
         }
 
+        /// <summary>
+        /// Метод отправляет файл из потока в чат.
+        /// </summary>
+        /// <param name="fileStream">Поток с файлом.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <param name="fileName">Имя файла.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task SendStreamFile(Stream fileStream, ChatData curChat, ITelegramBotClient botClient,
                                                         CancellationToken cancellationToken, string fileName = "plants.csv")
         {
@@ -79,9 +114,17 @@ namespace TelegramBot
             await SendMenuMessage(botClient, curChat, cancellationToken);
         }
 
+        /// <summary>
+        /// Метод отправляет сообщение с меню.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task SendMenuMessage(ITelegramBotClient botClient, ChatData curChat,
                                                         CancellationToken cancellationToken)
         {
+            // Кнопки меню.
             ReplyKeyboardMarkup menuKeyboard = new(new[]
             {
                 new KeyboardButton[] {

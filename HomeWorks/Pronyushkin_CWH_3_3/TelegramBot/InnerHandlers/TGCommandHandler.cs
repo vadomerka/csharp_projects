@@ -1,21 +1,24 @@
 ﻿using DataProcessing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot
+namespace TelegramBot.InnerHandlers
 {
+    /// <summary>
+    /// Вспомогательный класс. Обрабатывает команды.
+    /// </summary>
     public static class TGCommandHandler
     {
+        /// <summary>
+        /// Метод обрабатывает команду выборки.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task FetchCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
+            // Отправка сообщения с inline клавиатурой.
             await botClient.SendTextMessageAsync(
                 chatId: curChat.Id,
                 text: "По какому полю вы хотите провести выборку?",
@@ -33,6 +36,13 @@ namespace TelegramBot
                 cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Метод обрабатывает команду сортировки.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task SortCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
             await botClient.SendTextMessageAsync(
@@ -46,6 +56,13 @@ namespace TelegramBot
                 cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Метод обрабатывает команду скачивания данных.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task DownloadCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
             ReplyKeyboardMarkup formatChoice = new(new[]
@@ -65,29 +82,44 @@ namespace TelegramBot
                 cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Метод обрабатывает команду скачивания в формате csv.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task DownloadCSVCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
-            if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
+            if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
             try
             {
                 CSVProcessing cp = new CSVProcessing();
+                // Попытка загрузки данных в поток.
                 using (Stream fileStream = await cp.WriteAsync(curChat.Data))
                 {
                     if (fileStream is null) throw new ArgumentNullException();
+                    // Отправка.
                     await TGHelper.SendStreamFile(fileStream, curChat, botClient, cancellationToken);
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 await botClient.SendTextMessageAsync(
                     chatId: curChat.Id,
-                    text: $"Произошла ошибка.\n{ex.Message}",
+                    text: $"Произошла ошибка при формировании файла. Повторите попытку позже.",
                     cancellationToken: cancellationToken);
             }
         }
 
-        public static async Task DownloadJSONCommandAsync(ITelegramBotClient botClient, ChatData curChat, 
-            CancellationToken cancellationToken)
+        /// <summary>
+        /// Метод обрабатывает команду скачивания в формате json.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
+        public static async Task DownloadJSONCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
             try
             {
@@ -99,15 +131,22 @@ namespace TelegramBot
                     await TGHelper.SendStreamFile(fileStream, curChat, botClient, cancellationToken, "plants.json");
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 await botClient.SendTextMessageAsync(
                     chatId: curChat.Id,
-                    text: $"Произошла ошибка.\n{ex.Message}",
+                    text: $"Произошла ошибка при формировании файла. Повторите попытку позже.",
                     cancellationToken: cancellationToken);
             }
         }
 
+        /// <summary>
+        /// Метод обрабатывает команду перезаписи данных.
+        /// </summary>
+        /// <param name="botClient">Бот клиент.</param>
+        /// <param name="curChat">Текущий чат.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Не возвращает значений.</returns>
         public static async Task RewriteCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
             curChat.Data = curChat.BufferData;

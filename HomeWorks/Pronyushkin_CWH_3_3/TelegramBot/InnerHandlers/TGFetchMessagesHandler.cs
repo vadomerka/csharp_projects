@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
+﻿using Telegram.Bot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot
+namespace TelegramBot.InnerHandlers
 {
     public class TGFetchMessagesHandler
     {
@@ -19,7 +14,7 @@ namespace TelegramBot
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <param name="curChat">Текущий чат.</param>
         /// <returns>Нужно ли продолжать главный цикл программы.</returns>
-        public static async Task<bool> HandleFetchingMessages(ITelegramBotClient botClient, Update update, 
+        public static async Task<bool> HandleFetchingMessages(ITelegramBotClient botClient, Update update,
             ChatData curChat, CancellationToken cancellationToken)
         {
             if (botClient is null ||
@@ -30,17 +25,17 @@ namespace TelegramBot
                 curChat.FetchedValues.Add(update.Message.Text);
                 if (!curChat.IsFetching())
                 {
-                    var plants = new List<DataProcessing.Plant>();
                     try
                     {
-                        plants = TGHelper.FetchPlants(curChat);
+                        // Попытка отфильтровать данные.
+                        var plants = TGHelper.FetchPlants(curChat);
                         curChat.UpdatePlants(plants);
                         await botClient.SendTextMessageAsync(
                             chatId: curChat.Id,
                             text: "Данные отфильтрованы.",
                             cancellationToken: cancellationToken);
-                    } 
-                    catch (ArgumentNullException) 
+                    }
+                    catch (ArgumentNullException)
                     {
                         await botClient.SendTextMessageAsync(
                             chatId: curChat.Id,
