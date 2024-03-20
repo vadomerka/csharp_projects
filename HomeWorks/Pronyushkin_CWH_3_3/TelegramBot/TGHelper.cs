@@ -1,9 +1,4 @@
 ﻿using DataProcessing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
@@ -55,14 +50,14 @@ namespace TelegramBot
         }
 
         public static async Task<bool> CurChatCheck(ITelegramBotClient botClient, ChatData curChat,
-                                                        CancellationToken cancellationToken, string message = "Загрузите данные.")
+                                                        CancellationToken cancellationToken)
         {
             if (botClient is null) return true;
             if (curChat.Data is null)
             {
                 await botClient.SendTextMessageAsync(
                     chatId: curChat.Id,
-                    text: message,
+                    text: "Загрузите данные.",
                     replyMarkup: new ReplyKeyboardRemove(),
                     cancellationToken: cancellationToken);
                 return true;
@@ -70,17 +65,41 @@ namespace TelegramBot
             return false;
         }
 
-        public static async Task SendStreamFile(Stream fileStream, ChatData curChat, ITelegramBotClient botClient, 
-                                                    string fileName = "plants.csv")
+        public static async Task SendStreamFile(Stream fileStream, ChatData curChat, ITelegramBotClient botClient,
+                                                        CancellationToken cancellationToken, string fileName = "plants.csv")
         {
             if (botClient is null) return;
             fileStream.Seek(0, SeekOrigin.Begin);
             await botClient.SendDocumentAsync(
                 chatId: curChat.Id,
                 document: InputFile.FromStream(stream: fileStream, fileName: fileName),
-                caption: "Обработанные данные:");
+                caption: "Обработанные данные:",
+                cancellationToken: cancellationToken);
             fileStream.Seek(0, SeekOrigin.Begin);
+            await SendMenuMessage(botClient, curChat, cancellationToken);
         }
 
+        public static async Task SendMenuMessage(ITelegramBotClient botClient, ChatData curChat,
+                                                        CancellationToken cancellationToken)
+        {
+            ReplyKeyboardMarkup menuKeyboard = new(new[]
+            {
+                new KeyboardButton[] {
+                    "Произвести выборку.",
+                    "Отсортировать данные."
+                },
+                new KeyboardButton[] {
+                    "Скачать данные."
+                }
+            })
+            {
+                ResizeKeyboard = true
+            };
+            await botClient.SendTextMessageAsync(
+                chatId: curChat.Id,
+                text: "Выберите действие с данными.",
+                replyMarkup: menuKeyboard,
+                cancellationToken: cancellationToken);
+        }
     }
 }

@@ -43,15 +43,15 @@ namespace TelegramBot
                     return;
                 case "Скачать данные.":
                     if (await TGHelper.CurChatCheck(botClient, curChat,cancellationToken) || curChat.Data is null) return;
-
+                    await TGCommandHandler.DownloadCommandAsync(botClient, curChat, cancellationToken);
                     return;
                 case "Скачать в формате csv.":
                     await TGCommandHandler.DownloadCSVCommandAsync(botClient, curChat, cancellationToken);
-                    break;
+                    return;
                 case "Скачать в формате json.":
                     if (await TGHelper.CurChatCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
                     await TGCommandHandler.DownloadJSONCommandAsync(botClient, curChat, cancellationToken);
-                    break;
+                    return;
                 case "Перезаписать.":
                     if (botClient is null) return;
                     if (curChat.BufferData is null)
@@ -72,23 +72,14 @@ namespace TelegramBot
             }
             if (curChat.Data is not null)
             {
-                ReplyKeyboardMarkup menuKeyboard = new(new[]
-                {
-                    new KeyboardButton[] {
-                        "Произвести выборку.",
-                        "Отсортировать данные."
-                    },
-                    new KeyboardButton[] {
-                        "Скачать данные."
-                    }
-                })
-                {
-                    ResizeKeyboard = true
-                };
+                await TGHelper.SendMenuMessage(botClient, curChat, cancellationToken);
+            }
+            else
+            {
                 await botClient.SendTextMessageAsync(
                     chatId: chatId,
-                    text: "Выберите действие с данными.",
-                    replyMarkup: menuKeyboard,
+                    text: "Загрузите файл с данными.",
+                    replyMarkup: new ReplyKeyboardRemove(),
                     cancellationToken: cancellationToken);
             }
         }

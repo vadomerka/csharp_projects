@@ -34,9 +34,6 @@ namespace TelegramBot
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            long chatId = 0;
-            ChatData? curChat = null;
-            List<Plant> plants = new List<Plant>();
             switch (update.Type)
             {
                 case UpdateType.CallbackQuery:

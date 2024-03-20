@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramBot
 {
@@ -30,9 +31,9 @@ namespace TelegramBot
                         return x.LatinName.CompareTo(y.LatinName);
                     });
                     await botClient.SendTextMessageAsync(
-                    chatId: curChat.Id,
-                    text: "Данные отсортированы.",
-                    cancellationToken: cancellationToken);
+                        chatId: curChat.Id,
+                        text: "Данные отсортированы.",
+                        cancellationToken: cancellationToken);
                     break;
                 case "sort/reverse":
                     plants.Sort((Plant x, Plant y) =>
@@ -40,9 +41,9 @@ namespace TelegramBot
                         return y.LatinName.CompareTo(x.LatinName);
                     });
                     await botClient.SendTextMessageAsync(
-                    chatId: curChat.Id,
-                    text: "Данные отсортированы.",
-                    cancellationToken: cancellationToken);
+                        chatId: curChat.Id,
+                        text: "Данные отсортированы.",
+                        cancellationToken: cancellationToken);
                     break;
                 case "fetch/LandscapingZone":
                     curChat.FetchCount = 1;
@@ -51,6 +52,7 @@ namespace TelegramBot
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: "Введите значение по которому нужно отфильтровать данные.",
+                        replyMarkup: new ReplyKeyboardRemove(),
                         cancellationToken: cancellationToken);
                     break;
                 case "fetch/LocationPlace":
@@ -60,6 +62,7 @@ namespace TelegramBot
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: "Введите значение по которому нужно отфильтровать данные.",
+                        replyMarkup: new ReplyKeyboardRemove(),
                         cancellationToken: cancellationToken);
                     break;
                 case "fetch/LandscapingZone&ProsperityPeriod":
@@ -69,11 +72,14 @@ namespace TelegramBot
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: "Введите значение по которому нужно отфильтровать данные.",
-                        replyMarkup: null,
+                        replyMarkup: new ReplyKeyboardRemove(),
                         cancellationToken: cancellationToken);
+                    break;
+                default: 
                     break;
             }
             curChat.UpdatePlants(plants);
+            await botClient.AnswerCallbackQueryAsync(update.CallbackQuery.Id, cancellationToken: cancellationToken);
         }
     }
 }

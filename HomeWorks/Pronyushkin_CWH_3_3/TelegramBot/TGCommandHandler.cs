@@ -74,7 +74,7 @@ namespace TelegramBot
                 using (Stream fileStream = await cp.WriteAsync(curChat.Data))
                 {
                     if (fileStream is null) throw new ArgumentNullException();
-                    await TGHelper.SendStreamFile(fileStream, curChat, botClient);
+                    await TGHelper.SendStreamFile(fileStream, curChat, botClient, cancellationToken);
                 }
             }
             catch (Exception ex)
@@ -86,7 +86,8 @@ namespace TelegramBot
             }
         }
 
-        public static async Task DownloadJSONCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
+        public static async Task DownloadJSONCommandAsync(ITelegramBotClient botClient, ChatData curChat, 
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace TelegramBot
                 using (Stream fileStream = await jp.WriteAsync(plants))
                 {
                     if (fileStream is null) throw new ArgumentNullException();
-                    await TGHelper.SendStreamFile(fileStream, curChat, botClient, "plants.json");
+                    await TGHelper.SendStreamFile(fileStream, curChat, botClient, cancellationToken, "plants.json");
                 }
             }
             catch (Exception ex)

@@ -11,20 +11,6 @@ namespace TelegramBot
 {
     public class TGFetchMessagesHandler
     {
-        private static ReplyKeyboardMarkup menuKeyboard = new(new[]
-        {
-            new KeyboardButton[] {
-                "Произвести выборку.",
-                "Отсортировать данные."
-            },
-            new KeyboardButton[] {
-                "Скачать данные."
-            }
-        })
-        {
-            ResizeKeyboard = true
-        };
-
         /// <summary>
         /// Метод собирает данные от пользователя, по которым будет проведена выборка.
         /// </summary>
@@ -44,17 +30,26 @@ namespace TelegramBot
                 curChat.FetchedValues.Add(update.Message.Text);
                 if (!curChat.IsFetching())
                 {
-                    var plants = TGHelper.FetchPlants(curChat);
-                    curChat.UpdatePlants(plants);
-                    await botClient.SendTextMessageAsync(
-                        chatId: curChat.Id,
-                        text: "Данные отфильтрованы.",
-                        cancellationToken: cancellationToken);
-                    await botClient.SendTextMessageAsync(
-                        chatId: curChat.Id,
-                        text: "Выберите действие с данными.",
-                        replyMarkup: menuKeyboard,
-                        cancellationToken: cancellationToken);
+                    var plants = new List<DataProcessing.Plant>();
+                    try
+                    {
+                        plants = TGHelper.FetchPlants(curChat);
+                        curChat.UpdatePlants(plants);
+                        await botClient.SendTextMessageAsync(
+                            chatId: curChat.Id,
+                            text: "Данные отфильтрованы.",
+                            cancellationToken: cancellationToken);
+                    } 
+                    catch (ArgumentNullException) 
+                    {
+                        await botClient.SendTextMessageAsync(
+                            chatId: curChat.Id,
+                            text: "Объекты не найдены. Результат не сохранен.",
+                            cancellationToken: cancellationToken);
+                        // Останавливаем выборку.
+                        curChat.FetchCount = 0;
+                    }
+                    await TGHelper.SendMenuMessage(botClient, curChat, cancellationToken);
                     return false;
                 }
                 else
@@ -62,6 +57,7 @@ namespace TelegramBot
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: "Введите следующее значение.",
+                        replyMarkup: new ReplyKeyboardRemove(),
                         cancellationToken: cancellationToken);
                     return false;
                 }

@@ -86,6 +86,8 @@ namespace TelegramBot
                         chatId: curChat.Id,
                         text: "Данные сохранены.",
                         cancellationToken: cancellationToken);
+                    curChat.Data = curChat.BufferData;
+                    await TGHelper.SendMenuMessage(botClient, curChat, cancellationToken);
                     return true;
                 }
             }
