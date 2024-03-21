@@ -2,6 +2,7 @@
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using Microsoft.Extensions.Logging;
 
 namespace TelegramBot.InnerHandlers
 {
@@ -110,6 +111,7 @@ namespace TelegramBot.InnerHandlers
                 document: InputFile.FromStream(stream: fileStream, fileName: fileName),
                 caption: "Обработанные данные:",
                 cancellationToken: cancellationToken);
+            TGBot.Logger().LogInformation($"Бот отправил файл \"{fileName}\".");
             fileStream.Seek(0, SeekOrigin.Begin);
             await SendMenuMessage(botClient, curChat, cancellationToken);
         }

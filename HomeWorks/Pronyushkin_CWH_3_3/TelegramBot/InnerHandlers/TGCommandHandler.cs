@@ -1,4 +1,5 @@
 ﻿using DataProcessing;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -19,6 +20,7 @@ namespace TelegramBot.InnerHandlers
         public static async Task FetchCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
             // Отправка сообщения с inline клавиатурой.
+            TGBot.Logger().LogInformation($"Обработка команды Fetch.");
             await botClient.SendTextMessageAsync(
                 chatId: curChat.Id,
                 text: "По какому полю вы хотите провести выборку?",
@@ -45,6 +47,7 @@ namespace TelegramBot.InnerHandlers
         /// <returns>Не возвращает значений.</returns>
         public static async Task SortCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
+            TGBot.Logger().LogInformation($"Обработка команды Sort.");
             await botClient.SendTextMessageAsync(
                 chatId: curChat.Id,
                 text: "В каком порядке вы хотите отсортировать объекты?\nСортировка будет происходить по полю LatinName",
@@ -65,6 +68,7 @@ namespace TelegramBot.InnerHandlers
         /// <returns>Не возвращает значений.</returns>
         public static async Task DownloadCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
+            TGBot.Logger().LogInformation($"Обработка команды Download.");
             ReplyKeyboardMarkup formatChoice = new(new[]
             {
                 new KeyboardButton[] {
@@ -105,6 +109,7 @@ namespace TelegramBot.InnerHandlers
             }
             catch
             {
+                TGBot.Logger().LogError($"Произошла ошибка при формировании файла.");
                 await botClient.SendTextMessageAsync(
                     chatId: curChat.Id,
                     text: $"Произошла ошибка при формировании файла. Повторите попытку позже.",
@@ -133,6 +138,7 @@ namespace TelegramBot.InnerHandlers
             }
             catch
             {
+                TGBot.Logger().LogError($"Произошла ошибка при формировании файла.");
                 await botClient.SendTextMessageAsync(
                     chatId: curChat.Id,
                     text: $"Произошла ошибка при формировании файла. Повторите попытку позже.",
@@ -149,6 +155,7 @@ namespace TelegramBot.InnerHandlers
         /// <returns>Не возвращает значений.</returns>
         public static async Task RewriteCommandAsync(ITelegramBotClient botClient, ChatData curChat, CancellationToken cancellationToken)
         {
+            TGBot.Logger().LogInformation($"Обработка команды Rewrite.");
             curChat.Data = curChat.BufferData;
             curChat.BufferData = null;
             await botClient.SendTextMessageAsync(

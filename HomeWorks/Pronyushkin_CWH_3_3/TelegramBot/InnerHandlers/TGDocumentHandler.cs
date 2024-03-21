@@ -2,6 +2,7 @@
 using Telegram.Bot.Types;
 using Telegram.Bot;
 using DataProcessing;
+using Microsoft.Extensions.Logging;
 
 namespace TelegramBot.InnerHandlers
 {
@@ -29,6 +30,7 @@ namespace TelegramBot.InnerHandlers
                 update.Message.Document is not null &&
                 update.Message.Document.FileId is not null)
             {
+                TGBot.Logger().LogInformation($"Бот принял документ \"{update.Message.Document.FileName}\".");
                 try
                 {
                     var fileId = update.Message.Document.FileId;
@@ -64,17 +66,21 @@ namespace TelegramBot.InnerHandlers
                 }
                 catch (FormatException)
                 {
+                    TGBot.Logger().LogError("Произошла ошибка при чтении файла. Файл неверного формата.");
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: $"Произошла ошибка при чтении файла. Файл неверного формата.",
                         cancellationToken: cancellationToken);
+                    return true;
                 }
                 catch
                 {
+                    TGBot.Logger().LogError("Произошла ошибка при чтении файла.");
                     await botClient.SendTextMessageAsync(
                         chatId: curChat.Id,
                         text: $"Произошла ошибка при чтении файла. Повторите попытку позже.",
                         cancellationToken: cancellationToken);
+                    return true;
                 }
                 // Если пользователь загрузил файл, но данные уже есть.
                 if (curChat.Data is not null)

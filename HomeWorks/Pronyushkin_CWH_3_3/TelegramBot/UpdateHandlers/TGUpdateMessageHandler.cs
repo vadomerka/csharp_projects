@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBot.InnerHandlers;
@@ -36,6 +37,7 @@ namespace TelegramBot.UpdateHandlers
             if (!await TGFetchMessagesHandler.HandleFetchingMessages(botClient, update, curChat, cancellationToken)) return;
 
             // Обработка команд.
+            TGBot.Logger().LogInformation($"Бот принял сообщение \"{messageText}\".");
             switch (messageText)
             {
                 case "Произвести выборку.":

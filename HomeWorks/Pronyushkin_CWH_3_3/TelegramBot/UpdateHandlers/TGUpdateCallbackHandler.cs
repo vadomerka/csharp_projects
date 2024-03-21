@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBot.InnerHandlers;
@@ -28,6 +29,8 @@ namespace TelegramBot.UpdateHandlers
             // Проверяем загружены ли данные в чат.
             if (await TGHelper.CurChatDataCheck(botClient, curChat, cancellationToken) || curChat.Data is null) return;
 
+            TGBot.Logger().LogInformation("Бот принял Callback.");
+
             // Получаем список объектов.
             var plants = curChat.GetPlants();
             switch (update.CallbackQuery.Data)
@@ -42,6 +45,7 @@ namespace TelegramBot.UpdateHandlers
                         chatId: curChat.Id,
                         text: "Данные отсортированы.",
                         cancellationToken: cancellationToken);
+                    TGBot.Logger().LogInformation("Данные отсортированы.");
                     break;
                 case "sort/reverse":
                     plants.Sort((x, y) =>
@@ -52,6 +56,7 @@ namespace TelegramBot.UpdateHandlers
                         chatId: curChat.Id,
                         text: "Данные отсортированы.",
                         cancellationToken: cancellationToken);
+                    TGBot.Logger().LogInformation("Данные отсортированы.");
                     break;
                 // Запускаем выборку, настроив, сколько значений нужно получить от пользователя.
                 case "fetch/LandscapingZone":

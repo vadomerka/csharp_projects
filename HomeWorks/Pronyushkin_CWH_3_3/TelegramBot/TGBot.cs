@@ -1,9 +1,11 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using TelegramBot.UpdateHandlers;
+
 
 namespace TelegramBot
 {
@@ -15,6 +17,7 @@ namespace TelegramBot
         private TelegramBotClient? botClient = null;
         // Список всех чатов.
         private List<ChatData> chatsData = new List<ChatData>();
+        private static ILoggerFactory _loggerFactory;
 
         public TGBot()
         {
@@ -33,6 +36,28 @@ namespace TelegramBot
                 receiverOptions: receiverOptions,
                 cancellationToken: cts.Token
             );
+        }
+
+        public TGBot(ILoggerFactory loggerFactory)
+        {
+            botClient = new TelegramBotClient("7188316095:AAECrzMzGiqOY3uhQSiTwyoQWBGxBL1f46k");
+            using CancellationTokenSource cts = new();
+            // Бот не должен реагировать на сообщения, которые он пропустил в выкключенном состоянии.
+            ReceiverOptions receiverOptions = new()
+            {
+                AllowedUpdates = Array.Empty<UpdateType>(),
+                ThrowPendingUpdates = true
+            };
+            // Запускаем бота.
+            botClient.StartReceiving(
+                updateHandler: HandleUpdateAsync,
+                pollingErrorHandler: HandlePollingErrorAsync,
+                receiverOptions: receiverOptions,
+                cancellationToken: cts.Token
+            );
+            _loggerFactory = loggerFactory;
+            var logger = _loggerFactory.CreateLogger<TGBot>();
+            logger.LogInformation("Telegram bot start");
         }
 
         /// <summary>
@@ -72,9 +97,18 @@ namespace TelegramBot
                     => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
-
-             Console.WriteLine(ErrorMessage);
+            Logger().LogError($"Произошла ошибка. {ErrorMessage}");
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Метод предоставляет доступ к логеру.
+        /// </summary>
+        /// <returns>Логер.</returns>
+        public static ILogger Logger()
+        {
+            // Создание логера.
+            return _loggerFactory.CreateLogger<TGBot>();
         }
     }
 }

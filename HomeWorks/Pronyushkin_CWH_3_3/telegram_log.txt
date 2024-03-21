@@ -1,0 +1,147 @@
+[Information] [TelegramBot.TGBot] Telegram bot start
+[Information] [TelegramBot.TGBot] Бот принял сообщение "d".
+[Information] [TelegramBot.TGBot] Бот принял документ "botanica-Zaradie.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "10".
+[Warning] [TelegramBot.TGBot] Отмена выборки.
+[Information] [TelegramBot.TGBot] Telegram bot start
+[Information] [TelegramBot.TGBot] Бот принял сообщение "/start".
+[Information] [TelegramBot.TGBot] Бот принял документ "botanica-Zaradie.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "vjhgjg".
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "nlnlm".
+[Warning] [TelegramBot.TGBot] Отмена выборки.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "jojiojoj".
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "jkljmoljmoj".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "noiojo".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Telegram bot start
+[Information] [TelegramBot.TGBot] Бот принял документ "data_b4bea967-b717-4378-baf2-4da8a9f72dc7.csv".
+[Error] [TelegramBot.TGBot] Произошла ошибка при чтении файла. Файл неверного формата.
+[Information] [TelegramBot.TGBot] Бот принял документ "botanica-Zaradie.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате json.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.json".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "Хвойный лес".
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "Май - июнь".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате csv.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "hgihiuk".
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "oihjoijo".
+[Warning] [TelegramBot.TGBot] Отмена выборки.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "hniuhiu".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "а".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "в".
+[Information] [TelegramBot.TGBot] Бот принял документ "botanica-Zaradie.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "jbnbjklnj;k".
+[Warning] [TelegramBot.TGBot] Отмена выборки.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Считывание значений для выборки "Степь".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате json.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.json".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате csv.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате json.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.json".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате csv.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате csv.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Download.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате csv.".
+[Information] [TelegramBot.TGBot] Бот отправил файл "plants.csv".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Отсортировать данные.".
+[Information] [TelegramBot.TGBot] Обработка команды Sort.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Данные отсортированы.

@@ -1,6 +1,7 @@
 ﻿using Telegram.Bot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using Microsoft.Extensions.Logging;
 
 namespace TelegramBot.InnerHandlers
 {
@@ -22,6 +23,7 @@ namespace TelegramBot.InnerHandlers
                 update.Message.Text is null) return false;
             if (curChat.IsFetching())
             {
+                TGBot.Logger().LogInformation($"Считывание значений для выборки \"{update.Message.Text}\".");
                 curChat.FetchedValues.Add(update.Message.Text);
                 if (!curChat.IsFetching())
                 {
@@ -41,6 +43,7 @@ namespace TelegramBot.InnerHandlers
                             chatId: curChat.Id,
                             text: "Объекты не найдены. Результат не сохранен.",
                             cancellationToken: cancellationToken);
+                        TGBot.Logger().LogWarning($"Отмена выборки.");
                         // Останавливаем выборку.
                         curChat.FetchCount = 0;
                     }
