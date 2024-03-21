@@ -1,4 +1,6 @@
 ﻿// Пронюшкин Радомир БПИ234 вариант 4.
+// Ссылка на бота:
+// https://t.me/tg_c_sharp_test_2_bot.
 using Microsoft.Extensions.Logging;
 using Pronyushkin_CWH_3_3;
 using TelegramBot;

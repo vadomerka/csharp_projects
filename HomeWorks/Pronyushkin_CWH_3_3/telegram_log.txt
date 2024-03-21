@@ -145,3 +145,13 @@
 [Information] [TelegramBot.TGBot] Данные отсортированы.
 [Information] [TelegramBot.TGBot] Бот принял Callback.
 [Information] [TelegramBot.TGBot] Данные отсортированы.
+[Information] [TelegramBot.TGBot] Telegram bot start
+[Information] [TelegramBot.TGBot] Бот принял сообщение "d".
+[Information] [TelegramBot.TGBot] Бот принял документ "plants.json".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Произвести выборку.".
+[Information] [TelegramBot.TGBot] Обработка команды Fetch.
+[Information] [TelegramBot.TGBot] Бот принял Callback.
+[Information] [TelegramBot.TGBot] Telegram bot start
+[Information] [TelegramBot.TGBot] Бот принял сообщение "d".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать файл".
+[Information] [TelegramBot.TGBot] Бот принял сообщение "Скачать в формате json.".
