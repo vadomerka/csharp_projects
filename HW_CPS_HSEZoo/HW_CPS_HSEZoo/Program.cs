@@ -1,10 +1,13 @@
-﻿namespace HseZoo
+﻿using System;
+
+namespace HW_CPS_HSEZoo 
 {
-    class Program 
-    { 
-        public static void Main(string[] args)
+    class MainClass 
+    {
+        public static void Main (string[] args) 
         {
-            Console.WriteLine("start");
+            HseZoo hseZoo = new HseZoo();
+            hseZoo.Write();
         }
     }
 }
