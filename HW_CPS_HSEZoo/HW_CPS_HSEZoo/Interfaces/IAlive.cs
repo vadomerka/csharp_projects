@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEZoo
+namespace HW_CPS_HSEZoo.Interfaces
 {
-    internal interface IAlive
+    internal interface IAlive : IInventory
     {
-        int Food { get; }
+        public int Food { get; }
     }
 }

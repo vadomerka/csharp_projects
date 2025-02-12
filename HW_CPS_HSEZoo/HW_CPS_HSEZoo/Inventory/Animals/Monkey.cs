@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEZoo
+namespace HW_CPS_HSEZoo.Inventory.Animals
 {
-    public abstract class Animal : IAlive
+    public class Monkey : Herbo
     {
-        public int Food { get; }
+
     }
 }
