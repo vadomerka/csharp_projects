@@ -22,15 +22,22 @@ namespace HW_CPS_HSEZoo
         public void WriteList<T>() 
         {
             StringBuilder sb = new StringBuilder();
-            foreach (IInventory inventory in _inventoryList)
+            foreach (IInventory item in _inventoryList)
             {
-                IAlive? item = inventory as IAlive;
-                if (item == null) { continue; }
+                // IAlive? item = inventory as IAlive;
+                // if (item.GetType() == typeof(T)) { continue; }
+                if (item.GetType().IsAssignableTo(typeof(T))) { continue; }
+                
+                // typeof(T).ToString();
                 sb.Append($"Id: {item.Number}, item type: ");
                 sb.Append(item.GetType().ToString());
                 sb.Append("; ");
+                sb.Append(typeof(T));
+                sb.Append("; ");
+                sb.Append(item.GetType());
+                sb.Append("; ");
                 // IAlive alive = (IAlive)item;
-                sb.Append(item.GetType().IsAssignableTo(typeof(IAlive)));
+                sb.Append(item.GetType().IsAssignableTo(typeof(T)));
                 sb.AppendLine();
 
             }

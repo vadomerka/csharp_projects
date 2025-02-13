@@ -13,7 +13,7 @@ namespace HW_CPS_HSEZoo
             hseZoo.AddInventory(new Monkey());
             hseZoo.AddInventory(new Rabbit());
             hseZoo.AddInventory(new Thing());
-            hseZoo.WriteList<IInventory>();
+            hseZoo.WriteList<IAlive>();
 
             Console.ReadLine();
         }
