@@ -10,29 +10,38 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEZoo
 {
-    internal class HseZoo 
+    internal class HseZoo : IHasInventory
     {
-        List<IInventory> _inventoryList = new List<IInventory>();
+        protected List<IInventory> _inventoryList = new List<IInventory>();
 
-        public void AddInventory(IInventory inventory)
+        public void AddToInventory(IInventory inventory)
         {
             _inventoryList.Add(inventory);
         }
 
-        public void WriteList<T>() 
+        public List<T> GetInventoryData<T>() 
         {
-            StringBuilder sb = new StringBuilder();
+            // StringBuilder sb = new StringBuilder();
+            List<T> ret = new List<T>();
             foreach (IInventory inventory in _inventoryList)
             {
-                IAlive? item = inventory as IAlive;
-                if (item == null) { continue; }
+                if (!inventory.GetType().IsAssignableTo(typeof(T))) { continue; }
+                ret.Append((T)inventory);
+            }
+            return ret;
+        }
+
+        public void WriteInventoryData<T>() 
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IInventory item in GetInventoryData<T>())
+            {
                 sb.Append($"Id: {item.Number}, item type: ");
                 sb.Append(item.GetType().ToString());
-                sb.Append("; ");
-                // IAlive alive = (IAlive)item;
-                sb.Append(item.GetType().IsAssignableTo(typeof(IAlive)));
+                // sb.Append("; ");
+                // sb.Append(item.GetType().IsAssignableTo(typeof(IAlive)));
                 sb.AppendLine();
-
             }
             Console.Write(sb.ToString());
         }

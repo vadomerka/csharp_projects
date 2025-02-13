@@ -2,18 +2,24 @@
 using HW_CPS_HSEZoo.Interfaces;
 using System;
 using HW_CPS_HSEZoo.Inventory;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEZoo 
 {
+    // ServiceCollection services = new ServiceCollection();
+
     class MainClass 
     {
         public static void Main (string[] args) 
         {
+            
+            // services.AddSingleton(VetClinic);
+
             HseZoo hseZoo = new HseZoo();
-            hseZoo.AddInventory(new Monkey());
-            hseZoo.AddInventory(new Rabbit());
-            hseZoo.AddInventory(new Thing());
-            hseZoo.WriteList<IInventory>();
+            hseZoo.AddToInventory(new Monkey());
+            hseZoo.AddToInventory(new Rabbit());
+            hseZoo.AddToInventory(new Thing());
+            hseZoo.WriteInventoryData<IInventory>();
 
             Console.ReadLine();
         }
