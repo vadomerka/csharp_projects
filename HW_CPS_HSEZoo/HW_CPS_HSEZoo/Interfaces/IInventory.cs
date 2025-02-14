@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEZoo.Interfaces
 {
-    internal interface IInventory
+    public interface IInventory
     {
         public int Number { get; }
     }

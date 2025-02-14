@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEZoo.Interfaces
 {
-    internal interface IAlive : IInventory
+    public interface IAlive : IInventory
     {
         public int Food { get; }
     }

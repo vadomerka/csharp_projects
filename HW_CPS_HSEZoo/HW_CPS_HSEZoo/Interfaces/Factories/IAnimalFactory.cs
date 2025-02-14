@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEZoo.Interfaces.Factories
 {
-    internal interface IAnimalFactory : IInventoryFactory
+    public interface IAnimalFactory : IInventoryFactory
     {
         public Animal? CreateAnimal(string itemType);
     }

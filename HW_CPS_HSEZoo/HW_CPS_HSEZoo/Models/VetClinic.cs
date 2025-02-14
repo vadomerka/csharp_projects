@@ -8,11 +8,12 @@ using HW_CPS_HSEZoo.Interfaces;
 
 namespace HW_CPS_HSEZoo.Models
 {
-    internal class VetClinic : IHealthAnalizer
+    public class VetClinic : IHealthAnalizer
     {
         private float _targetHealth;
 
-        public VetClinic() { _targetHealth = 0.5f; }
+        // Каждое пятое животное не будет взято в зоопарк.
+        public VetClinic() { _targetHealth = 0.2f; }
 
         public VetClinic(float thealth)
         {

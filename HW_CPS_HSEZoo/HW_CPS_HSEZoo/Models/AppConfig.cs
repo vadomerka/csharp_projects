@@ -25,7 +25,7 @@ public class AppConfig
 
     public static IServiceProvider GetService()
     {
-        Console.WriteLine("Get Services........");
+        // Console.WriteLine("Get Services........");
         var services = new ServiceCollection();
         services.AddSingleton<HseZoo>();
         services.AddSingleton<VetClinic>();

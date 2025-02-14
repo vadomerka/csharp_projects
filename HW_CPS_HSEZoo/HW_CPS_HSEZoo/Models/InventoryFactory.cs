@@ -4,7 +4,7 @@ using HW_CPS_HSEZoo.Models.Inventory.Things;
 
 namespace HW_CPS_HSEZoo.Models
 {
-    internal class InventoryFactory : IAnimalFactory, IInventoryFactory
+    public class InventoryFactory : IAnimalFactory, IInventoryFactory
     {
         protected int index = 0;
 

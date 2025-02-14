@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEZoo.Models.Inventory.Things
 {
-    internal class Table : Thing
+    public class Table : Thing
     {
         public Table(int num) { _number = num; }
     }

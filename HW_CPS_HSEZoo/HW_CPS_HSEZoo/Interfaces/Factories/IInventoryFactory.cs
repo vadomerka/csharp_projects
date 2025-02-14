@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEZoo.Interfaces.Factories
 {
-    internal interface IInventoryFactory
+    public interface IInventoryFactory
     {
         protected static int index;
     }

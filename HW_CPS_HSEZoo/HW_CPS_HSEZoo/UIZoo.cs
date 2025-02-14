@@ -1,12 +1,14 @@
-﻿using HW_CPS_HSEZoo.Models;
+﻿using HW_CPS_HSEZoo.Interfaces;
+using HW_CPS_HSEZoo.Models;
 using HW_CPS_HSEZoo.Models.Inventory.Animals;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 
 namespace HW_CPS_HSEZoo
 {
-    internal static class UIZoo
+    public static class UIZoo
     {
-        public static void Menu() 
+        public static void Menu()
         {
             while (true)
             {
@@ -45,6 +47,7 @@ namespace HW_CPS_HSEZoo
                 }
             }
         }
+
 
         public static void AddAnimal()
         {
@@ -158,25 +161,46 @@ namespace HW_CPS_HSEZoo
             return ret;
         }
 
+        private static void WriteInventoryData<T>(List<T>? items, string itemType = "инвентаря")
+        {
+            StringBuilder sb = new StringBuilder();
+            if (items == null || items.Count == 0) { sb.AppendLine("Список пуст."); return; }
+            foreach (IInventory? item in items)
+            {
+                if (item == null) { continue; }
+                sb.Append($"Id: {item.Number}; Вид {itemType}: ");
+                sb.Append(item.GetType().Name);
+                if (item is IAlive) { sb.Append($"; Количество еды: {((IAlive)item).Food}"); }
+                if (item is IMood) { sb.Append($"; Доброта: {((IMood)item).Kindness}"); }
+                sb.AppendLine();
+            }
+            Console.Write(sb.ToString());
+        }
+
         public static void WriteFoodList()
         {
             var services = AppConfig.Services;
             HseZoo hseZoo = services.GetRequiredService<HseZoo>();
-            hseZoo.WriteAnimalFoodData();
+            WriteInventoryData(hseZoo.GetInventoryData<IAlive>(), "животного");
 
             Console.WriteLine("\nНажмите любую клавишу чтобы вернуться в меню.");
             Console.ReadKey();
         }
+
 
         public static void WriteContactAnimalList()
         {
             var services = AppConfig.Services;
             HseZoo hseZoo = services.GetRequiredService<HseZoo>();
-            hseZoo.WriteContactAnimalsData();
+            // hseZoo.WriteContactAnimalsData();
+            var contactAnims = new List<IMood>(hseZoo.GetInventoryData<IMood>().Where(
+                (IMood anim) => { return anim.Kindness >= 5; }));
+            WriteInventoryData(contactAnims, "животного");
 
             Console.WriteLine("\nНажмите любую клавишу чтобы вернуться в меню.");
             Console.ReadKey();
         }
+
 
         public static void Exit()
         {
