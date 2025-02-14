@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEZoo.Inventory.Animals
+namespace HW_CPS_HSEZoo.Models.Inventory.Animals
 {
     public class Wolf : Predator
     {
-        public void Woof()
+        public Wolf(int num, int food = 0)
         {
-            Console.WriteLine("woof1");
+            _number = num;
+            _food = food;
         }
     }
 }
