@@ -4,6 +4,9 @@ using HW_CPS_HSEZoo.Models.Inventory.Things;
 
 namespace HW_CPS_HSEZoo.Models
 {
+    /// <summary>
+    /// Создает инвентарь.
+    /// </summary>
     public class InventoryFactory : IAnimalFactory, IInventoryFactory
     {
         protected int index = 0;

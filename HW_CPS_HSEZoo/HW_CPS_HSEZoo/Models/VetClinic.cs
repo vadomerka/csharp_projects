@@ -8,6 +8,9 @@ using HW_CPS_HSEZoo.Interfaces;
 
 namespace HW_CPS_HSEZoo.Models
 {
+    /// <summary>
+    /// Проверяет здоровье.
+    /// </summary>
     public class VetClinic : IHealthAnalizer
     {
         private float _targetHealth;
@@ -22,10 +25,9 @@ namespace HW_CPS_HSEZoo.Models
 
         public bool AnalyzeHealth(IAlive? being)
         {
-            // If being is null
             if (being == null) return false;
 
-            // Getting reliable data.
+            // Узнаем пройдет животное или нет.
             Random rnd = new Random();
             if (rnd.NextDouble() < _targetHealth) return false;
             return true;

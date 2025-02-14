@@ -6,6 +6,9 @@ using System.Text;
 
 namespace HW_CPS_HSEZoo
 {
+    /// <summary>
+    /// Класс для ввода вывода данных от пользователя.
+    /// </summary>
     public static class UIZoo
     {
         public static void Menu()
@@ -48,14 +51,18 @@ namespace HW_CPS_HSEZoo
             }
         }
 
-
+        /// <summary>
+        /// Метод добавляет животное в зоопарк, по данным от пользователя.
+        /// </summary>
         public static void AddAnimal()
         {
+            // Подключение сервисов.
             var services = AppConfig.Services;
             var hseZoo = services.GetRequiredService<HseZoo>();
             var invFactory = services.GetRequiredService<InventoryFactory>();
             var vet = services.GetRequiredService<VetClinic>();
 
+            // Получение данных о животном
             string animFoodType = GetUserAnimFoodType();
             if (animFoodType == "") return;
             string aClass = GetUserAnimalClass(animFoodType);
@@ -67,6 +74,7 @@ namespace HW_CPS_HSEZoo
             if (animFoodType == "Herbo") { ((Herbo)animal).Kindness = 
                     GetUserNum("Введите число от 0 до 10 - доброту животного.", 0, 10); }
 
+            // Проверка ветеринаром.
             if (vet.AnalyzeHealth(animal))
             {
                 Console.WriteLine("Животное успешно добавлено!");
@@ -80,6 +88,10 @@ namespace HW_CPS_HSEZoo
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Метод для получения типа животного.
+        /// </summary>
+        /// <returns>Строка</returns>
         private static string GetUserAnimFoodType()
         {
             while (true)
@@ -110,6 +122,11 @@ namespace HW_CPS_HSEZoo
             }
         }
 
+        /// <summary>
+        /// Метод для получения класса животного.
+        /// </summary>
+        /// <param name="foodType">Показываем только выборы для соответствующих типов животных.</param>
+        /// <returns>Строка</returns>
         private static string GetUserAnimalClass(string foodType) 
         {
             while (true)
@@ -149,6 +166,13 @@ namespace HW_CPS_HSEZoo
             return "";
         }
 
+        /// <summary>
+        /// Получение числа от пользователя.
+        /// </summary>
+        /// <param name="message">Сообщаем какое именно число.</param>
+        /// <param name="minn"></param>
+        /// <param name="maxn"></param>
+        /// <returns>Число</returns>
         private static int GetUserNum(string message, int minn = int.MinValue, int maxn = int.MaxValue) 
         {
             int ret = 0;
@@ -161,22 +185,34 @@ namespace HW_CPS_HSEZoo
             return ret;
         }
 
+        /// <summary>
+        /// Метод выводит полные данные об инвентаре в массиве.
+        /// </summary>
+        /// <typeparam name="T">Тип инвентаря</typeparam>
+        /// <param name="items">Массив</param>
+        /// <param name="itemType">Сообщение пользователю</param>
         private static void WriteInventoryData<T>(List<T>? items, string itemType = "инвентаря")
         {
             StringBuilder sb = new StringBuilder();
-            if (items == null || items.Count == 0) { sb.AppendLine("Список пуст."); return; }
-            foreach (IInventory? item in items)
+            if (items == null || items.Count == 0) { sb.AppendLine("Список пуст."); }
+            else
             {
-                if (item == null) { continue; }
-                sb.Append($"Id: {item.Number}; Вид {itemType}: ");
-                sb.Append(item.GetType().Name);
-                if (item is IAlive) { sb.Append($"; Количество еды: {((IAlive)item).Food}"); }
-                if (item is IMood) { sb.Append($"; Доброта: {((IMood)item).Kindness}"); }
-                sb.AppendLine();
+                foreach (IInventory? item in items)
+                {
+                    if (item == null) { continue; }
+                    sb.Append($"Id: {item.Number}; Вид {itemType}: ");
+                    sb.Append(item.GetType().Name);
+                    if (item is IAlive) { sb.Append($"; Количество еды: {((IAlive)item).Food}"); }
+                    if (item is IMood) { sb.Append($"; Доброта: {((IMood)item).Kindness}"); }
+                    sb.AppendLine();
+                }
             }
             Console.Write(sb.ToString());
         }
 
+        /// <summary>
+        /// Метод выводит информацию о животных.
+        /// </summary>
         public static void WriteFoodList()
         {
             var services = AppConfig.Services;
@@ -187,12 +223,13 @@ namespace HW_CPS_HSEZoo
             Console.ReadKey();
         }
 
-
+        /// <summary>
+        /// Метод выводит информацию о контактных животных.
+        /// </summary>
         public static void WriteContactAnimalList()
         {
             var services = AppConfig.Services;
             HseZoo hseZoo = services.GetRequiredService<HseZoo>();
-            // hseZoo.WriteContactAnimalsData();
             var contactAnims = new List<IMood>(hseZoo.GetInventoryData<IMood>().Where(
                 (IMood anim) => { return anim.Kindness >= 5; }));
             WriteInventoryData(contactAnims, "животного");
