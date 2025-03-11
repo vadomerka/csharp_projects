@@ -1,14 +1,10 @@
 ﻿using HW_CPS_HSEBank.Data;
 using HW_CPS_HSEBank.Data.Factories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.Commands
 {
-    internal class AddAccountCommand : IBankOperation
+    public class AddAccountCommand : IBankOperation
     {
         private readonly string name = "";
         private readonly int balance = 0;
@@ -23,9 +19,9 @@ namespace HW_CPS_HSEBank.Commands
 
         public void Execute()
         {
-
-            AccountFactory accountFactory = new AccountFactory();
-            BankAccountsRepository mb = new(); // TODO
+            IServiceProvider services = CompositionRoot.Services;
+            var accountFactory = services.GetRequiredService<AccountFactory>();
+            var mb = services.GetRequiredService<BankDataRepository>(); // TODO
             mb.AddAccount(accountFactory.CreateAccount(name, balance));
         }
     }

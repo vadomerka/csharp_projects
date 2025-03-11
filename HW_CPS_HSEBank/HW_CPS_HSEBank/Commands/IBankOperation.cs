@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Commands
 {
-    internal interface IBankOperation : ICommand
+    public interface IBankOperation : ICommand
     {
         public string? ToString();
     }

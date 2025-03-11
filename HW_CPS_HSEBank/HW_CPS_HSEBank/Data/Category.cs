@@ -6,20 +6,21 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Data
 {
-    public class BankAccount
+    public class Category
     {
         private int id;
+        private string type;
         private string name;
-        private decimal balance;
 
-        public BankAccount(int id, string name, decimal balance) {
+        public Category(int id, string type, string name)
+        {
             this.id = id;
+            this.type = type;
             this.name = name;
-            this.balance = balance;
         }
 
         public int Id { get => id; }
-        public string Name { get => name; set { name = value; } }
-        public decimal Balance { get => balance; set => balance = value; }
+        public string Type { get => type; set => type = value; }
+        public string Name { get => name; set => name = value; }
     }
 }

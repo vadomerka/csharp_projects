@@ -10,7 +10,7 @@ namespace HW_CPS_HSEBank.Data.Factories
     {
         int lastId = 0;
 
-        public IAccount CreateAccount(string name, int balance) { 
+        public BankAccount CreateAccount(string name, int balance) { 
             BankAccount bankAccount = new BankAccount(++lastId, name, balance);
             return bankAccount;
         }

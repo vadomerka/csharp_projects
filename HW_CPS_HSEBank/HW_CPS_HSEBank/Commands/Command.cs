@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Commands
 {
-    internal class Command : ICommand
+    public class Command : ICommand
     {
 
         public Command() { }
+
+        public string Type => throw new NotImplementedException();
 
         public void Execute()
         {

@@ -1,5 +1,8 @@
 ﻿using HW_CPS_HSEBank.Commands;
+using HW_CPS_HSEBank.Data;
 using HW_CPS_HSEBank.Data.Factories;
+using HW_CPS_HSEBank.Json;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 
 namespace HW_CPS_HSEBank
@@ -24,6 +27,8 @@ namespace HW_CPS_HSEBank
             List<MenuItem> mainOptions = new List<MenuItem>
                 {
                     new MenuItem("Добавить аккаунт", AddAccount),
+                    new MenuItem("Экспортировать данные", ExportData),
+                    new MenuItem("Импортировать данные", ImportData),
                     new MenuItem("Выход", Exit)
                 };
             MakeMenu(mainOptions);
@@ -91,6 +96,41 @@ namespace HW_CPS_HSEBank
             return true;
         }
 
+        public static bool ExportData() {
+            Console.Clear();
+            string fileName = Console.ReadLine();
+            Console.WriteLine($"Данные экспортируются в {fileName}.");
+            //string? name = Console.ReadLine();
+            //if (name == null) return true;
+
+            _ = JsonDataParser.ExportDataAsync(fileName);
+            Console.WriteLine("Данные были записаны.");
+            Console.ReadLine();
+
+            return true;
+        }
+
+        public static bool ImportData()
+        {
+            Console.Clear();
+            string fileName = Console.ReadLine();
+            Console.WriteLine($"Данные импортируются из {fileName}.");
+            //string? name = Console.ReadLine();
+            //if (name == null) return true;
+
+            BankDataRepository? newrep = JsonDataParser.ImportData(fileName);
+            if (newrep == null) return true;
+
+            IServiceProvider services = CompositionRoot.Services;
+            var oldrep = services.GetRequiredService<BankDataRepository>();
+            oldrep.Swap(newrep);
+            oldrep.AddAccount(new BankAccount(4, "новичок морячок", 100000));
+
+            Console.WriteLine("Данные были считаны.");
+            Console.ReadLine();
+
+            return true;
+        }
 
         public static bool Exit()
         {
