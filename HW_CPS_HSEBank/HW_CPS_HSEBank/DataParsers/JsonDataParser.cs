@@ -7,14 +7,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEBank.Json
+namespace HW_CPS_HSEBank.DataParsers
 {
-    internal static class JsonDataParser
+    public static class JsonDataParser
     {
         private static IServiceProvider services = CompositionRoot.Services;
 
         public static BankDataRepository? ImportData(string fileName = "HseBank.json") {
-            var brep = services.GetRequiredService<BankDataRepository>();
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
 
@@ -27,11 +26,10 @@ namespace HW_CPS_HSEBank.Json
             }
         }
 
-        public static async Task ExportDataAsync(string fileName="HseBank.json")
+        public static async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank.json")
         {
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                var brep = services.GetRequiredService<BankDataRepository>();
                 var options = new JsonSerializerOptions
                 {
                     WriteIndented = true,

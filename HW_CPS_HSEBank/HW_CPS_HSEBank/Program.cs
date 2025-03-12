@@ -1,4 +1,5 @@
 ﻿using HW_CPS_HSEBank.Data;
+using HW_CPS_HSEBank.UI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank

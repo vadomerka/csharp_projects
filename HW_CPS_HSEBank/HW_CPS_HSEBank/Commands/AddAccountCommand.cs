@@ -7,9 +7,9 @@ namespace HW_CPS_HSEBank.Commands
     public class AddAccountCommand : IBankOperation
     {
         private readonly string name = "";
-        private readonly int balance = 0;
+        private readonly decimal balance = 0;
 
-        public AddAccountCommand(string name, int balance)
+        public AddAccountCommand(string name, decimal balance)
         {
             this.name = name;
             this.balance = balance;
