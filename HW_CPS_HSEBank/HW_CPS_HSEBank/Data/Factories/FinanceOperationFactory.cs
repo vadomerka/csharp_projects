@@ -14,6 +14,13 @@ namespace HW_CPS_HSEBank.Data.Factories
             return new FinanceOperation(++lastId);
         }
 
+        public FinanceOperation Create(string type, int bankAccountId,
+                                decimal amount, DateTime date, string description,
+                                int categoryId)
+        {
+            return new FinanceOperation(++lastId, type, bankAccountId, amount, date, description, categoryId);
+        }
+
         public FinanceOperation Create(FinanceOperation obj)
         {
             return new FinanceOperation(obj.Id, obj.Type, obj.BankAccountId, obj.Amount, 

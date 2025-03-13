@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Commands
 {
-    public interface ICommand
+    public interface IVisitor
     {
-        public string Type{ get; }
-        public void Execute();
-
-        public void VisitorExecute(IVisitor visitor);
+        public void Execute(ICommand command);
     }
 }

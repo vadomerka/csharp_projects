@@ -13,10 +13,13 @@ namespace HW_CPS_HSEBank.Data.Factories
         {
             return new Category(++lastId);
         }
-
+        public Category Create(string type)
+        {
+            return new Category(++lastId, type);
+        }
         public Category Create(Category obj)
         {
-            return new Category(obj.Id, obj.Type, obj.Name);
+            return new Category(obj.Id, obj.Type);
         }
     }
 }

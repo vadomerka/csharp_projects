@@ -17,5 +17,10 @@ namespace HW_CPS_HSEBank.Commands
         {
             throw new NotImplementedException();
         }
+
+        public void VisitorExecute(IVisitor visitor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,146 +1,49 @@
-﻿using HW_CPS_HSEBank.Commands;
+﻿using HW_CPS_HSEBank.Commands.AccountCommands;
+using HW_CPS_HSEBank.Data;
+using HW_CPS_HSEBank.Data.Factories;
+using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 namespace HW_CPS_HSEBank.UI
 {
     public class BankUI
     {
-        public delegate bool UIFunc();
         private static IServiceProvider services = CompositionRoot.Services;
-
-        public struct MenuItem
-        {
-            public string _title;
-            public UIFunc _func;
-
-            public MenuItem(string title, UIFunc func)
-            {
-                _title = title;
-                _func = func;
-            }
-        }
 
         public static void Menu()
         {
             List<MenuItem> mainOptions = new List<MenuItem>
                 {
-                    new MenuItem("Добавить аккаунт", AddAccount),
+                    new MenuItem("Работа с данными", DataWorkMenu),
                     new MenuItem("Экспортировать данные", DataParserUI.ExportData),
                     new MenuItem("Импортировать данные", DataParserUI.ImportData),
                     new MenuItem("Выход", Exit)
                 };
-            MakeMenu(mainOptions);
+            UtilsUI.MakeMenu(mainOptions);
         }
 
-        public static void WriteMenuOptions(List<MenuItem> options, string title = "")
-        {
-            Console.Clear();
-            if (title != "") Console.WriteLine(title);
-            for (int i = 0; i < options.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {options[i]._title}.");
-            }
-
-            Console.WriteLine("чтобы выбрать действие, нажмите соответсвующую клавишу");
-        }
-
-        public static void MakeMenu(List<MenuItem> options, string title = "")
-        {
-            if (title != "") Console.WriteLine(title);
-            while (true)
-            {
-                WriteMenuOptions(options);
-
-                int key = (int)Console.ReadKey().Key;
-                Console.WriteLine();
-
-                int n1 = (int)ConsoleKey.NumPad1;
-                int n2 = (int)ConsoleKey.NumPad9;
-                int d1 = (int)ConsoleKey.D1;
-                int d2 = (int)ConsoleKey.D9;
-                if (n1 <= key && key <= n2)
+        private static bool DataWorkMenu() {
+            List<MenuItem> mainOptions = new List<MenuItem>
                 {
-                    key -= n1;
-                }
-                else if (d1 <= key && key <= d2)
-                {
-                    key -= d1;
-                }
-                else if (key == (int)ConsoleKey.Escape) {
-                    return;
-                }
-                else
-                {
-                    continue;
-                }
-                if (key >= options.Count) continue;
-                if (!options[key]._func()) { return; };
-            }
+                    new MenuItem("Создать аккаунт", AddAccount),
+                    new MenuItem("Создать категорию", AddCategory),
+                    new MenuItem("Произвести финансовую операцию", AddFinanceOperation)
+                };
+            return UtilsUI.MakeMenu(mainOptions);
         }
 
-        public static string? GetUserString(string message = "", bool clear = false)
-        {
-            if (clear) Console.Clear();
-            if (message != "") Console.WriteLine(message);
-            string? input = Console.ReadLine();
-            return input;
-        }
-
-        public static string GetReqUserString(string message = "", bool clear = false)
-        {
-            if (clear) Console.Clear();
-            string? input = null;
-            while (input == null)
-            {
-                if (message != "") Console.WriteLine(message);
-                input = Console.ReadLine();
-            }
-            return input;
-        }
-
-        public static T? GetUserNumber<T>(string message = "", bool clear = false)
-        {
-            if (clear) Console.Clear();
-            if (message != "") Console.WriteLine(message);
-            string? input = Console.ReadLine();
-            return (T?)Convert.ChangeType(input, typeof(T));
-        }
-
-        public static T GetReqUserNumber<T>(string message = "", bool clear = false)
-        {
-            if (clear) Console.Clear();
-            //T? res;
-            //do
-            //{
-            //    string? input = Console.ReadLine();
-            //    res = (T?)Convert.ChangeType(input, typeof(T));
-            //} while (res == null);
-            //return res;
-            T? res;
-            while (true)
-            {
-                try
-                {
-                    if (message != "") Console.WriteLine(message);
-                    res = (T?)Convert.ChangeType(Console.ReadLine(), typeof(T));
-                    if (res == null) throw new Exception();
-                    return res;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Ошибка ввода!");
-                    continue;
-                }
-            }
-        }
+        
 
         private static bool AddAccount()
         {
-            string? name = GetUserString("Введите имя пользователя.", true);
+            Console.Clear();
+            Console.WriteLine("Добавление аккаунта:");
+            string? name = UtilsUI.GetUserString("Введите имя пользователя.");
             if (name == null) return true;
             decimal balance;
             do
             {
-                balance = GetReqUserNumber<decimal>("Введите баланс пользователя (положительное число).");
+                balance = UtilsUI.GetReqUserNumber<decimal>("Введите баланс пользователя (положительное число).");
             } while (0 > balance);
 
             AddAccountCommand addAccount = new(name, balance);
@@ -149,6 +52,53 @@ namespace HW_CPS_HSEBank.UI
             return true;
         }
 
+        private static bool AddFinanceOperation()
+        {
+            Console.Clear();
+            Console.WriteLine("Добавление финансовой операции:");
+            Console.WriteLine("Финансовые операции могут проиcходить только между существующими пользователями.");
+            var options = new List<string>() { "доход", "расход" };
+            string type = UtilsUI.GetReqUserString("Введите тип операции (доход или расход).", options);
+            int bankAccountId;
+            do { bankAccountId = UtilsUI.GetReqUserNumber<int>("Введите id пользователя (положительное число)."); } while (0 > bankAccountId);
+            decimal amount;
+            do { amount = UtilsUI.GetReqUserNumber<decimal>("Введите сумму операции (положительное число)."); } while (0 > amount);
+
+            DateTime date = UtilsUI.GetReqUserDateTime("Введите время операции");
+
+            string? description = UtilsUI.GetUserString("Введите описание операции (опционально).");
+            int categoryId;
+            do { categoryId = UtilsUI.GetReqUserNumber<int>("Введите id категории (положительное число)."); } while (0 > categoryId);
+
+            // Todo: commands?
+            IServiceProvider services = CompositionRoot.Services;
+            var factory = services.GetRequiredService<FinanceOperationFactory>();
+            var mb = services.GetRequiredService<BankDataRepository>();
+            mb.AddFinanceOperation(factory
+                .Create(type, bankAccountId, amount, date, description ??= "", categoryId));
+
+            return true;
+        }
+
+        private static bool AddCategory() {
+            Console.Clear();
+            Console.WriteLine("Добавление категории:");
+
+            string name = UtilsUI.GetReqUserString("Введите название новой категории.");
+
+            // Todo: commands?
+            IServiceProvider services = CompositionRoot.Services;
+            var factory = services.GetRequiredService<CategoryFactory>();
+            var mb = services.GetRequiredService<BankDataRepository>();
+            mb.AddCategory(factory.Create(name));
+
+            return true;
+        }
+
+        public static bool MenuReturn()
+        {
+            return true;
+        }
         public static bool Exit()
         {
             Console.WriteLine("Выход из программы...");

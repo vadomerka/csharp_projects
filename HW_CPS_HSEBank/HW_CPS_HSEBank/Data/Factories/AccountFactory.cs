@@ -14,6 +14,7 @@ namespace HW_CPS_HSEBank.Data.Factories
         {
             return new BankAccount(++lastId, "", 0);
         }
+
         public BankAccount Create(string name, decimal balance) { 
             BankAccount bankAccount = new BankAccount(++lastId, name, balance);
             return bankAccount;

@@ -24,15 +24,13 @@ namespace HW_CPS_HSEBank.Data
             this.id = 0;
         }
 
-        public Category(int id, string type, string name)
+        public Category(int id, string type)
         {
             this.id = id;
             this.type = type;
-            this.name = name;
         }
 
         public int Id { get => id; set { id = value; } }
         public string Type { get => type; set => type = value; }
-        public string Name { get => name; set => name = value; }
     }
 }

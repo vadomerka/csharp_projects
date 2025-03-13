@@ -2,7 +2,7 @@
 using HW_CPS_HSEBank.Data.Factories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HW_CPS_HSEBank.Commands
+namespace HW_CPS_HSEBank.Commands.AccountCommands
 {
     public class AddAccountCommand : IBankOperation
     {
@@ -15,14 +15,19 @@ namespace HW_CPS_HSEBank.Commands
             this.balance = balance;
         }
 
-        public string Type => "Add Account";
+        public string Type => "Add";
 
         public void Execute()
         {
             IServiceProvider services = CompositionRoot.Services;
             var accountFactory = services.GetRequiredService<AccountFactory>();
-            var mb = services.GetRequiredService<BankDataRepository>(); // TODO
+            var mb = services.GetRequiredService<BankDataRepository>();
             mb.AddAccount(accountFactory.Create(name, balance));
+        }
+
+        public void VisitorExecute(IVisitor visitor)
+        {
+            visitor.Execute(this);
         }
     }
 }

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
-    public static class JsonDataParser
+    public class JsonDataParser : IFileDataParser<BankDataRepository>
     {
-        private static IServiceProvider services = CompositionRoot.Services;
+        private IServiceProvider services = CompositionRoot.Services;
 
-        public static BankDataRepository? ImportData(string fileName = "HseBank.json") {
+        public BankDataRepository? ImportData(string fileName = "HseBank.json") {
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
 
@@ -26,7 +26,7 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        public static async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank.json")
+        private async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank.json")
         {
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
@@ -38,6 +38,11 @@ namespace HW_CPS_HSEBank.DataParsers
                 };
                 await JsonSerializer.SerializeAsync(fs, brep, options);
             }
+        }
+
+        public void ExportData(BankDataRepository brep, string fileName)
+        {
+            ExportDataAsync(brep, fileName).Wait();
         }
     }
 }

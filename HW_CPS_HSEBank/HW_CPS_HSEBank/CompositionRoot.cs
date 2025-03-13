@@ -1,5 +1,6 @@
 ﻿using HW_CPS_HSEBank.Data;
 using HW_CPS_HSEBank.Data.Factories;
+using HW_CPS_HSEBank.DataParsers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank
@@ -19,6 +20,10 @@ namespace HW_CPS_HSEBank
             services.AddSingleton<AccountFactory>();
             services.AddSingleton<FinanceOperationFactory>();
             services.AddSingleton<CategoryFactory>();
+
+            services.AddSingleton<JsonDataParser>();
+            services.AddSingleton<YamlDataParser>();
+            services.AddSingleton<CsvDataParser>();
             //services.AddSingleton<BankAccountsRepository>();
             services.AddSingleton<BankDataRepository>();
 

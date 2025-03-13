@@ -15,11 +15,11 @@ using System.Xml.Serialization;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
-    public static class CsvDataParser
+    public class CsvDataParser : IFileDataParser<BankDataRepository>
     {
-        private static IServiceProvider services = CompositionRoot.Services;
+        private IServiceProvider services = CompositionRoot.Services;
 
-        public static BankDataRepository? ImportData(string fileName = "hseBank")
+        public BankDataRepository? ImportData(string fileName = "hseBank")
         {
             BankDataRepository newBank = new();
             List<string> fileNames = new List<string> { fileName + "_accounts.csv",
@@ -31,25 +31,23 @@ namespace HW_CPS_HSEBank.DataParsers
             return newBank;
         }
 
-        private static void ImportTData<TFactory, TData>(string fileName, ref BankDataRepository newBank) {
+        private void ImportTData<TFactory, TData>(string fileName, ref BankDataRepository newBank) 
+            where TFactory : IDataFactory<TData> where TData : IBankDataType
+        {
             using (var reader = new StreamReader(fileName))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                var factory = (IDataFactory<TData>)services.GetRequiredService<TFactory>();
+                var factory = services.GetRequiredService<TFactory>();
                 var record = factory.Create();
                 var records = csv.EnumerateRecords(record);
                 foreach (TData r in records)
                 {
-
-                    if (factory is IDataFactory<TData>)
-                    {
-                        newBank.AddData((IBankDataType)factory.Create(r));
-                    }
+                    newBank.AddData(factory.Create(r));
                 }
             }
         }
 
-        public static void ExportData(BankDataRepository brep, string fileName = "hseBank")
+        public void ExportData(BankDataRepository brep, string fileName = "hseBank")
         {
             using (var writer = new StreamWriter(fileName + "_accounts.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))

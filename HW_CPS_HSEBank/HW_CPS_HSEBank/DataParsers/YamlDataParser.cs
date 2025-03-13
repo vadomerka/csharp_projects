@@ -5,11 +5,11 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
-    public class YamlDataParser
+    public class YamlDataParser : IFileDataParser<BankDataRepository>
     {
-        private static IServiceProvider services = CompositionRoot.Services;
+        private IServiceProvider services = CompositionRoot.Services;
 
-        public static BankDataRepository? ImportData(string fileName = "HseBank.yaml")
+        public BankDataRepository? ImportData(string fileName = "HseBank.yaml")
         {
             using (TextReader fs = new StreamReader(fileName))
             {
@@ -21,7 +21,7 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        public static async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank.yaml")
+        public void ExportData(BankDataRepository brep, string fileName = "HseBank.yaml")
         {
             using (TextWriter fs = new StreamWriter(fileName, false))
             {
