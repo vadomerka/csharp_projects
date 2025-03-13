@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Data
 {
-    public class BankAccount
+    public class BankAccount : IBankDataType
     {
         private int id;
         private string name;

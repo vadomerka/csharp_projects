@@ -14,6 +14,12 @@
         public List<FinanceOperation> FinanceOperations { get { return _operations; } set { _operations = value; } }
         public List<Category> Categories { get { return _categories; } set { _categories = value; } }
 
+        public void AddData(IBankDataType obj) {
+            if (obj == null) throw new ArgumentNullException();
+            if (obj is BankAccount) { AddAccount((BankAccount)obj); }
+            if (obj is FinanceOperation) { AddFinanceOperation((FinanceOperation)obj); }
+            if (obj is Category) { AddCategory((Category)obj); }
+        }
 
         public void AddAccount(BankAccount account)
         {

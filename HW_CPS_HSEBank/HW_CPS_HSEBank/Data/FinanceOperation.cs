@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace HW_CPS_HSEBank.Data
+﻿namespace HW_CPS_HSEBank.Data
 {
-    public class FinanceOperation
+    public class FinanceOperation : IBankDataType
     {
         private int id;
         private string type;
@@ -25,6 +18,11 @@ namespace HW_CPS_HSEBank.Data
             this.date = DateTime.Now;
             this.description = "";
             this.categoryId = 0;
+        }
+
+        public FinanceOperation(int id) : this()
+        {
+            this.id = 0;
         }
 
         public FinanceOperation(int id, string type, int bankAccountId,

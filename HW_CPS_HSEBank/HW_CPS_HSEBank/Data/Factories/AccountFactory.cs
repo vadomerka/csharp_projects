@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Data.Factories
 {
-    internal class AccountFactory : IDataFactory
+    public class AccountFactory : IDataFactory<BankAccount>
     {
-        int lastId = 0;
+        private int lastId = 0;
 
-        public BankAccount CreateAccount(string name, decimal balance) { 
+        public BankAccount Create()
+        {
+            return new BankAccount(++lastId, "", 0);
+        }
+        public BankAccount Create(string name, decimal balance) { 
             BankAccount bankAccount = new BankAccount(++lastId, name, balance);
             return bankAccount;
         }
 
-        public BankAccount CreateAccount(BankAccount nAcc)
+        public BankAccount Create(BankAccount nAcc)
         {
             BankAccount bankAccount = new BankAccount(nAcc.Id, nAcc.Name, nAcc.Balance);
             return bankAccount;

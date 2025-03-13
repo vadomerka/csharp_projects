@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Data
 {
-    public class Category
+    public class Category : IBankDataType
     {
         private int id;
         private string type;
@@ -17,6 +17,11 @@ namespace HW_CPS_HSEBank.Data
             this.id = 0;
             this.type = "";
             this.name = "";
+        }
+
+        public Category(int id) : this()
+        {
+            this.id = 0;
         }
 
         public Category(int id, string type, string name)

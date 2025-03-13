@@ -11,6 +11,7 @@ using CsvHelper;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using HW_CPS_HSEBank.Data.Factories;
+using System.Xml.Serialization;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
@@ -18,21 +19,33 @@ namespace HW_CPS_HSEBank.DataParsers
     {
         private static IServiceProvider services = CompositionRoot.Services;
 
-        public static BankDataRepository? ImportData(string fileName = "hseBank.csv")
+        public static BankDataRepository? ImportData(string fileName = "hseBank")
         {
-            using (var reader = new StreamReader(fileName + "_accounts.csv"))
+            BankDataRepository newBank = new();
+            List<string> fileNames = new List<string> { fileName + "_accounts.csv",
+                                                        fileName + "_operations.csv",
+                                                        fileName + "_categories.csv"};
+            ImportTData<AccountFactory, BankAccount>(fileNames[0], ref newBank);
+            ImportTData<FinanceOperationFactory, FinanceOperation>(fileNames[1], ref newBank);
+            ImportTData<CategoryFactory, Category>(fileNames[2], ref newBank);
+            return newBank;
+        }
+
+        private static void ImportTData<TFactory, TData>(string fileName, ref BankDataRepository newBank) {
+            using (var reader = new StreamReader(fileName))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
-                var record = new BankAccount();
+                var factory = (IDataFactory<TData>)services.GetRequiredService<TFactory>();
+                var record = factory.Create();
                 var records = csv.EnumerateRecords(record);
-                var answer = new List<BankAccount>();
-                foreach (var r in records)
+                foreach (TData r in records)
                 {
-                    var factory = services.GetRequiredService<AccountFactory>();
-                    answer.Add(factory.CreateAccount(r));
+
+                    if (factory is IDataFactory<TData>)
+                    {
+                        newBank.AddData((IBankDataType)factory.Create(r));
+                    }
                 }
-                return services.GetRequiredService<BankDataRepository>();
-                // todo: all other data types.
             }
         }
 

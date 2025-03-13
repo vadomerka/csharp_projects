@@ -22,7 +22,7 @@ namespace HW_CPS_HSEBank.Commands
             IServiceProvider services = CompositionRoot.Services;
             var accountFactory = services.GetRequiredService<AccountFactory>();
             var mb = services.GetRequiredService<BankDataRepository>(); // TODO
-            mb.AddAccount(accountFactory.CreateAccount(name, balance));
+            mb.AddAccount(accountFactory.Create(name, balance));
         }
     }
 }

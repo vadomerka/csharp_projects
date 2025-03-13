@@ -65,6 +65,9 @@ namespace HW_CPS_HSEBank.UI
                 {
                     key -= d1;
                 }
+                else if (key == (int)ConsoleKey.Escape) {
+                    return;
+                }
                 else
                 {
                     continue;

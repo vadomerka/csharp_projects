@@ -50,7 +50,7 @@ namespace HW_CPS_HSEBank.UI
             Console.WriteLine("Данные были записаны.");
             Console.ReadLine();
 
-            return true;
+            return false;
         }
 
         private static bool ExportCsvData()
@@ -65,7 +65,7 @@ namespace HW_CPS_HSEBank.UI
             Console.WriteLine("Данные были записаны.");
             Console.ReadLine();
 
-            return true;
+            return false;
         }
 
         public static bool ImportData()
@@ -127,7 +127,7 @@ namespace HW_CPS_HSEBank.UI
         private static bool ImportCsvData()
         {
             Console.Clear();
-            string fileName = GetReqUserString("Введите путь к файлу.");
+            string fileName = GetReqUserString("Введите путь и название файлов (без расширений и типа таблицы).");
             fileName = Path.GetFileNameWithoutExtension(fileName);
             Console.WriteLine($"Данные импортируются из {fileName}_[table].csv.");
 

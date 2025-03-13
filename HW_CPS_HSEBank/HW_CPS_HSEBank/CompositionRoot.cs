@@ -17,6 +17,8 @@ namespace HW_CPS_HSEBank
             var services = new ServiceCollection();
 
             services.AddSingleton<AccountFactory>();
+            services.AddSingleton<FinanceOperationFactory>();
+            services.AddSingleton<CategoryFactory>();
             //services.AddSingleton<BankAccountsRepository>();
             services.AddSingleton<BankDataRepository>();
 
