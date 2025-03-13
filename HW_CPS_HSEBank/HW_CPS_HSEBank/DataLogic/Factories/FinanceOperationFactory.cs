@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HW_CPS_HSEBank.DataLogic.DataModels;
 
-namespace HW_CPS_HSEBank.Data.Factories
+namespace HW_CPS_HSEBank.DataLogic.Factories
 {
     public class FinanceOperationFactory : IDataFactory<FinanceOperation>
     {
@@ -19,6 +20,13 @@ namespace HW_CPS_HSEBank.Data.Factories
                                 int categoryId)
         {
             return new FinanceOperation(++lastId, type, bankAccountId, amount, date, description, categoryId);
+        }
+
+        public FinanceOperation Create(object[] args)
+        {
+            if (args.Length != 6) throw new ArgumentException();
+            return new FinanceOperation(++lastId, (string)args[0], (int)args[1], (decimal)args[2],
+                                                  (DateTime)args[3], (string)args[4], (int)args[5]);
         }
 
         public FinanceOperation Create(FinanceOperation obj)

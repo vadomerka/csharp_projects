@@ -1,5 +1,5 @@
-﻿using HW_CPS_HSEBank.Data.Factories;
-using HW_CPS_HSEBank.Data;
+﻿using HW_CPS_HSEBank.DataLogic.Factories;
+using HW_CPS_HSEBank.DataLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,6 @@ namespace HW_CPS_HSEBank.DataParsers
     {
         public T? ImportData(string fileName);
 
-        public void ExportData(T brep, string fileName);
+        public void ExportData(T bmng, string fileName);
     }
 }

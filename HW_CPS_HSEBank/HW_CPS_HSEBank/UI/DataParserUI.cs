@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.Data;
+﻿using HW_CPS_HSEBank.DataLogic;
 using HW_CPS_HSEBank.DataParsers;
 using Microsoft.Extensions.DependencyInjection;
 using static HW_CPS_HSEBank.UI.BankUI;
@@ -21,12 +21,12 @@ namespace HW_CPS_HSEBank.UI
             return true;
         }
 
-        private static bool ExportDataToFile<Parser>() where Parser : IFileDataParser<BankDataRepository> {
+        private static bool ExportDataToFile<Parser>() where Parser : IFileDataParser<BankDataManager> {
             Console.Clear();
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу.");
             Console.WriteLine($"Данные экспортируются в {fileName}.");
 
-            var brep = services.GetRequiredService<BankDataRepository>();
+            var brep = services.GetRequiredService<BankDataManager>();
             var parser = services.GetRequiredService<Parser>();
             parser.ExportData(brep, fileName);
 
@@ -93,12 +93,12 @@ namespace HW_CPS_HSEBank.UI
             return true;
         }
 
-        private static bool ImportDataFromFile<Parser>() where Parser : IFileDataParser<BankDataRepository>
+        private static bool ImportDataFromFile<Parser>() where Parser : IFileDataParser<BankDataManager>
         {
             Console.Clear();
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу.");
             Console.WriteLine($"Данные импортируются из {fileName}.");
-            BankDataRepository? newrep;
+            BankDataManager? newrep;
             try
             {
                 var parser = services.GetRequiredService<Parser>();
@@ -116,8 +116,10 @@ namespace HW_CPS_HSEBank.UI
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
 
-            var oldrep = services.GetRequiredService<BankDataRepository>();
-            oldrep.Swap(newrep);
+            // todo: check before saving!!!
+
+            var oldrep = services.GetRequiredService<BankDataManager>();
+            oldrep.Save(newrep);
 
             Console.WriteLine("Данные были считаны.");
             Console.ReadLine();
@@ -147,7 +149,7 @@ namespace HW_CPS_HSEBank.UI
             }
 
             var oldrep = services.GetRequiredService<BankDataRepository>();
-            oldrep.Swap(newrep);
+            oldrep.Save(newrep);
 
             Console.WriteLine("Данные были считаны.");
             Console.ReadLine();
@@ -177,7 +179,7 @@ namespace HW_CPS_HSEBank.UI
             }
 
             var oldrep = services.GetRequiredService<BankDataRepository>();
-            oldrep.Swap(newrep);
+            oldrep.Save(newrep);
 
             Console.WriteLine("Данные были считаны.");
             Console.ReadLine();
@@ -209,7 +211,7 @@ namespace HW_CPS_HSEBank.UI
             }
 
             var oldrep = services.GetRequiredService<BankDataRepository>();
-            oldrep.Swap(newrep);
+            oldrep.Save(newrep);
 
             Console.WriteLine("Данные были считаны.");
             Console.ReadLine();

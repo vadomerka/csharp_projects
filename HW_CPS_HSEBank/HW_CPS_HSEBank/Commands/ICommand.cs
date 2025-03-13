@@ -10,7 +10,5 @@ namespace HW_CPS_HSEBank.Commands
     {
         public string Type{ get; }
         public void Execute();
-
-        public void VisitorExecute(IVisitor visitor);
     }
 }

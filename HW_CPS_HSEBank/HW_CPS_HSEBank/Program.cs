@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.Data;
+﻿using HW_CPS_HSEBank.DataLogic;
 using HW_CPS_HSEBank.UI;
 using Microsoft.Extensions.DependencyInjection;
 

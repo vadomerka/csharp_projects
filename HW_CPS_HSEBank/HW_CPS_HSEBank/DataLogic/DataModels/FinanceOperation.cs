@@ -1,6 +1,9 @@
-﻿namespace HW_CPS_HSEBank.Data
+﻿using HW_CPS_HSEBank.Commands;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
-    public class FinanceOperation : IBankDataType
+    public class FinanceOperation : IBankDataType, IBankOperation
     {
         private int id;
         private string type;
@@ -10,14 +13,15 @@
         private string description;
         private int categoryId;
 
-        public FinanceOperation() {
-            this.id = 0;
-            this.type = "";
-            this.bankAccountId = 0;
-            this.amount = 0;
-            this.date = DateTime.Now;
-            this.description = "";
-            this.categoryId = 0;
+        public FinanceOperation()
+        {
+            id = 0;
+            type = "";
+            bankAccountId = 0;
+            amount = 0;
+            date = DateTime.Now;
+            description = "";
+            categoryId = 0;
         }
 
         public FinanceOperation(int id) : this()
@@ -53,6 +57,17 @@
         public int CategoryId { get => categoryId; set { categoryId = value; } }
 
         public void Execute()
+        {
+            var services = CompositionRoot.Services;
+            var mgr = services.GetRequiredService<BankDataManager>();
+            decimal change = amount;
+            if (type == "расход") { change *= -1; }
+            BankAccount? bankAccount = mgr.GetAccountById(bankAccountId);
+            if (bankAccount == null) throw new InvalidOperationException();
+            bankAccount.Balance += change;
+        }
+
+        public void VisitorExecute(IVisitor visitor)
         {
             throw new NotImplementedException();
         }

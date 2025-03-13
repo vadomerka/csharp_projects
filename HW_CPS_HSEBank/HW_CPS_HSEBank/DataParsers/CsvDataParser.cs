@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.Data;
+﻿using HW_CPS_HSEBank.DataLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,28 +10,29 @@ using YamlDotNet.Serialization;
 using CsvHelper;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
-using HW_CPS_HSEBank.Data.Factories;
+using HW_CPS_HSEBank.DataLogic.Factories;
 using System.Xml.Serialization;
+using HW_CPS_HSEBank.DataLogic.DataModels;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
-    public class CsvDataParser : IFileDataParser<BankDataRepository>
+    public class CsvDataParser : IFileDataParser<BankDataManager>
     {
         private IServiceProvider services = CompositionRoot.Services;
 
-        public BankDataRepository? ImportData(string fileName = "hseBank")
+        public BankDataManager? ImportData(string fileName = "hseBank")
         {
-            BankDataRepository newBank = new();
+            BankDataManager newMng = BankDataManager.GetNewManager();
             List<string> fileNames = new List<string> { fileName + "_accounts.csv",
                                                         fileName + "_operations.csv",
                                                         fileName + "_categories.csv"};
-            ImportTData<AccountFactory, BankAccount>(fileNames[0], ref newBank);
-            ImportTData<FinanceOperationFactory, FinanceOperation>(fileNames[1], ref newBank);
-            ImportTData<CategoryFactory, Category>(fileNames[2], ref newBank);
-            return newBank;
+            ImportTData<AccountFactory, BankAccount>(fileNames[0], ref newMng);
+            ImportTData<FinanceOperationFactory, FinanceOperation>(fileNames[1], ref newMng);
+            ImportTData<CategoryFactory, Category>(fileNames[2], ref newMng);
+            return newMng;
         }
 
-        private void ImportTData<TFactory, TData>(string fileName, ref BankDataRepository newBank) 
+        private void ImportTData<TFactory, TData>(string fileName, ref BankDataManager newBank) 
             where TFactory : IDataFactory<TData> where TData : IBankDataType
         {
             using (var reader = new StreamReader(fileName))
@@ -47,8 +48,9 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        public void ExportData(BankDataRepository brep, string fileName = "hseBank")
+        public void ExportData(BankDataManager bmng, string fileName = "hseBank")
         {
+            var brep = bmng.GetRepository();
             using (var writer = new StreamWriter(fileName + "_accounts.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {

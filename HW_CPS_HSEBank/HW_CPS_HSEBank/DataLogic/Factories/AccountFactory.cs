@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HW_CPS_HSEBank.DataLogic.DataModels;
 
-namespace HW_CPS_HSEBank.Data.Factories
+namespace HW_CPS_HSEBank.DataLogic.Factories
 {
     public class AccountFactory : IDataFactory<BankAccount>
     {
@@ -17,6 +18,13 @@ namespace HW_CPS_HSEBank.Data.Factories
 
         public BankAccount Create(string name, decimal balance) { 
             BankAccount bankAccount = new BankAccount(++lastId, name, balance);
+            return bankAccount;
+        }
+
+        public BankAccount Create(object[] args)
+        {
+            if (args.Length != 2) throw new ArgumentException();
+            BankAccount bankAccount = new BankAccount(++lastId, (string)args[0], (decimal)args[1]);
             return bankAccount;
         }
 

@@ -4,19 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEBank.Data
+namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
     public class Category : IBankDataType
     {
         private int id;
         private string type;
-        private string name;
 
         public Category()
         {
-            this.id = 0;
-            this.type = "";
-            this.name = "";
+            id = 0;
+            type = "";
         }
 
         public Category(int id) : this()

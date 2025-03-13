@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEBank.Data.Factories
+namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
-    public interface IDataFactory<T>
+    public interface IBankDataType
     {
-        public T Create();
-        public T Create(T obj);
+        public int Id { get; set; }
     }
 }

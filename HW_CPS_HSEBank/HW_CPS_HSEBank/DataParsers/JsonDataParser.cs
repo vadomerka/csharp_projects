@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.Data;
+﻿using HW_CPS_HSEBank.DataLogic;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -9,20 +9,17 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
-    public class JsonDataParser : IFileDataParser<BankDataRepository>
+    public class JsonDataParser : IFileDataParser<BankDataManager>
     {
         private IServiceProvider services = CompositionRoot.Services;
 
-        public BankDataRepository? ImportData(string fileName = "HseBank.json") {
+        public BankDataManager? ImportData(string fileName = "HseBank.json") {
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                };
+                var options = new JsonSerializerOptions { WriteIndented = true };
                 BankDataRepository? newrep = JsonSerializer.Deserialize<BankDataRepository>(fs);
-                return newrep;
+                BankDataManager? newMng = (newrep == null) ? null : new BankDataManager(newrep);
+                return newMng;
             }
         }
 
@@ -40,9 +37,9 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        public void ExportData(BankDataRepository brep, string fileName)
+        public void ExportData(BankDataManager bmng, string fileName)
         {
-            ExportDataAsync(brep, fileName).Wait();
+            ExportDataAsync(bmng.GetRepository(), fileName).Wait();
         }
     }
 }

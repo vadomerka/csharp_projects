@@ -1,8 +1,10 @@
-﻿using HW_CPS_HSEBank.Commands.AccountCommands;
-using HW_CPS_HSEBank.Data;
-using HW_CPS_HSEBank.Data.Factories;
+﻿using HW_CPS_HSEBank.Commands;
+using HW_CPS_HSEBank.DataLogic;
+using HW_CPS_HSEBank.DataLogic.DataModels;
+using HW_CPS_HSEBank.DataLogic.Factories;
 using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HW_CPS_HSEBank.UI
 {
@@ -32,8 +34,6 @@ namespace HW_CPS_HSEBank.UI
             return UtilsUI.MakeMenu(mainOptions);
         }
 
-        
-
         private static bool AddAccount()
         {
             Console.Clear();
@@ -46,7 +46,7 @@ namespace HW_CPS_HSEBank.UI
                 balance = UtilsUI.GetReqUserNumber<decimal>("Введите баланс пользователя (положительное число).");
             } while (0 > balance);
 
-            AddAccountCommand addAccount = new(name, balance);
+            var addAccount = new AddCommand<AccountFactory, BankAccount>(new object[] { name, balance });
             addAccount.Execute();
 
             return true;
@@ -71,11 +71,25 @@ namespace HW_CPS_HSEBank.UI
             do { categoryId = UtilsUI.GetReqUserNumber<int>("Введите id категории (положительное число)."); } while (0 > categoryId);
 
             // Todo: commands?
-            IServiceProvider services = CompositionRoot.Services;
-            var factory = services.GetRequiredService<FinanceOperationFactory>();
-            var mb = services.GetRequiredService<BankDataRepository>();
-            mb.AddFinanceOperation(factory
-                .Create(type, bankAccountId, amount, date, description ??= "", categoryId));
+            try
+            {
+                var addCommand = new AddFinanceOperation<FinanceOperationFactory, FinanceOperation>(new object[]
+                { type, bankAccountId, amount, date, description ??= "", categoryId });
+                addCommand.Execute();
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Операция недействительна.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Произошла ошибка при выполнении операции.");
+            }
+            //IServiceProvider services = CompositionRoot.Services;
+            //var factory = services.GetRequiredService<FinanceOperationFactory>();
+            //var mb = services.GetRequiredService<BankDataManager>();
+            //mb.AddFinanceOperation(factory
+            //    .Create(type, bankAccountId, amount, date, description ??= "", categoryId));
 
             return true;
         }
@@ -87,10 +101,12 @@ namespace HW_CPS_HSEBank.UI
             string name = UtilsUI.GetReqUserString("Введите название новой категории.");
 
             // Todo: commands?
-            IServiceProvider services = CompositionRoot.Services;
-            var factory = services.GetRequiredService<CategoryFactory>();
-            var mb = services.GetRequiredService<BankDataRepository>();
-            mb.AddCategory(factory.Create(name));
+            var addCommand = new AddCommand<CategoryFactory, Category>(new object[] { name });
+            addCommand.Execute();
+            //IServiceProvider services = CompositionRoot.Services;
+            //var factory = services.GetRequiredService<CategoryFactory>();
+            //var mb = services.GetRequiredService<BankDataManager>();
+            //mb.AddCategory(factory.Create(name));
 
             return true;
         }

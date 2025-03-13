@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEBank.Data
+namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
     public class BankAccount : IBankDataType
     {
@@ -12,13 +12,15 @@ namespace HW_CPS_HSEBank.Data
         private string name;
         private decimal balance;
 
-        public BankAccount() {
-            this.id = 0;
-            this.name = "";
-            this.balance = 0;
+        public BankAccount()
+        {
+            id = 0;
+            name = "";
+            balance = 0;
         }
 
-        public BankAccount(int id, string name, decimal balance) {
+        public BankAccount(int id, string name, decimal balance)
+        {
             this.id = id;
             this.name = name;
             this.balance = balance;
