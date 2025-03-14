@@ -18,6 +18,7 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             br = mgr.GetRepository();
         }
 
+
         public void AddData(IBankDataType obj)
         {
             if (obj == null) throw new ArgumentNullException();

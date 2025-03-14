@@ -111,6 +111,10 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             return null;
         }
 
+        public void AddData(IEnumerable<IBankDataType> list)
+        {
+            foreach (var item in list) { AddData(item); }
+        }
         public void AddData(IBankDataType obj) { 
             adder.AddData(obj);
         }

@@ -1,5 +1,6 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
-using HW_CPS_HSEBank.DataParsers;
+using HW_CPS_HSEBank.DataParsing;
+using HW_CPS_HSEBank.DataParsing.DataParsers;
 using HW_CPS_HSEBank.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using static HW_CPS_HSEBank.UI.BankUI;
@@ -22,14 +23,13 @@ namespace HW_CPS_HSEBank.UI
             return true;
         }
 
-        private static bool ExportDataToFile<Parser>() where Parser : IFileDataParser<BankDataManager> {
+        private static bool ExportDataToFile<Parser>() where Parser : IDataToText {
             Console.Clear();
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу.");
             Console.WriteLine($"Данные экспортируются в {fileName}.");
 
             var brep = services.GetRequiredService<BankDataManager>();
-            var parser = services.GetRequiredService<Parser>();
-            parser.ExportData(brep, fileName);
+            BankDataParser.Export<Parser>(brep, fileName);
 
             Console.WriteLine("Данные были записаны.");
             Console.ReadLine();
@@ -94,18 +94,19 @@ namespace HW_CPS_HSEBank.UI
             return true;
         }
 
-        private static bool ImportDataFromFile<Parser>() where Parser : IFileDataParser<BankDataManager>
+        private static bool ImportDataFromFile<Parser>() where Parser : IDataToText
         {
             Console.Clear();
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу (без расширения).");
             fileName = Path.GetFileNameWithoutExtension(fileName);
             Console.WriteLine($"Данные импортируются из {fileName}.");
             BankDataManager? newrep;
+            //var parser = services.GetRequiredService<Parser>();
+            newrep = BankDataParser.Import<Parser>(fileName);
+            if (newrep == null) throw new ArgumentNullException();
             try
             {
-                var parser = services.GetRequiredService<Parser>();
-                newrep = parser.ImportData(fileName);
-                if (newrep == null) throw new ArgumentNullException();
+                // return
             }
             catch (HseBankException ex) {
                 Console.WriteLine(ex.Message);
