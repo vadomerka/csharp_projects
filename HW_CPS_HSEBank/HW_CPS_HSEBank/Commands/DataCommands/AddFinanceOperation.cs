@@ -22,7 +22,7 @@ namespace HW_CPS_HSEBank.Commands.DataCommands
         {
             //var mb = services.GetRequiredService<BankDataManager>();
             mgr.AddData(bankData);
-            bankData.Execute();
+            bankData.Execute(mgr);
         }
     }
 }

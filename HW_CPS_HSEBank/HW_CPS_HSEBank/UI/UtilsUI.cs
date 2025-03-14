@@ -115,6 +115,21 @@ namespace HW_CPS_HSEBank.UI
             return input == ConsoleKey.Y;
         }
 
+        public static DateTime? GetUserDateTime(string message = "", string format = "yyyy.MM.dd hh:mm:ss")
+        {
+            DateTime? date;
+            string userDateTime = GetReqUserString($"{message} [{format}].");
+            try
+            {
+                date = DateTime.Parse(userDateTime, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                date = null;
+            }
+            return date;
+        }
+
         public static DateTime GetReqUserDateTime(string message = "", string format = "yyyy.MM.dd hh:mm:ss")
         {
             DateTime date;

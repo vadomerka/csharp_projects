@@ -1,4 +1,5 @@
-﻿using HW_CPS_HSEBank.DataLogic.DataModels;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
+using HW_CPS_HSEBank.DataLogic.DataModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -10,29 +11,36 @@ namespace HW_CPS_HSEBank.DataLogic.DataAnalyze
 {
     public static class BankDataAnalyzer
     {
-        public static List<BankAccount> FinanceOperationsRecount(List<BankAccount> acs, List<FinanceOperation> ops)
+        public static BankDataManager FinanceOperationsRecount(BankDataManager mgr)
         {
-            //var service = CompositionRoot.Services;
-            //var save = service.GetRequiredService<BankDataManager>(); // Ссылка для работы
-            //var backup = new BankDataManager();                       // Ссылка для бекапа сохраненных данных
-            //backup.CopyRepository(save.GetRepository());
-            //save.CopyRepository(mgr.GetRepository());                 // Открываем репозиторий для работы.
-
-            //var rep = save.GetRepository();
-            //var ops = rep.FinanceOperations;
-            //var sops = BankDataSorter.SortFinanceOperationsByDate(ops);
-            //var zeroAccs = rep.BankAccounts;
-            //foreach (var acc in zeroAccs) { 
-            //    acc.Balance = 0;
-            //}
-            //foreach (var op in sops) {
-            //    op.Execute();
-            //}
-
-            //mgr.CopyRepository(save.GetRepository());
-            //save.CopyRepository(backup.GetRepository());
-
-            return acs;
+            var nmgr = new BankDataManager(mgr.GetRepository());
+            return nmgr;
         }
+
+        public static decimal AccountMoneySum(BankDataManager mgr, int accId, string type, DateTime? d1 = null, DateTime? d2 = null)
+        {
+            decimal dif = 0;
+            var rep = mgr.GetRepository();
+            var accFiltered = BankDataFilter.FilterByAccountId(rep.FinanceOperations, accId);
+            if (accFiltered.Count() == 0) { throw new ArgumentNullException("Аккаунты с этим id не были найдены."); }
+            var dateFiltered = BankDataFilter.FilterByDate(accFiltered, d1, d2);
+            if (dateFiltered.Count() == 0) { throw new ArgumentNullException("Операции в этот промежуток времени не были найдены."); }
+            var inc = BankDataFilter.FilterByType(dateFiltered, type);
+            //int koef = type == "доход" ? 1 : -1;
+            foreach (var fop in inc) { dif += fop.Amount; }
+            return dif;
+        }
+
+        //public static decimal DifferenceIncomeExpence(BankDataManager mgr, int accId, DateTime? d1 = null, DateTime? d2 = null) {
+        //    decimal dif = 0;
+        //    var rep = mgr.GetRepository();
+        //    var accFiltered = BankDataFilter.FilterByAccountId(rep.FinanceOperations, accId);
+        //    var dateFiltered = BankDataFilter.FilterByDate(accFiltered, d1, d2);
+        //    var inc = BankDataFilter.FilterByType(dateFiltered, "доход");
+        //    var exp = BankDataFilter.FilterByType(dateFiltered, "расход");
+        //    foreach ( var fop in inc ) { dif += fop.Amount; }
+        //    foreach (var fop in exp) { dif += fop.Amount; }
+        //    return dif;
+        //}
     }
 }

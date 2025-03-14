@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
-    public class Category : IBankDataType
+    public class Category : IBankDataType, IHasType
     {
         private int id;
         private string type;

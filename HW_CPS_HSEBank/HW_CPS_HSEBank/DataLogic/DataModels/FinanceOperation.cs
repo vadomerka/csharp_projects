@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
-    public class FinanceOperation : IBankDataType, IBankOperation
+    public class FinanceOperation : IBankDataType, IBankOperation, IHasType
     {
         private int id;
         private string type;

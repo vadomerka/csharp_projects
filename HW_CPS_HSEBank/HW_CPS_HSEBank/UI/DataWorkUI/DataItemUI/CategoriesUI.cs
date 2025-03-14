@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HW_CPS_HSEBank.UI.DataItemUI
+namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
 {
     public class CategoriesUI : IDataItemUI
     {

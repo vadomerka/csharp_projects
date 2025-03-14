@@ -6,7 +6,7 @@ using HW_CPS_HSEBank.DataLogic.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using System.Xml.Linq;
 
-namespace HW_CPS_HSEBank.UI.DataItemUI
+namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
 {
     public class AccountsUI : IDataItemUI
     {
@@ -14,7 +14,8 @@ namespace HW_CPS_HSEBank.UI.DataItemUI
 
         public string Title { get => "аккаунт"; }
 
-        private object[]? GetInitList(string message) {
+        private object[]? GetInitList(string message)
+        {
             Console.WriteLine(message);
             string? name = UtilsUI.GetUserString("Введите название аккаунта.");
             if (name == null) return null;
