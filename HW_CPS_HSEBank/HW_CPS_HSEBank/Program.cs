@@ -1,4 +1,6 @@
-﻿using HW_CPS_HSEBank.DataLogic;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
+using HW_CPS_HSEBank.DataLogic.DataModels;
+using HW_CPS_HSEBank.DataLogic.Factories;
 using HW_CPS_HSEBank.UI;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,15 +10,19 @@ namespace HW_CPS_HSEBank
     {
         public static void Main(string[] args)
         {
-            var b = CompositionRoot.Services.GetRequiredService<BankDataRepository>();
-            //b.AddAccount(new BankAccount(1, "n1", 10));
-            //b.AddAccount(new BankAccount(2, "n2", 11));
-            //b.AddAccount(new BankAccount(3, "n3", 12));
+            var services = CompositionRoot.Services;
+            var b = services.GetRequiredService<BankDataManager>();
+            var f1 = services.GetRequiredService<AccountFactory>();
+            var f2 = services.GetRequiredService<FinanceOperationFactory>();
+            var f3 = services.GetRequiredService<CategoryFactory>();
+            b.AddData(f1.Create("n1", 10));
+            b.AddData(f1.Create("n2", 11));
+            b.AddData(f1.Create("n3", 12));
 
-            //b.AddCategory(new Category(1, "test", "test category 1"));
-            //b.AddCategory(new Category(2, "test2", "test category 2"));
+            b.AddData(f3.Create("test category 1"));
+            b.AddData(f3.Create("test category 2"));
 
-            //b.AddFinanceOperation(new FinanceOperation(1, "adsasd", 1, 654654, DateTime.Now, "desc", 1));
+            b.AddData(f2.Create("доход", 1, 50, DateTime.Now, "desc", 1));
 
             BankUI.Menu();
         }

@@ -1,25 +1,16 @@
-﻿using HW_CPS_HSEBank.DataLogic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization;
-using CsvHelper;
+﻿using CsvHelper;
 using System.Globalization;
 using Microsoft.Extensions.DependencyInjection;
 using HW_CPS_HSEBank.DataLogic.Factories;
-using System.Xml.Serialization;
 using HW_CPS_HSEBank.DataLogic.DataModels;
+using HW_CPS_HSEBank.DataLogic.DataManagement;
 
 namespace HW_CPS_HSEBank.DataParsers
 {
     public class CsvDataParser : IFileDataParser<BankDataManager>
     {
         private IServiceProvider services = CompositionRoot.Services;
-
+        
         public BankDataManager? ImportData(string fileName = "hseBank")
         {
             BankDataManager newMng = BankDataManager.GetNewManager();

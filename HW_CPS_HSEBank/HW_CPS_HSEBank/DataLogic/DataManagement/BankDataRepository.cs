@@ -1,6 +1,6 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
 
-namespace HW_CPS_HSEBank.DataLogic
+namespace HW_CPS_HSEBank.DataLogic.DataManagement
 {
     public class BankDataRepository
     {

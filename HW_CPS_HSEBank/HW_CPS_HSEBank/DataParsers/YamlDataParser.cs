@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.DataLogic;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using System.Text.Json;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -9,9 +9,9 @@ namespace HW_CPS_HSEBank.DataParsers
     {
         private IServiceProvider services = CompositionRoot.Services;
 
-        public BankDataManager? ImportData(string fileName = "HseBank.yaml")
+        public BankDataManager? ImportData(string fileName = "HseBank")
         {
-            using (TextReader fs = new StreamReader(fileName))
+            using (TextReader fs = new StreamReader(fileName + ".yaml"))
             {
                 IDeserializer deserializer = new DeserializerBuilder()
                     .WithNamingConvention(CamelCaseNamingConvention.Instance)
@@ -22,10 +22,10 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        public void ExportData(BankDataManager bmng, string fileName = "HseBank.yaml")
+        public void ExportData(BankDataManager bmng, string fileName = "HseBank")
         {
             var brep = bmng.GetRepository();
-            using (TextWriter fs = new StreamWriter(fileName, false))
+            using (TextWriter fs = new StreamWriter(fileName + ".yaml", false))
             {
                 ISerializer serializer = new SerializerBuilder()
                     .WithNamingConvention(CamelCaseNamingConvention.Instance)

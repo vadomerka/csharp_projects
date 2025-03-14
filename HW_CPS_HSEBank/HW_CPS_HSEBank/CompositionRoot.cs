@@ -1,6 +1,7 @@
-﻿using HW_CPS_HSEBank.DataLogic;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.Factories;
 using HW_CPS_HSEBank.DataParsers;
+using HW_CPS_HSEBank.UI.DataItemUI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank
@@ -24,7 +25,11 @@ namespace HW_CPS_HSEBank
             services.AddSingleton<JsonDataParser>();
             services.AddSingleton<YamlDataParser>();
             services.AddSingleton<CsvDataParser>();
-            //services.AddSingleton<BankAccountsRepository>();
+
+            services.AddSingleton<AccountsUI>();
+            services.AddSingleton<FinanceOperationsUI>();
+            services.AddSingleton<CategoriesUI>();
+
             services.AddSingleton<BankDataRepository>();
             services.AddSingleton<BankDataManager>();
 

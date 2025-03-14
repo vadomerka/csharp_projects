@@ -1,4 +1,4 @@
-﻿using HW_CPS_HSEBank.DataLogic;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,8 @@ namespace HW_CPS_HSEBank.DataParsers
     {
         private IServiceProvider services = CompositionRoot.Services;
 
-        public BankDataManager? ImportData(string fileName = "HseBank.json") {
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+        public BankDataManager? ImportData(string fileName = "HseBank") {
+            using (FileStream fs = new FileStream(fileName + ".json", FileMode.OpenOrCreate))
             {
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 BankDataRepository? newrep = JsonSerializer.Deserialize<BankDataRepository>(fs);
@@ -23,9 +23,9 @@ namespace HW_CPS_HSEBank.DataParsers
             }
         }
 
-        private async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank.json")
+        private async Task ExportDataAsync(BankDataRepository brep, string fileName = "HseBank")
         {
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(fileName + ".json", FileMode.OpenOrCreate))
             {
                 var options = new JsonSerializerOptions
                 {

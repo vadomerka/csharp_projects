@@ -1,5 +1,6 @@
-﻿using HW_CPS_HSEBank.DataLogic;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataParsers;
+using HW_CPS_HSEBank.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using static HW_CPS_HSEBank.UI.BankUI;
 
@@ -96,7 +97,8 @@ namespace HW_CPS_HSEBank.UI
         private static bool ImportDataFromFile<Parser>() where Parser : IFileDataParser<BankDataManager>
         {
             Console.Clear();
-            string fileName = UtilsUI.GetReqUserString("Введите путь к файлу.");
+            string fileName = UtilsUI.GetReqUserString("Введите путь к файлу (без расширения).");
+            fileName = Path.GetFileNameWithoutExtension(fileName);
             Console.WriteLine($"Данные импортируются из {fileName}.");
             BankDataManager? newrep;
             try
@@ -105,18 +107,21 @@ namespace HW_CPS_HSEBank.UI
                 newrep = parser.ImportData(fileName);
                 if (newrep == null) throw new ArgumentNullException();
             }
+            catch (HseBankException ex) {
+                Console.WriteLine(ex.Message);
+                return UtilsUI.GetUserBool("Попробовать снова? y/n");
+            }
             catch (FileNotFoundException)
             {
                 Console.WriteLine("Файл не был найден.");
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Console.WriteLine("Произошла ошибка при чтении файла.");
+                Console.WriteLine(ex);
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
-
-            // todo: check before saving!!!
 
             var oldrep = services.GetRequiredService<BankDataManager>();
             oldrep.Save(newrep);

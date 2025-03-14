@@ -1,4 +1,6 @@
 ﻿using HW_CPS_HSEBank.Commands;
+using HW_CPS_HSEBank.DataLogic.DataManagement;
+using HW_CPS_HSEBank.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.DataLogic.DataModels
@@ -56,15 +58,24 @@ namespace HW_CPS_HSEBank.DataLogic.DataModels
 
         public int CategoryId { get => categoryId; set { categoryId = value; } }
 
-        public void Execute()
+        public void Execute(BankDataManager? mgr)
         {
             var services = CompositionRoot.Services;
-            var mgr = services.GetRequiredService<BankDataManager>();
+            if (mgr == null)
+            {
+                mgr = services.GetRequiredService<BankDataManager>();
+            }
             decimal change = amount;
             if (type == "расход") { change *= -1; }
             BankAccount? bankAccount = mgr.GetAccountById(bankAccountId);
-            if (bankAccount == null) throw new InvalidOperationException();
+            if (bankAccount == null) throw new FinanceOperationException($"Аккаунт {bankAccountId} не найден!");
+
             bankAccount.Balance += change;
+        }
+
+        public void Execute()
+        {
+            Execute(null);
         }
 
         public void VisitorExecute(IVisitor visitor)
