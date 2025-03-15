@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HW_CPS_HSEBank.UI
+﻿namespace HW_CPS_HSEBank.UI
 {
+    // Метод меню.
     public delegate bool UIFunc();
 
+    /// <summary>
+    /// Класс для пункта меню.
+    /// </summary>
     public struct MenuItem
     {
         public string _title;

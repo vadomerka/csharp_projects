@@ -112,6 +112,7 @@ namespace HW_CPS_HSEBank.UI
             if (clear) Console.Clear();
             if (message != "") Console.WriteLine(message);
             var input = Console.ReadKey().Key;
+            Console.WriteLine();
             return input == ConsoleKey.Y;
         }
 

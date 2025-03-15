@@ -1,19 +1,19 @@
-﻿using HW_CPS_HSEBank.Commands;
-using HW_CPS_HSEBank.DataLogic;
-using HW_CPS_HSEBank.DataLogic.DataModels;
-using HW_CPS_HSEBank.DataLogic.Factories;
-using HW_CPS_HSEBank.UI.DataWorkUI;
+﻿using HW_CPS_HSEBank.UI.DataWorkUI;
 using HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI;
 using Microsoft.Extensions.DependencyInjection;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HW_CPS_HSEBank.UI
 {
+    /// <summary>
+    /// Класс для меню управления банком.
+    /// </summary>
     public class BankUI
     {
         private static IServiceProvider s = CompositionRoot.Services;
 
+        /// <summary>
+        /// Главное меню.
+        /// </summary>
         public static void Menu()
         {
             List<MenuItem> mainOptions = new List<MenuItem>
@@ -22,7 +22,7 @@ namespace HW_CPS_HSEBank.UI
                     new MenuItem("Анализ данных", DataAnalyze),
                     new MenuItem("Экспортировать данные", DataParserUI.ExportData),
                     new MenuItem("Импортировать данные", DataParserUI.ImportData),
-                    new MenuItem("Статистика", Exit),
+                    new MenuItem("Статистика", ExitNotImplemented), // Не успеваю.
                     new MenuItem("Выход", Exit)
                 };
             UtilsUI.MakeMenu(mainOptions);
@@ -33,11 +33,17 @@ namespace HW_CPS_HSEBank.UI
                 {
                     new MenuItem("Работа с аккаунтами", DataMenu<AccountsUI>),
                     new MenuItem("Работа с операциями", DataMenu<FinanceOperationsUI>),
-                    new MenuItem("Работа с категориями", DataMenu<CategoriesUI>)
+                    new MenuItem("Работа с категориями", DataMenu<CategoriesUI>),
+                    new MenuItem("Пересчет данных", AnalyzeUI.RecountUI)
                 };
             return UtilsUI.MakeMenu(mainOptions);
         }
 
+        /// <summary>
+        /// Работа с списком данных.
+        /// </summary>
+        /// <typeparam name="TData">IDataItemUI</typeparam>
+        /// <returns></returns>
         private static bool DataMenu<TData>() where TData : IDataItemUI {
             IDataItemUI mc = s.GetRequiredService<TData>();
             List<MenuItem> mainOptions = new List<MenuItem>
@@ -45,25 +51,25 @@ namespace HW_CPS_HSEBank.UI
                     new MenuItem($"Добавить {mc.Title}", mc.AddItem),
                     new MenuItem($"Удалить {mc.Title}", mc.DeleteItem),
                     new MenuItem($"Изменить {mc.Title}", mc.ChangeItem),
-                    //new MenuItem($"Изменить {mc.Title}", mc.AddItem)
+                    //new MenuItem($"Найти {mc.Title}", mc.AddItem) // Не успеваю.
                 };
             return UtilsUI.MakeMenu(mainOptions);
         }
 
         private static bool DataAnalyze() {
-            //IDataItemUI mc = s.GetRequiredService<TData>();
             List<MenuItem> mainOptions = new List<MenuItem>
                 {
-                    new MenuItem($"Подсчет разницы доходов и расходов за выбранный период.", AnalyzeUI.AnalyzeIncomeExpenceDifference),
-                    //new MenuItem($"Удалить {mc.Title}", mc.DeleteItem),
-                    //new MenuItem($"Изменить {mc.Title}", mc.ChangeItem),
-                    //new MenuItem($"Изменить {mc.Title}", mc.AddItem)
+                    new MenuItem($"Подсчет разницы доходов и расходов за выбранный период", 
+                    AnalyzeUI.AnalyzeIncomeExpenceDifference),
+                    new MenuItem($"Группировка операций по категориям", AnalyzeUI.GroupOperationsViaCategory),
                 };
             return UtilsUI.MakeMenu(mainOptions);
         }
 
-        public static bool MenuReturn()
+        public static bool ExitNotImplemented()
         {
+            Console.WriteLine("Не имплементировано");
+            Console.ReadLine();
             return true;
         }
         public static bool Exit()

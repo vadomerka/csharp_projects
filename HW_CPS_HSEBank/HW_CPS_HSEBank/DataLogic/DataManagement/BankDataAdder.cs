@@ -31,6 +31,12 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             account.Balance = account.Balance;
             br.BankAccounts.Add(account);
         }
+        public void AddNewAccount(BankAccount account)
+        {
+            if (!mgr.checker.CheckAccount(account)) throw new ArgumentException();
+            account.Balance = 0;
+            br.BankAccounts.Add(account);
+        }
         public void AddFinanceOperation(FinanceOperation operaion)
         {
             if (!mgr.checker.CheckOperation(operaion)) throw new FinanceOperationException("Ошибка при добавлении операции.");

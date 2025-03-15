@@ -1,9 +1,9 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
+using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataParsing;
 using HW_CPS_HSEBank.DataParsing.DataParsers;
 using HW_CPS_HSEBank.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
-using static HW_CPS_HSEBank.UI.BankUI;
 
 namespace HW_CPS_HSEBank.UI.DataWorkUI
 {
@@ -29,11 +29,47 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу.");
             Console.WriteLine($"Данные экспортируются в {fileName}.");
 
-            var brep = services.GetRequiredService<BankDataManager>();
-            BankDataParser.Export<Parser>(brep, fileName);
+            try
+            {
+                var brep = services.GetRequiredService<BankDataManager>();
+                BankDataParser.Export<Parser>(brep, fileName);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Произошла ошибка записи в файл.");
+                return UtilsUI.GetUserBool("Попробовать снова? y/n");
+            }
 
             Console.WriteLine("Данные были записаны.");
             Console.ReadLine();
+
+            return false;
+        }
+
+        public static bool ExportDataToConsole<Parser>(BankDataManager? mgr = null, bool clearFlag = true, bool outro = true) where Parser : IDataToText
+        {
+            if (clearFlag) { Console.Clear(); }
+
+            Console.WriteLine($"Данные экспортируются в консоль.");
+
+            if (mgr == null) mgr = services.GetRequiredService<BankDataManager>();
+            BankDataParser.Export<Parser>(mgr);
+
+            if (outro)
+            {
+                Console.WriteLine("Данные были записаны.");
+                Console.ReadLine();
+            }
+
+            return false;
+        }
+
+        public static bool ExportDataToConsole<Parser, TData>(IEnumerable<TData> data, bool clearFlag = true) where Parser : IDataToText
+            where TData : class, IBankDataType
+        {
+            if (clearFlag) { Console.Clear(); }
+
+            BankListParser<Parser>.Export<TData>(data);
 
             return false;
         }
@@ -57,12 +93,11 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
             fileName = Path.GetFileNameWithoutExtension(fileName);
             Console.WriteLine($"Данные импортируются из {fileName}.");
             BankDataManager? newrep;
-            //var parser = services.GetRequiredService<Parser>();
-            newrep = BankDataParser.Import<Parser>(fileName);
-            if (newrep == null) throw new ArgumentNullException();
+
             try
             {
-                // return
+                newrep = BankDataParser.Import<Parser>(fileName);
+                if (newrep == null) throw new ArgumentNullException();
             }
             catch (HseBankException ex)
             {
@@ -77,7 +112,7 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
             catch (Exception ex)
             {
                 Console.WriteLine("Произошла ошибка при чтении файла.");
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
 

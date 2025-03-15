@@ -26,21 +26,18 @@ namespace HW_CPS_HSEBank.DataLogic.DataAnalyze
             var dateFiltered = BankDataFilter.FilterByDate(accFiltered, d1, d2);
             if (dateFiltered.Count() == 0) { throw new ArgumentNullException("Операции в этот промежуток времени не были найдены."); }
             var inc = BankDataFilter.FilterByType(dateFiltered, type);
-            //int koef = type == "доход" ? 1 : -1;
             foreach (var fop in inc) { dif += fop.Amount; }
             return dif;
         }
 
-        //public static decimal DifferenceIncomeExpence(BankDataManager mgr, int accId, DateTime? d1 = null, DateTime? d2 = null) {
-        //    decimal dif = 0;
-        //    var rep = mgr.GetRepository();
-        //    var accFiltered = BankDataFilter.FilterByAccountId(rep.FinanceOperations, accId);
-        //    var dateFiltered = BankDataFilter.FilterByDate(accFiltered, d1, d2);
-        //    var inc = BankDataFilter.FilterByType(dateFiltered, "доход");
-        //    var exp = BankDataFilter.FilterByType(dateFiltered, "расход");
-        //    foreach ( var fop in inc ) { dif += fop.Amount; }
-        //    foreach (var fop in exp) { dif += fop.Amount; }
-        //    return dif;
-        //}
+        public static IEnumerable<FinanceOperation> FinanceOperationsSortByCategory(IEnumerable<FinanceOperation> ops)
+        {
+            var nops = BankDataSorter.SortFinanceOperationsByDate(ops);
+            var res = BankDataSorter.SortBankDataByIntProperty(nops, (FinanceOperation op1) => { 
+                return op1.CategoryId;
+            });
+            
+            return res;
+        }
     }
 }

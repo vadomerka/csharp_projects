@@ -47,7 +47,7 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
         public void ApplyRepository(BankDataRepository brr)
         {
             br.BankAccounts.Clear();
-            brr.BankAccounts.ForEach(AddData);
+            brr.BankAccounts.ForEach(adder.AddNewAccount);
             br.Categories.Clear();
             brr.Categories.ForEach(AddData);
 

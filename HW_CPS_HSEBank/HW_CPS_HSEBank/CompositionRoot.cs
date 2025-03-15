@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank
 {
-
+    /// <summary>
+    /// Класс содержащий все зависимости.
+    /// </summary>
     public static class CompositionRoot
 
     {
@@ -18,18 +20,22 @@ namespace HW_CPS_HSEBank
         {
             var services = new ServiceCollection();
 
+            // Factories.
             services.AddSingleton<AccountFactory>();
             services.AddSingleton<FinanceOperationFactory>();
             services.AddSingleton<CategoryFactory>();
 
+            // Parsers.
             services.AddSingleton<JsonDataParser>();
             services.AddSingleton<YamlDataParser>();
             services.AddSingleton<CsvDataParser>();
 
+            // UI.
             services.AddSingleton<AccountsUI>();
             services.AddSingleton<FinanceOperationsUI>();
             services.AddSingleton<CategoriesUI>();
 
+            // Data.
             services.AddSingleton<BankDataRepository>();
             services.AddSingleton<BankDataManager>();
 
