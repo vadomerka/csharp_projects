@@ -1,27 +1,39 @@
-﻿using HW_CPS_HSEBank.Commands;
-using HW_CPS_HSEBank.Commands.DataCommands;
+﻿using HW_CPS_HSEBank.Commands.DataCommands;
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataLogic.Factories;
 using Microsoft.Extensions.DependencyInjection;
-using System.Xml.Linq;
 
 namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
 {
+    /// <summary>
+    /// Класс добавления/изменения/удаления аккаунтов. Класс использует DataCommands.
+    /// </summary>
     public class AccountsUI : IDataItemUI
     {
         private IServiceProvider services = CompositionRoot.Services;
 
         public string Title { get => "аккаунт"; }
 
+        /// <summary>
+        /// Метод создает список инициализации на основе данных от пользователя.
+        /// </summary>
+        /// <param name="message">Сообщение пользователю</param>
+        /// <returns>Список инициализации</returns>
         private object[]? GetInitList(string message)
         {
             Console.WriteLine(message);
             string? name = UtilsUI.GetUserString("Введите название аккаунта.");
             if (name == null) return null;
+            // Пользователь не имеет права добавлять аккаунт с не пустым балансом.
+            // Чтобы добавить баланс, нужно создать соответсвующую операцию.
             return new object[] { name, (decimal)0 };
         }
 
+        /// <summary>
+        /// Метод добавления аккаунта с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool AddItem()
         {
             Console.Clear();
@@ -45,6 +57,10 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return true;
         }
 
+        /// <summary>
+        /// Метод изменения аккаунта с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool ChangeItem()
         {
             Console.Clear();
@@ -60,8 +76,9 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
                 {
                     var initList = GetInitList("Изменение аккаунта:");
                     if (initList == null) return false;
-                    //var initlist = new object[] { id } + initList;
+
                     var list = new object[1 + initList.Length];
+                    // id нужен для нахождения элемента в системе.
                     list[0] = id;
                     initList.CopyTo(list, 1);
                     var changeAccount = new ChangeCommand<BankAccount>(list);
@@ -81,6 +98,10 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return true;
         }
 
+        /// <summary>
+        /// Метод удаления аккаунта с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool DeleteItem()
         {
             Console.Clear();
@@ -111,6 +132,11 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return true;
         }
 
+        /// <summary>
+        /// Не имплементированно
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public bool FindItem()
         {
             Console.Clear();

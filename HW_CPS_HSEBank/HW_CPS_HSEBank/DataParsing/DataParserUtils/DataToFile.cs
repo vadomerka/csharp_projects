@@ -2,6 +2,10 @@
 
 namespace HW_CPS_HSEBank.DataParsing.DataParserUtils
 {
+    /// <summary>
+    /// Класс для импорта экспорта данных с файлом
+    /// </summary>
+    /// <typeparam name="Parser"></typeparam>
     public class DataToFile<Parser> where Parser : IDataToText
     {
         public static IEnumerable<TData> ImportData<TData>(string path) where TData : class

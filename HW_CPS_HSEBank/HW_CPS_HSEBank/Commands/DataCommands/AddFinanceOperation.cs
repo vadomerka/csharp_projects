@@ -1,15 +1,15 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataLogic.Factories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 
 namespace HW_CPS_HSEBank.Commands.DataCommands
 {
+    /// <summary>
+    /// Класс команды добавления финансовой операции. 
+    /// Отличается от простого добавления выполнением операции при выполнении команды.
+    /// </summary>
+    /// <typeparam name="TFactory"></typeparam>
+    /// <typeparam name="TData"></typeparam>
     public class AddFinanceOperation<TFactory, TData> : AddCommand<TFactory, TData>
         where TFactory : IDataFactory<TData> where TData : FinanceOperation
     {
@@ -20,7 +20,6 @@ namespace HW_CPS_HSEBank.Commands.DataCommands
 
         public override void Execute()
         {
-            //var mb = services.GetRequiredService<BankDataManager>();
             mgr.AddData(bankData);
             bankData.Execute(mgr);
         }

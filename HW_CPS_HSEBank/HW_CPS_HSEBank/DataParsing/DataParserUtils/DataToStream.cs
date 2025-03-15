@@ -1,16 +1,13 @@
-﻿using CsvHelper;
-using HW_CPS_HSEBank.DataParsing.DataParsers;
+﻿using HW_CPS_HSEBank.DataParsing.DataParsers;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.DataParsing.DataParserUtils
 {
-    public static class DataToStream<Parser> where Parser : IDataToText // : IFileDataParser<BankDataManager>
+    /// <summary>
+    /// Класс для импорта экспорта данных с стримом
+    /// </summary>
+    /// <typeparam name="Parser"></typeparam>
+    public static class DataToStream<Parser> where Parser : IDataToText
     {
         private static Parser parser = CompositionRoot.Services.GetRequiredService<Parser>();
         public static IEnumerable<TData> ImportData<TData>(StreamReader sr) where TData : class
@@ -20,10 +17,7 @@ namespace HW_CPS_HSEBank.DataParsing.DataParserUtils
 
         public static void ExportData<TData>(StreamWriter sw, IEnumerable<TData> records) where TData : class
         {
-            TextWriter res = parser.ExportData(sw, records);
-            //string check = res.ToString();
-            //sw.Write(res);
-            //check = sw.ToString();
+            parser.ExportData(sw, records);
         }
     }
 }

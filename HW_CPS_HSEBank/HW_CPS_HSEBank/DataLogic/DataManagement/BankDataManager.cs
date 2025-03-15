@@ -1,27 +1,34 @@
-﻿using HW_CPS_HSEBank.Commands;
-using HW_CPS_HSEBank.DataLogic.DataAnalyze;
+﻿using HW_CPS_HSEBank.DataLogic.DataAnalyze;
 using HW_CPS_HSEBank.DataLogic.DataModels;
-using HW_CPS_HSEBank.DataLogic.Factories;
-using HW_CPS_HSEBank.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HW_CPS_HSEBank.DataLogic.DataManagement
 {
+    /// <summary>
+    /// Класс для управления данными.
+    /// </summary>
     public class BankDataManager
     {
         private IServiceProvider services = CompositionRoot.Services;
+        // Внутренние сервисы. Не выносятся в DI потому что привязаны к конкретному объекту
         private BankDataRepository br;
         public BankDataChecker checker;
         private BankDataAdder adder;
         private BankDataChanger changer;
         private BankDataDeleter deleter;
 
+        /// <summary>
+        /// Менеджер текущего репозитория.
+        /// </summary>
         public BankDataManager()
         {
             br = services.GetRequiredService<BankDataRepository>();
             UtilsInit();
         }
+        /// <summary>
+        /// Создание менеджера на основе другого репозитория.
+        /// </summary>
+        /// <param name="brr"></param>
         public BankDataManager(BankDataRepository brr)
         {
             br = new BankDataRepository();
@@ -32,7 +39,6 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
         {
             return new BankDataManager(new BankDataRepository());
         }
-
         private void UtilsInit() {
             checker = new BankDataChecker(this);
             adder = new BankDataAdder(this);
@@ -44,39 +50,45 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
         {
             return br;
         }
+        /// <summary>
+        /// Применение репозитория. Операции совершаются во время добавления.
+        /// </summary>
+        /// <param name="brr"></param>
         public void ApplyRepository(BankDataRepository brr)
         {
+            // Создание списка нулевых аккаунтов
             br.BankAccounts.Clear();
             brr.BankAccounts.ForEach(adder.AddNewAccount);
             br.Categories.Clear();
             brr.Categories.ForEach(AddData);
 
             br.FinanceOperations.Clear();
+            // Сортировка для верного применения операций
             var nops = BankDataSorter.SortFinanceOperationsByDate(brr.FinanceOperations);
             foreach (FinanceOperation item in nops)
             {
+                // Добавление.
                 AddData(item);
+                // Применение.
                 item.Execute(this);
             }
         }
-        public void CopyRepository(BankDataRepository other)
+        /// <summary>
+        /// Копирование репозитория. Никаких дополнительных действий.
+        /// </summary>
+        /// <param name="other"></param>
+        private void CopyRepository(BankDataRepository other)
         {
             br.BankAccounts.Clear();
             other.BankAccounts.ForEach(AddData);
             br.Categories.Clear();
             other.Categories.ForEach(AddData);
-
+            // Операции должны идти после добавления категорий и аккаунтов, чтобы проверка не бунтовала.
             br.FinanceOperations.Clear();
             other.FinanceOperations.ForEach(AddData);
         }
 
-        public TData? GetDataById<TData>(int id) where TData : class, IBankDataType {
-            IBankDataType? res = null;
-            if (typeof(TData) == typeof(BankAccount)) res = GetAccountById(id);
-            if (typeof(TData) == typeof(FinanceOperation)) res = GetOperationById(id);
-            if (typeof(TData) == typeof(Category)) res = GetCategoryById(id);
-            return (TData?)res;
-        }
+        // Получение данных по id.
         public BankAccount? GetAccountById(int id)
         {
             for (int i = 0; i < br.BankAccounts.Count; i++)
@@ -111,26 +123,59 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             return null;
         }
 
-        public void AddData(IEnumerable<IBankDataType> list)
+        /// <summary>
+        /// Импорт списка данных.
+        /// </summary>
+        /// <param name="list"></param>
+        public void ImportData(IEnumerable<IBankDataType> list)
         {
-            foreach (var item in list) { AddData(item); }
+            foreach (var item in list) { ImportData(item); }
         }
+        /// <summary>
+        /// Импорт объекта
+        /// </summary>
+        /// <param name="obj"></param>
+        public void ImportData(IBankDataType obj)
+        {
+            adder.ImportData(obj);
+        }
+
+        /// <summary>
+        /// Добавление объекта
+        /// </summary>
+        /// <param name="obj"></param>
         public void AddData(IBankDataType obj) { 
             adder.AddData(obj);
         }
+        /// <summary>
+        /// Изменение объекта
+        /// </summary>
+        /// <param name="obj"></param>
         public void ChangeData<TData>(object[] initList) where TData : class, IBankDataType
         {
             changer.ChangeData<TData>(initList);
         }
+        /// <summary>
+        /// Удаление объекта
+        /// </summary>
+        /// <param name="obj"></param>
         public void DeleteData<TData>(int id) where TData : class, IBankDataType
         {
             deleter.DeleteData<TData>(id);
         }
 
+        /// <summary>
+        /// Скопировать репозиторий.
+        /// </summary>
+        /// <param name="other"></param>
         public void Save(BankDataRepository other)
         {
             CopyRepository(other);
         }
+        /// <summary>
+        /// Скопировать репозиторий менеджера.
+        /// </summary>
+        /// <param name="other"></param>
         public void Save(BankDataManager otherMng)
         {
             Save(otherMng.GetRepository());

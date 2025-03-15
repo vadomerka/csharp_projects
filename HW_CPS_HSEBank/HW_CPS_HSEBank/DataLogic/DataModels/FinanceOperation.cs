@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
+    /// <summary>
+    /// Класс финанс операций
+    /// </summary>
     public class FinanceOperation : IBankDataType, IBankOperation, IHasType
     {
         private int id;
@@ -28,7 +31,7 @@ namespace HW_CPS_HSEBank.DataLogic.DataModels
 
         public FinanceOperation(int id) : this()
         {
-            this.id = 0;
+            this.id = id;
         }
 
         public FinanceOperation(int id, string type, int bankAccountId,
@@ -58,18 +61,22 @@ namespace HW_CPS_HSEBank.DataLogic.DataModels
 
         public int CategoryId { get => categoryId; set { categoryId = value; } }
 
+        /// <summary>
+        /// Метод для совершения финансовой операции. Добавление/Убавление денег со счета аккаунта.
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <exception cref="FinanceOperationException"></exception>
         public void Execute(BankDataManager? mgr)
         {
+            // Получение менеджера, которому нужно менять данные.
             var services = CompositionRoot.Services;
-            if (mgr == null)
-            {
-                mgr = services.GetRequiredService<BankDataManager>();
-            }
+            if (mgr == null) { mgr = services.GetRequiredService<BankDataManager>(); }
             decimal change = amount;
             if (type == "расход") { change *= -1; }
+            // Поиск пользователя.
             BankAccount? bankAccount = mgr.GetAccountById(bankAccountId);
             if (bankAccount == null) throw new FinanceOperationException($"Аккаунт {bankAccountId} не найден!");
-
+            // Совершение операции.
             bankAccount.Balance += change;
         }
 

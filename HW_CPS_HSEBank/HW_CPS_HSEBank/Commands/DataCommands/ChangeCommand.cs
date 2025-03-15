@@ -1,17 +1,17 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.DataModels;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.Commands.DataCommands
 {
+    /// <summary>
+    /// Команда для изменения объекта.
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class ChangeCommand<TData> : IBankOperation
         where TData : class, IBankDataType
     {
+        // Список инициализации для изменения объекта.
         protected object[] initList;
         protected BankDataManager mgr;
         protected IServiceProvider services = CompositionRoot.Services;

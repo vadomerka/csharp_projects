@@ -1,18 +1,18 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataLogic.Factories;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 
 namespace HW_CPS_HSEBank.Commands.DataCommands
 {
+    /// <summary>
+    /// Команда для добавления объекта.
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class AddCommand<TFactory, TData> : IBankOperation
         where TFactory : IDataFactory<TData> where TData : IBankDataType
     {
+        // Объект для добавления.
         protected readonly TData bankData;
         protected BankDataManager mgr;
         protected IServiceProvider services = CompositionRoot.Services;
@@ -29,12 +29,22 @@ namespace HW_CPS_HSEBank.Commands.DataCommands
             var factory = services.GetRequiredService<TFactory>();
             bankData = factory.Create(other);
         }
+        /// <summary>
+        /// Конструктор для добавления к конкретному объекту.
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="args"></param>
         public AddCommand(BankDataManager mgr, object[] args)
         {
             this.mgr = mgr;
             var factory = services.GetRequiredService<TFactory>();
             bankData = factory.Create(args);
         }
+        /// <summary>
+        /// Конструктор для добавления к конкретному объекту.
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="other"></param>
         public AddCommand(BankDataManager mgr, TData other)
         {
             this.mgr = mgr;

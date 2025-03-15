@@ -109,10 +109,9 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
                 Console.WriteLine("Файл не был найден.");
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("Произошла ошибка при чтении файла.");
-                //Console.WriteLine(ex);
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
 

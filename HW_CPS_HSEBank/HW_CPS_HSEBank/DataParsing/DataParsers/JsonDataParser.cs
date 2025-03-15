@@ -1,16 +1,10 @@
-﻿using CsvHelper;
-using HW_CPS_HSEBank.DataLogic.DataManagement;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace HW_CPS_HSEBank.DataParsing.DataParsers
 {
+    /// <summary>
+    /// Класс для импорта экспорта данных из json
+    /// </summary>
     public class JsonDataParser : IDataToText
     {
         public static string GetExtension() { return ".json"; }

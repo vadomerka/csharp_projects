@@ -1,12 +1,10 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HW_CPS_HSEBank.DataLogic.DataAnalyze
 {
+    /// <summary>
+    /// Класс для сортировки переданных данных банка.
+    /// </summary>
     public static class BankDataSorter
     {
         public static void SortBankDataById<TData>(ref IEnumerable<TData> data) where TData : IBankDataType

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HW_CPS_HSEBank.DataParsing.DataParsers;
-using YamlDotNet.Core;
+﻿using HW_CPS_HSEBank.DataParsing.DataParsers;
 
 namespace HW_CPS_HSEBank.DataParsing.DataParserUtils
 {
+    /// <summary>
+    /// Класс для импорта экспорта данных с консолью
+    /// </summary>
+    /// <typeparam name="Parser"></typeparam>
     public class DataToConsole<Parser> where Parser : IDataToText
     {
         public static IEnumerable<TData> ImportData<TData>() where TData : class

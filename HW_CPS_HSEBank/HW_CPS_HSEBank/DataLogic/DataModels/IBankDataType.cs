@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HW_CPS_HSEBank.DataLogic.DataModels
+﻿namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
+    /// <summary>
+    /// Тип данных, который хранится в BankRepository
+    /// </summary>
     public interface IBankDataType
     {
         public int Id { get; set; }

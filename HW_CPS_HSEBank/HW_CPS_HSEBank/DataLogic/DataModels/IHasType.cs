@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HW_CPS_HSEBank.DataLogic.DataModels
+﻿namespace HW_CPS_HSEBank.DataLogic.DataModels
 {
+    /// <summary>
+    /// Интерфейс для объектов, у которых есть свойство Type
+    /// </summary>
     public interface IHasType
     {
         public string Type { get; set; }

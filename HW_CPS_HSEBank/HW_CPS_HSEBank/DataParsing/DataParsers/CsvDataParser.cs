@@ -1,13 +1,11 @@
 ﻿using CsvHelper;
 using System.Globalization;
-using Microsoft.Extensions.DependencyInjection;
-using HW_CPS_HSEBank.DataLogic.Factories;
-using HW_CPS_HSEBank.DataLogic.DataModels;
-using HW_CPS_HSEBank.DataLogic.DataManagement;
-using System.Reflection.PortableExecutable;
 
 namespace HW_CPS_HSEBank.DataParsing.DataParsers
 {
+    /// <summary>
+    /// Класс для импорта экспорта данных из csv
+    /// </summary>
     public class CsvDataParser : IDataToText // : IFileDataParser<BankDataManager>
     {
         public static string GetExtension() { return ".csv"; }

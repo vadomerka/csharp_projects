@@ -22,8 +22,8 @@ namespace HW_CPS_HSEBank.UI
                     new MenuItem("Анализ данных", DataAnalyze),
                     new MenuItem("Экспортировать данные", DataParserUI.ExportData),
                     new MenuItem("Импортировать данные", DataParserUI.ImportData),
-                    new MenuItem("Статистика", ExitNotImplemented), // Не успеваю.
-                    new MenuItem("Выход", Exit)
+                    new MenuItem("Статистика", UtilsUI.ExitNotImplemented), // Не успеваю.
+                    new MenuItem("Выход", UtilsUI.Exit)
                 };
             UtilsUI.MakeMenu(mainOptions);
         }
@@ -64,18 +64,6 @@ namespace HW_CPS_HSEBank.UI
                     new MenuItem($"Группировка операций по категориям", AnalyzeUI.GroupOperationsViaCategory),
                 };
             return UtilsUI.MakeMenu(mainOptions);
-        }
-
-        public static bool ExitNotImplemented()
-        {
-            Console.WriteLine("Не имплементировано");
-            Console.ReadLine();
-            return true;
-        }
-        public static bool Exit()
-        {
-            Console.WriteLine("Выход из программы...");
-            return false;
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HW_CPS_HSEBank.DataLogic.DataModels;
+﻿using HW_CPS_HSEBank.DataLogic.DataModels;
 
 namespace HW_CPS_HSEBank.DataLogic.Factories
 {
+    /// <summary>
+    /// Фабрика для создания аккаунтов
+    /// </summary>
     public class AccountFactory : IDataFactory<BankAccount>
     {
         private int lastId = 0;

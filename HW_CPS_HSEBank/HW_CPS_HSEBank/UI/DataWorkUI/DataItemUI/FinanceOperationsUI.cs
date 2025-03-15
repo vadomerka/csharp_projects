@@ -1,5 +1,4 @@
-﻿using HW_CPS_HSEBank.Commands;
-using HW_CPS_HSEBank.Commands.DataCommands;
+﻿using HW_CPS_HSEBank.Commands.DataCommands;
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataLogic.Factories;
@@ -7,11 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
 {
+    /// <summary>
+    /// Класс добавления/изменения/удаления операций
+    /// </summary>
     public class FinanceOperationsUI : IDataItemUI
     {
         private IServiceProvider services = CompositionRoot.Services;
         public string Title { get => "операцию"; }
 
+        /// <summary>
+        /// Метод создает список инициализации на основе данных от пользователя.
+        /// </summary>
+        /// <param name="message">Сообщение пользователю</param>
+        /// <returns>Список инициализации</returns>
         private object[]? GetInitList(string message)
         {
             Console.WriteLine(message);
@@ -31,6 +38,10 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return new object[] { type, bankAccountId, amount, date, description ??= "", categoryId };
         }
 
+        /// <summary>
+        /// Метод добавления операции с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool AddItem()
         {
             Console.Clear();
@@ -55,6 +66,10 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return true;
         }
 
+        /// <summary>
+        /// Метод изменения операции с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool ChangeItem()
         {
             Console.Clear();
@@ -65,7 +80,7 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             var mgr = services.GetRequiredService<BankDataManager>();
             try
             {
-                if (mgr.GetCategoryById(id) == null) { Console.WriteLine("Операция не найдена."); }
+                if (mgr.GetOperationById(id) == null) { Console.WriteLine("Операция не найдена."); }
                 else
                 {
                     var initList = GetInitList("Изменение операции:");
@@ -91,26 +106,30 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             return true;
         }
 
+        /// <summary>
+        /// Метод удаления операции с данными от пользователя.
+        /// </summary>
+        /// <returns></returns>
         public bool DeleteItem()
         {
             Console.Clear();
-            Console.WriteLine("Удалить категорию:");
+            Console.WriteLine("Удалить операцию:");
             int id;
-            do { id = UtilsUI.GetReqUserNumber<int>("Введите id категории (положительное число)."); } while (0 > id);
+            do { id = UtilsUI.GetReqUserNumber<int>("Введите id операции (положительное число)."); } while (0 > id);
 
             var mgr = services.GetRequiredService<BankDataManager>();
             try
             {
-                if (mgr.GetAccountById(id) == null) { Console.WriteLine("Категория не найдена."); }
+                if (mgr.GetOperationById(id) == null) { Console.WriteLine("Операция не найдена."); }
                 else
                 {
-                    var deleteAccount = new DeleteCommand<Category>(new object[] { id });
+                    var deleteAccount = new DeleteCommand<FinanceOperation>(new object[] { id });
                     deleteAccount.Execute();
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Произошла ошибка при удалении категории.");
+                Console.WriteLine("Произошла ошибка при удалении операции.");
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
             Console.WriteLine("Данные успешно удалены.");

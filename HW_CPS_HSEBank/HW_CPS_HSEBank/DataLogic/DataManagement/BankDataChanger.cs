@@ -1,14 +1,10 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace HW_CPS_HSEBank.DataLogic.DataManagement
 {
+    /// <summary>
+    /// Класс для изменения объектов в менеджере.
+    /// </summary>
     public class BankDataChanger
     {
         BankDataManager mgr;
@@ -19,12 +15,23 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             br = mgr.GetRepository();
         }
 
+        /// <summary>
+        /// Изменить данные.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="initList"></param>
         public void ChangeData<TData>(object[] initList) where TData : class, IBankDataType
         {
             if (typeof(TData) == typeof(BankAccount)) ChangeAccount(initList);
             if (typeof(TData) == typeof(FinanceOperation)) ChangeFinanceOperation(initList);
             if (typeof(TData) == typeof(Category)) ChangeCategory(initList);
         }
+
+        /// <summary>
+        /// Изменить аккаунт.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="initList"></param>
         public void ChangeAccount(object[] initList)
         {
             int id = (int)initList[0];
@@ -32,14 +39,21 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             if (res == null) { throw new ArgumentException(); }
             string oldname = res.Name;
             res.Name = (string)initList[1];
+            // Изменить баланс можно только с добавлением операций.
             //res.Balance = (decimal)initList[2];
             if (!mgr.checker.CheckAccount(res, checkId: false))
             {
+                // Возвращение предыдущих данных.
                 res.Name = oldname;
                 throw new ArgumentException("Ошибка при изменении аккаунта.");
             }
         }
 
+        /// <summary>
+        /// Вспомогательная функция для установки данных операции.
+        /// </summary>
+        /// <param name="op"></param>
+        /// <param name="initList"></param>
         private void SetOperationData(ref FinanceOperation op, object[] initList) {
             op.Type = (string)initList[1];
             op.BankAccountId = (int)initList[2];
@@ -48,6 +62,11 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             op.Description = (string)initList[5];
             op.CategoryId = (int)initList[6];
         }
+        /// <summary>
+        /// Изменить операцию.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="initList"></param>
         public void ChangeFinanceOperation(object[] initList)
         {
             int id = (int)initList[0];
@@ -61,6 +80,12 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
                 throw new FinanceOperationException("Ошибка при изменении операции.");
             }
         }
+
+        /// <summary>
+        /// Изменить категорию.
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="initList"></param>
         public void ChangeCategory(object[] initList)
         {
             int id = (int)initList[0];

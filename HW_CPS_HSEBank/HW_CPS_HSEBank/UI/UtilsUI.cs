@@ -2,9 +2,17 @@
 
 namespace HW_CPS_HSEBank.UI
 {
+    /// <summary>
+    /// Класс содержит базовые функции для получения данных от пользователя.
+    /// </summary>
     public static class UtilsUI
     {
-        public static void WriteMenuOptions(List<MenuItem> options, string title = "")
+        /// <summary>
+        /// Метод выводит пункты меню.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="title"></param>
+        private static void WriteMenuOptions(List<MenuItem> options, string title = "")
         {
             Console.Clear();
             if (title != "") Console.WriteLine(title);
@@ -17,16 +25,25 @@ namespace HW_CPS_HSEBank.UI
             Console.WriteLine("(для возвращения нажмите [BackSpace])");
         }
 
+        /// <summary>
+        /// Метод создания меню из пунктов меню.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
         public static bool MakeMenu(List<MenuItem> options, string title = "")
         {
             if (title != "") Console.WriteLine(title);
             while (true)
             {
+                // Вывод пунктов.
                 WriteMenuOptions(options);
 
+                // Считываем выбор.
                 int key = (int)Console.ReadKey().Key;
                 Console.WriteLine();
 
+                // Обработка если пользователь выбрал пункт меню.
                 int n1 = (int)ConsoleKey.NumPad1;
                 int n2 = (int)ConsoleKey.NumPad9;
                 int d1 = (int)ConsoleKey.D1;
@@ -39,15 +56,12 @@ namespace HW_CPS_HSEBank.UI
                 {
                     key -= d1;
                 }
-                else if (key == (int)ConsoleKey.Backspace || key == (int)ConsoleKey.Escape)
-                {
-                    return true;
-                }
-                else
-                {
-                    continue;
-                }
+                // Выход.
+                else if (key == (int)ConsoleKey.Backspace || key == (int)ConsoleKey.Escape) { return true; }
+                else { continue; }
+
                 if (key >= options.Count) continue;
+                // Запуск метода.
                 if (!options[key]._func()) { return false; };
             }
         }
@@ -143,8 +157,10 @@ namespace HW_CPS_HSEBank.UI
             return date;
         }
 
-        public static bool MenuReturn()
+        public static bool ExitNotImplemented()
         {
+            Console.WriteLine("Не имплементировано");
+            Console.ReadLine();
             return true;
         }
         public static bool Exit()

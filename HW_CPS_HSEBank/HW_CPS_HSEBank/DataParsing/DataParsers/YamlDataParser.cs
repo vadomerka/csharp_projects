@@ -1,10 +1,11 @@
-﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
-using System.Text.Json;
-using YamlDotNet.Serialization;
+﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace HW_CPS_HSEBank.DataParsing.DataParsers
 {
+    /// <summary>
+    /// Класс для импорта экспорта данных из yaml
+    /// </summary>
     public class YamlDataParser : IDataToText
     {
         public static string GetExtension() { return ".yaml"; }

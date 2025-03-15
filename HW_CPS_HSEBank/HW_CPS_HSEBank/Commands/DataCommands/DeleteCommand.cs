@@ -1,18 +1,17 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataModels;
-using HW_CPS_HSEBank.DataLogic.Factories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 
 namespace HW_CPS_HSEBank.Commands.DataCommands
 {
+    /// <summary>
+    /// Команда для удаления объекта.
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class DeleteCommand<TData> : IBankOperation
         where TData : class, IBankDataType
     {
+        // id объекта для удаления.
         protected readonly int id;
         protected BankDataManager mgr;
         protected IServiceProvider services = CompositionRoot.Services;

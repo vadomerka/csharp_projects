@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
+﻿namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
 {
+    /// <summary>
+    /// Интерфейс для использования темплейтных меню.
+    /// </summary>
     public interface IDataItemUI
     {
         public string Title { get; }

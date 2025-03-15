@@ -2,12 +2,13 @@
 
 namespace HW_CPS_HSEBank.DataLogic.DataManagement
 {
+    /// <summary>
+    /// Класс который хранит ссылки на списки данных.
+    /// </summary>
     public class BankDataRepository
     {
         private List<BankAccount> _accounts = new List<BankAccount>();
         private List<FinanceOperation> _operations = new List<FinanceOperation>();
-        // todo??
-        //private List<FinanceOperation> _unsaved_operations = new List<FinanceOperation>();
         private List<Category> _categories = new List<Category>();
 
         public List<BankAccount> BankAccounts { get { return _accounts; } set { _accounts = value; } }

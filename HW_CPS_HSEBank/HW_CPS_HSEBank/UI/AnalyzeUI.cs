@@ -32,13 +32,19 @@ namespace HW_CPS_HSEBank.UI
                 }
 
                 if (UtilsUI.GetUserBool("Сохранить результаты? y/n")) { mgr.Save(res); }
+
+                Console.WriteLine("Пересчет завершен.");
             }
             catch (ArgumentNullException)
             {
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
+            catch (Exception)
+            {
+                Console.WriteLine("Пересчет завершился ошибкой.");
+                Console.WriteLine("Введите другие данные.");
+            }
 
-            Console.WriteLine("Данные сохранены.");
             Console.ReadLine();
 
             return true;
