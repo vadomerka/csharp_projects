@@ -1,7 +1,4 @@
-﻿using HW_CPS_HSEBank.Commands;
-using System.Reflection.Metadata.Ecma335;
-
-namespace HW_CPS_HSEBank.UI.MenuUtils
+﻿namespace HW_CPS_HSEBank.UI.MenuUtils
 {
     // Метод меню.
     public delegate bool UIFunc();
