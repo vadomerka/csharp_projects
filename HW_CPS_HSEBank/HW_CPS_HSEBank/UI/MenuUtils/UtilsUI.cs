@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace HW_CPS_HSEBank.UI
+namespace HW_CPS_HSEBank.UI.MenuUtils
 {
     /// <summary>
     /// Класс содержит базовые функции для получения данных от пользователя.
@@ -12,13 +12,13 @@ namespace HW_CPS_HSEBank.UI
         /// </summary>
         /// <param name="options"></param>
         /// <param name="title"></param>
-        private static void WriteMenuOptions(List<MenuItem> options, string title = "")
+        private static void WriteMenuOptions(List<IMenuCommand> options, string title = "")
         {
             Console.Clear();
             if (title != "") Console.WriteLine(title);
             for (int i = 0; i < options.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {options[i]._title}.");
+                Console.WriteLine($"{i + 1}. {options[i].Title}.");
             }
 
             Console.WriteLine("чтобы выбрать действие, нажмите соответсвующую клавишу");
@@ -31,7 +31,7 @@ namespace HW_CPS_HSEBank.UI
         /// <param name="options"></param>
         /// <param name="title"></param>
         /// <returns></returns>
-        public static bool MakeMenu(List<MenuItem> options, string title = "")
+        public static bool MakeMenu(List<IMenuCommand> options, string title = "")
         {
             if (title != "") Console.WriteLine(title);
             while (true)
@@ -62,7 +62,7 @@ namespace HW_CPS_HSEBank.UI
 
                 if (key >= options.Count) continue;
                 // Запуск метода.
-                if (!options[key]._func()) { return false; };
+                if (!options[key].Execute()) { return false; };
             }
         }
 

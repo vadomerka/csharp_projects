@@ -1,5 +1,6 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataAnalyze;
 using HW_CPS_HSEBank.DataLogic.DataModels;
+using HW_CPS_HSEBank.DataLogic.Factories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.DataLogic.DataManagement
@@ -85,7 +86,7 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
             other.Categories.ForEach(AddData);
             // Операции должны идти после добавления категорий и аккаунтов, чтобы проверка не бунтовала.
             br.FinanceOperations.Clear();
-            other.FinanceOperations.ForEach(AddData);
+            other.FinanceOperations.ForEach(ImportData);
         }
 
         // Получение данных по id.
@@ -127,9 +128,14 @@ namespace HW_CPS_HSEBank.DataLogic.DataManagement
         /// Импорт списка данных.
         /// </summary>
         /// <param name="list"></param>
-        public void ImportData(IEnumerable<IBankDataType> list)
+        public void ImportData<T>(IDataFactory<T> fac, IEnumerable<T> list) where T : class, IBankDataType
         {
-            foreach (var item in list) { ImportData(item); }
+            int maxId = 0;
+            foreach (var item in list) { 
+                ImportData(item);
+                maxId = item.Id;
+            }
+            fac.Id = maxId;
         }
         /// <summary>
         /// Импорт объекта

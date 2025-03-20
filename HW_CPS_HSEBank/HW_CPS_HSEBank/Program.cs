@@ -1,6 +1,8 @@
-﻿using HW_CPS_HSEBank.DataParsing;
+﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
+using HW_CPS_HSEBank.DataParsing;
 using HW_CPS_HSEBank.DataParsing.DataParsers;
 using HW_CPS_HSEBank.UI;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank
 {
@@ -12,7 +14,10 @@ namespace HW_CPS_HSEBank
         public static int Main(string[] args)
         {
             // Раскомментировать строчку, для авто-импорта тестовых данных.
-            BankDataParser.Import<JsonDataParser>("tests/hseBank");
+            var newrep = BankDataParser.Import<JsonDataParser>("tests/hseBank");
+            var services = CompositionRoot.Services;
+            var oldrep = services.GetRequiredService<BankDataManager>();
+            oldrep.Save(newrep);
 
             BankUI.Menu();
 

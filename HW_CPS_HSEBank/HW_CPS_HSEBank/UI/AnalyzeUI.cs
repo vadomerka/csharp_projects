@@ -4,6 +4,7 @@ using HW_CPS_HSEBank.DataLogic.DataAnalyze;
 using Microsoft.Extensions.DependencyInjection;
 using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.UI.DataWorkUI;
+using HW_CPS_HSEBank.UI.MenuUtils;
 
 namespace HW_CPS_HSEBank.UI
 {

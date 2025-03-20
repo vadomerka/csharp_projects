@@ -10,7 +10,7 @@ namespace HW_CPS_HSEBank.Commands.DataCommands
     /// </summary>
     /// <typeparam name="TData"></typeparam>
     public class AddCommand<TFactory, TData> : IBankOperation
-        where TFactory : IDataFactory<TData> where TData : IBankDataType
+        where TFactory : IDataFactory<TData> where TData : class, IBankDataType
     {
         // Объект для добавления.
         protected readonly TData bankData;

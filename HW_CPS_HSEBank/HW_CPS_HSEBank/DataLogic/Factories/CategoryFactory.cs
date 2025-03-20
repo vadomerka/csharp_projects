@@ -7,7 +7,9 @@ namespace HW_CPS_HSEBank.DataLogic.Factories
     /// </summary>
     public class CategoryFactory : IDataFactory<Category>
     {
-        private int lastId = 0;
+        protected int lastId = 0;
+        public int Id { set => lastId = value; }
+
         public Category Create()
         {
             return new Category(++lastId);

@@ -3,6 +3,7 @@ using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataParsing;
 using HW_CPS_HSEBank.DataParsing.DataParsers;
 using HW_CPS_HSEBank.Exceptions;
+using HW_CPS_HSEBank.UI.MenuUtils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.UI.DataWorkUI
@@ -13,7 +14,7 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
 
         public static bool ExportData()
         {
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = new List<IMenuCommand>
                 {
                     new MenuItem("JSON", ExportDataToFile<JsonDataParser>),
                     new MenuItem("YAML", ExportDataToFile<YamlDataParser>),
@@ -69,14 +70,14 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
         {
             if (clearFlag) { Console.Clear(); }
 
-            BankListParser<Parser>.Export<TData>(data);
+            ListParser<Parser>.Export<TData>(data);
 
             return false;
         }
 
         public static bool ImportData()
         {
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = new List<IMenuCommand>
                 {
                     new MenuItem("JSON", ImportDataFromFile<JsonDataParser>),
                     new MenuItem("YAML", ImportDataFromFile<YamlDataParser>),
@@ -90,7 +91,7 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
         {
             Console.Clear();
             string fileName = UtilsUI.GetReqUserString("Введите путь к файлу (без расширения).");
-            fileName = Path.GetFileNameWithoutExtension(fileName);
+            //fileName = Path.GetFileNameWithoutExtension(fileName);
             Console.WriteLine($"Данные импортируются из {fileName}.");
             BankDataManager? newrep;
 
@@ -98,6 +99,9 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
             {
                 newrep = BankDataParser.Import<Parser>(fileName);
                 if (newrep == null) throw new ArgumentNullException();
+
+                var oldrep = services.GetRequiredService<BankDataManager>();
+                oldrep.Save(newrep);
             }
             catch (HseBankException ex)
             {
@@ -114,9 +118,6 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI
                 Console.WriteLine("Произошла ошибка при чтении файла.");
                 return UtilsUI.GetUserBool("Попробовать снова? y/n");
             }
-
-            var oldrep = services.GetRequiredService<BankDataManager>();
-            oldrep.Save(newrep);
 
             Console.WriteLine("Данные были считаны.");
             Console.ReadLine();

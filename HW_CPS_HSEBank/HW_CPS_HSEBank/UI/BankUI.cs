@@ -1,5 +1,6 @@
 ﻿using HW_CPS_HSEBank.UI.DataWorkUI;
 using HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI;
+using HW_CPS_HSEBank.UI.MenuUtils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.UI
@@ -16,26 +17,26 @@ namespace HW_CPS_HSEBank.UI
         /// </summary>
         public static void Menu()
         {
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = MenuCommandBuilder.MenuCommandTimeList(new List<IMenuCommand>
                 {
                     new MenuItem("Работа с данными", DataWorkMenu),
                     new MenuItem("Анализ данных", DataAnalyze),
                     new MenuItem("Экспортировать данные", DataParserUI.ExportData),
                     new MenuItem("Импортировать данные", DataParserUI.ImportData),
-                    new MenuItem("Статистика", UtilsUI.ExitNotImplemented), // Не успеваю.
+                    new MenuItem("Статистика", StatisticsUI.MenuStatisticsExport), // Не успеваю.
                     new MenuItem("Выход", UtilsUI.Exit)
-                };
+                });
             UtilsUI.MakeMenu(mainOptions);
         }
 
         private static bool DataWorkMenu() {
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = MenuCommandBuilder.MenuCommandTimeList(new List<IMenuCommand>
                 {
                     new MenuItem("Работа с аккаунтами", DataMenu<AccountsUI>),
                     new MenuItem("Работа с операциями", DataMenu<FinanceOperationsUI>),
                     new MenuItem("Работа с категориями", DataMenu<CategoriesUI>),
                     new MenuItem("Пересчет данных", AnalyzeUI.RecountUI)
-                };
+                });
             return UtilsUI.MakeMenu(mainOptions);
         }
 
@@ -46,23 +47,22 @@ namespace HW_CPS_HSEBank.UI
         /// <returns></returns>
         private static bool DataMenu<TData>() where TData : IDataItemUI {
             IDataItemUI mc = s.GetRequiredService<TData>();
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = MenuCommandBuilder.MenuCommandTimeList(new List<IMenuCommand>
                 {
                     new MenuItem($"Добавить {mc.Title}", mc.AddItem),
                     new MenuItem($"Удалить {mc.Title}", mc.DeleteItem),
                     new MenuItem($"Изменить {mc.Title}", mc.ChangeItem),
-                    //new MenuItem($"Найти {mc.Title}", mc.AddItem) // Не успеваю.
-                };
+                });
             return UtilsUI.MakeMenu(mainOptions);
         }
 
         private static bool DataAnalyze() {
-            List<MenuItem> mainOptions = new List<MenuItem>
+            List<IMenuCommand> mainOptions = MenuCommandBuilder.MenuCommandTimeList(new List<IMenuCommand>
                 {
                     new MenuItem($"Подсчет разницы доходов и расходов за выбранный период", 
                     AnalyzeUI.AnalyzeIncomeExpenceDifference),
                     new MenuItem($"Группировка операций по категориям", AnalyzeUI.GroupOperationsViaCategory),
-                };
+                });
             return UtilsUI.MakeMenu(mainOptions);
         }
     }

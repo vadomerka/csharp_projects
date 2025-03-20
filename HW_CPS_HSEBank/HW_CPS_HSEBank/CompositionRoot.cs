@@ -1,6 +1,7 @@
 ﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.Factories;
 using HW_CPS_HSEBank.DataParsing.DataParsers;
+using HW_CPS_HSEBank.Statistics;
 using HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +39,9 @@ namespace HW_CPS_HSEBank
             // Data.
             services.AddSingleton<BankDataRepository>();
             services.AddSingleton<BankDataManager>();
+
+            // Statistics.
+            services.AddSingleton<MenuStatistics>();
 
             return services.BuildServiceProvider(); // строим контейнер зависимостей
         }

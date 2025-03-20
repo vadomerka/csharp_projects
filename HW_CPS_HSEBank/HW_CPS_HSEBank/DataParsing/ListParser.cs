@@ -1,10 +1,9 @@
-﻿using HW_CPS_HSEBank.DataLogic.DataManagement;
-using HW_CPS_HSEBank.DataParsing.DataParsers;
+﻿using HW_CPS_HSEBank.DataParsing.DataParsers;
 using HW_CPS_HSEBank.DataParsing.DataParserUtils;
 
 namespace HW_CPS_HSEBank.DataParsing
 {
-    public static class BankListParser<Parser> where Parser : IDataToText
+    public static class ListParser<Parser> where Parser : IDataToText
     {
         /// <summary>
         /// Метод для импорта списка объектов.

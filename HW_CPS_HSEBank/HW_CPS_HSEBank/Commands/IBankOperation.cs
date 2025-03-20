@@ -6,5 +6,6 @@
     public interface IBankOperation : ICommand
     {
         public string? ToString();
+        public void Execute();
     }
 }

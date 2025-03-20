@@ -2,6 +2,7 @@
 using HW_CPS_HSEBank.DataLogic.DataManagement;
 using HW_CPS_HSEBank.DataLogic.DataModels;
 using HW_CPS_HSEBank.DataLogic.Factories;
+using HW_CPS_HSEBank.UI.MenuUtils;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
@@ -38,8 +39,19 @@ namespace HW_CPS_HSEBank.UI.DataWorkUI.DataItemUI
             var initList = GetInitList("Добавление категории:");
             if (initList == null) return false;
 
-            var addCommand = new AddCommand<CategoryFactory, Category>(initList);
-            addCommand.Execute();
+            try
+            {
+                var addCommand = new AddCommand<CategoryFactory, Category>(initList);
+                addCommand.Execute();
+
+                Console.WriteLine("Данные успешно добавлены.");
+            } 
+            catch (Exception)
+            {
+                Console.WriteLine("Произошла ошибка при добавлении категории.");
+            }
+
+            Console.ReadLine();
 
             return true;
         }

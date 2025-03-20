@@ -7,7 +7,9 @@ namespace HW_CPS_HSEBank.DataLogic.Factories
     /// </summary>
     public class FinanceOperationFactory : IDataFactory<FinanceOperation>
     {
-        private int lastId = 0;
+        protected int lastId = 0;
+        public int Id { set => lastId = value; }
+
         public FinanceOperation Create()
         {
             return new FinanceOperation(++lastId);
