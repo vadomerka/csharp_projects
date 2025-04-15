@@ -1,19 +1,40 @@
-﻿namespace HW_CPS_HSEZoo_2.Domain.Entities
+﻿using System.Windows.Input;
+
+namespace HW_CPS_HSEZoo_2.Domain.Entities
 {
-    internal class FeedingSchedule
+    internal class FeedingSchedule : ICommand
     {
         private Animal _animal;
-        private DateTime _nextFeed;
-        private TimeSpan _untillNext;
+        private DateTime _feedTime;
+        private string _foodType;
 
-        public FeedingSchedule(Animal animal, DateTime firstFeed, TimeSpan untillNext) { 
+        public event EventHandler? CanExecuteChanged;
+
+        public FeedingSchedule(Animal animal, DateTime feedTime, string foodType) { 
             _animal = animal;
-            _nextFeed = firstFeed;
-            _untillNext = untillNext;
+            _feedTime = feedTime;
+            _foodType = foodType;
         }
 
-        void GetNextFeed() { 
-        
+        public void ChangeSchedule(DateTime feedTime, TimeSpan untillNext) {
+            if (feedTime >= DateTime.Now)
+            {
+                _feedTime = feedTime;
+            }
+        }
+
+        public void Cancel() { 
+            // ??.
+        }
+
+        public bool CanExecute(object? parameter)
+        {
+            return _feedTime >= DateTime.Now;
+        }
+
+        public void Execute(object? parameter)
+        {
+            _animal.Feed(_foodType);
         }
     }
 }

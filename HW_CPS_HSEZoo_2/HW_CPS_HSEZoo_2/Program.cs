@@ -6,8 +6,7 @@ namespace HW_CPS_HSEZoo_2
     {
         public static void Main(string[] args)
         {
-            var an = new Animal();
-            an.Feed();
+            Console.WriteLine("Zoo Start!");
         }
     }
 }
