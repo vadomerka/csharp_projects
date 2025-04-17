@@ -1,21 +1,24 @@
-﻿using HW_CPS_HSEZoo_2.Domain.ValueObjects;
+﻿using HW_CPS_HSEZoo_2.Domain.Interfaces;
+using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 
 namespace HW_CPS_HSEZoo_2.Domain.Entities
 {
-    internal class Animal : IEnclosable, IFeedable
+    public class Animal : IEnclosable, IFeedable
     {
         private List<string> _animalTypes = new List<string>();
 
-        public Animal() {
+        public Animal(int id = 0)
+        {
             Species = "";
             Name = "";
             BirthDate = DateOnly.MinValue;
             Gender = Gender.Male;
             FavouriteFood = "";
             IsHealthy = true;
+            Id = id;
         }
 
-        public Animal(string species, List<string> animalTypes, string name, 
+        public Animal(int id, string species, List<string> animalTypes, string name, 
             DateOnly birthDate, Gender gender, string favouriteFood, bool isHealthy) {
             Species = species;
             _animalTypes = animalTypes;
@@ -24,6 +27,7 @@ namespace HW_CPS_HSEZoo_2.Domain.Entities
             Gender = gender;
             FavouriteFood = favouriteFood;
             IsHealthy = isHealthy;
+            Id = id;
         }
 
         public string Species { get; set; }
@@ -33,16 +37,17 @@ namespace HW_CPS_HSEZoo_2.Domain.Entities
         public Gender Gender { get; set; }
         public string FavouriteFood { get; set; }
         public bool IsHealthy { get; set; }
+        public int Id { get; }
 
-        public void AddType (string type)
-        {
-            type = type.ToLower();
-            if (_animalTypes.Contains(type)) return;
-            _animalTypes.Add(type);
-        }
+        //public void AddType (string type)
+        //{
+        //    type = type.ToLower();
+        //    if (_animalTypes.Contains(type)) return;
+        //    _animalTypes.Add(type);
+        //}
 
-        public void Feed(string foodTipe) {
-            Console.WriteLine($"Animal is fed with {foodTipe}!");
-        }
+        //public void Feed(string foodTipe) {
+        //    Console.WriteLine($"Animal is fed with {foodTipe}!");
+        //}
     }
 }

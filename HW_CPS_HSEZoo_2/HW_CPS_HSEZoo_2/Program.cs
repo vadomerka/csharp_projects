@@ -1,12 +1,27 @@
-﻿using HW_CPS_HSEZoo_2.Domain.Entities;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-namespace HW_CPS_HSEZoo_2
+var builder = WebApplication.CreateBuilder(args);
+
+// Добавление контроллеров и Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer(); // Для поддержки минимальных API/Swagger
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Swagger только в dev-среде (можно убрать проверку, если нужно всегда)
+if (app.Environment.IsDevelopment())
 {
-    public class MainClass
-    {
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Zoo Start!");
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

@@ -1,9 +1,8 @@
-﻿using HW_CPS_HSEZoo_2.Domain.Entities;
-
-namespace HW_CPS_HSEZoo_2.Domain.Aggregates
+﻿namespace HW_CPS_HSEZoo_2.Domain.Interfaces
 {
-    interface IEnclosure
+    public interface IEnclosure : IEntity
     {
+        public IEnclosable GetEntity(int Id);
         public bool CheckAdd(IEnclosable entity);
         public bool CheckRemove(IEnclosable entity);
         public void AddEntity(IEnclosable entity);
