@@ -1,8 +1,6 @@
-﻿using Humanizer;
-using HW_CPS_HSEZoo_2.Domain.Aggregates;
+﻿using HW_CPS_HSEZoo_2.Domain.Aggregates;
 using HW_CPS_HSEZoo_2.Domain.Entities;
 using HW_CPS_HSEZoo_2.Domain.Factories;
-using HW_CPS_HSEZoo_2.Domain.Repositories;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 using Microsoft.Extensions.DependencyInjection;
 

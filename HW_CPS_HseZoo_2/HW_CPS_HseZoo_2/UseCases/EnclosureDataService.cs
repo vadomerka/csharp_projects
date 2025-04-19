@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using HW_CPS_HSEZoo_2.Domain.Factories;
+﻿using HW_CPS_HSEZoo_2.Domain.Factories;
 using HW_CPS_HSEZoo_2.Domain.Interfaces;
 using HW_CPS_HSEZoo_2.Domain.Repositories;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;

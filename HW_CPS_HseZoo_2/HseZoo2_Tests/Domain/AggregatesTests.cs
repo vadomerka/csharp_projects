@@ -1,8 +1,6 @@
 ﻿using HW_CPS_HSEZoo_2.Domain.Aggregates;
 using HW_CPS_HSEZoo_2.Domain.Entities;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
-using Microsoft.Identity.Client;
-using System.Drawing;
 
 namespace HseZoo2_Tests.Domain
 {

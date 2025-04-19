@@ -3,7 +3,6 @@ using HW_CPS_HSEZoo_2.Domain.Entities;
 using HW_CPS_HSEZoo_2.Domain.Interfaces;
 using HW_CPS_HSEZoo_2.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 
 namespace HseZoo2_Tests.Domain
 {
