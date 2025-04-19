@@ -1,11 +1,15 @@
-﻿using HW_CPS_HSEZoo_2.Domain.Entities.Events;
+﻿using HW_CPS_HSEZoo_2.Domain.Events;
 using HW_CPS_HSEZoo_2.Domain.Interfaces;
 
 namespace HW_CPS_HSEZoo_2.UseCases
 {
-    internal class AnimalTransferService
+    public class AnimalTransferService
     {
-        public event ZooEvents.AnimalMovedEvent? moveEvent;
+        public static event ZooEvents.AnimalMovedEvent? moveEvent;
+        public static IServiceProvider services = CompositionRoot.Services;
+
+        public AnimalTransferService() { }
+        public AnimalTransferService(IServiceProvider sservices) { services = sservices; }
 
         public void Add(IEnclosure to, IEnclosable animal) {
             if (to.CheckAdd(animal)) throw new ArgumentException();
@@ -25,6 +29,7 @@ namespace HW_CPS_HSEZoo_2.UseCases
         {
             if (from.CheckRemove(animal)) throw new ArgumentException();
             from.RemoveEntity(animal);
+            services.GetRequiredService<FeedingOrganizationService>().RemoveSchedules((IAnimal)animal);
         }
     }
 }

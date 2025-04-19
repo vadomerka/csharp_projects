@@ -1,17 +1,15 @@
-﻿using HW_CPS_HSEZoo_2.Domain.Aggregates;
-using HW_CPS_HSEZoo_2.Domain.Entities;
-using HW_CPS_HSEZoo_2.Domain.Interfaces;
+﻿using HW_CPS_HSEZoo_2.Domain.Interfaces;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 using HW_CPS_HSEZoo_2.UseCases;
-using Microsoft.Identity.Client;
-using System.Drawing;
-using System.Net;
 
 namespace HW_CPS_HSEZoo_2.Infrastructure
 {
     public static class AnimalFacade
     {
         private static IServiceProvider services = CompositionRoot.Services;
+
+        public static IServiceProvider Services { get {  return services; } set { services = value; } }
+
         public static IEnclosable GetAnimal(int enId, int anId) {
             var ens = services.GetRequiredService<EnclosureDataService>();
             var ans = services.GetRequiredService<AnimalDataService>();

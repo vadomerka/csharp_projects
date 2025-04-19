@@ -7,6 +7,14 @@ namespace HW_CPS_HSEZoo_2.Infrastructure
     public class FeedingScheduleFacade
     {
         private static IServiceProvider services = CompositionRoot.Services;
+
+        public static IServiceProvider Services { get { return services; } set { services = value; } }
+        public static List<ISchedule> GetFeedingSchedules()
+        {
+            var ser = services.GetRequiredService<FeedingOrganizationService>();
+            return ser.GetSchedules();
+        }
+
         public static ISchedule GetFeedingSchedule(int id)
         {
             var ser = services.GetRequiredService<FeedingOrganizationService>();

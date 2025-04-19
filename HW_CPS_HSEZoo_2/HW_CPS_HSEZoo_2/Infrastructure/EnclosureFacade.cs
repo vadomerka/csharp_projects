@@ -1,5 +1,4 @@
 ﻿using HW_CPS_HSEZoo_2.UseCases;
-using HW_CPS_HSEZoo_2.Domain.Aggregates;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 using HW_CPS_HSEZoo_2.Domain.Interfaces;
 
@@ -9,6 +8,7 @@ namespace HW_CPS_HSEZoo_2.Infrastructure
     {
         private static IServiceProvider services = CompositionRoot.Services;
 
+        public static IServiceProvider Services { get { return services; } set { services = value; } }
         public static IEnclosure GetEnclosure(int enId)
         {
             var rep = services.GetRequiredService<EnclosureDataService>();

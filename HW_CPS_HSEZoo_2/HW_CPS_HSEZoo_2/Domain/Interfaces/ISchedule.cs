@@ -2,7 +2,9 @@
 {
     public interface ISchedule : IEntity
     {
-        IFeedable Animal { get; }
+        public new int Id { get; }
+        IAnimal Animal { get; }
         DateTime Time { get; }
+        public string FoodType { get; }
     }
 }

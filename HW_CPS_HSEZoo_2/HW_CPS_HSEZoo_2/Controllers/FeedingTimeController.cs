@@ -1,8 +1,6 @@
-﻿using Humanizer;
-using HW_CPS_HSEZoo_2.Domain.Interfaces;
+﻿using HW_CPS_HSEZoo_2.Domain.Interfaces;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 using HW_CPS_HSEZoo_2.Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HW_CPS_HSEZoo_2.Controllers
@@ -11,8 +9,8 @@ namespace HW_CPS_HSEZoo_2.Controllers
     [Route("[controller]")]
     public class FeedingTimeController : Controller
     {
-        [HttpGet(Name = "GetFeedingTimes")]
-        public ActionResult<ISchedule> Get(int id)
+        [HttpGet("/get/{id}", Name = "GetFeedingTime")]
+        public ActionResult<ISchedule> GetFeedingSchedule(int id)
         {
             try
             {
@@ -31,10 +29,32 @@ namespace HW_CPS_HSEZoo_2.Controllers
             {
                 return StatusCode(500, new { error = "Internal server error", details = ex.Message });
             }
+        }
+
+        [HttpGet("/get", Name = "GetFeedingTimes")]
+        public ActionResult<ISchedule> GetFeedingSchedules()
+        {
+            try
+            {
+                var entity = FeedingScheduleFacade.GetFeedingSchedules();
+                if (entity == null)
+                {
+                    return NotFound(new { message = $"FeedingSchedules not found." });
+                }
+                return Ok(entity);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Internal server error", details = ex.Message });
+            }
 
         }
 
-        [HttpPost(Name = "CreateFeedingTime")]
+        [HttpPost("/create/{enclosureId}/{animalId}", Name = "CreateFeedingTime")]
         public ActionResult Post(int enclosureId, int animalId, FeedingScheduleDTO dto)
         {
             try
@@ -52,7 +72,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             }
         }
 
-        [HttpDelete(Name = "DeleteFeedingTime")]
+        [HttpDelete("/delete/{id}", Name = "DeleteFeedingTime")]
         public ActionResult Delete(int id)
         {
             try

@@ -9,7 +9,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
     [Route("[controller]")]
     public class EnclosureController : ControllerBase
     {
-        [HttpGet(Name = "GetEnclosure")]
+        [HttpGet("/get/{enclosureId}", Name = "GetEnclosure")]
         public ActionResult<Enclosure> Get(int enclosureId)
         {
             try
@@ -31,7 +31,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             }
         }
 
-        [HttpPost(Name = "CreateEnclosure")]
+        [HttpPost("/create/{length}/{width}/{height}/{maxCount}", Name = "CreateEnclosure")]
         public ActionResult Post([FromBody] List<string> types, int length, int width, int height, [FromQuery] int maxCount)
         {
             try
@@ -49,7 +49,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             }
         }
 
-        [HttpDelete(Name = "DeleteEnclosure")]
+        [HttpDelete("/delete/{enclosureId}", Name = "DeleteEnclosure")]
         public ActionResult Delete(int id)
         {
             try

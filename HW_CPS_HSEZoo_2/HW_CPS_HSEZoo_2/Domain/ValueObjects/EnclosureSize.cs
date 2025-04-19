@@ -16,5 +16,14 @@
         public int Length { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (((EnclosureSize)obj).Length != Length) return false;
+            if (((EnclosureSize)obj).Width != Width) return false;
+            if (((EnclosureSize)obj).Height != Height) return false;
+            return true;
+        }
     }
 }

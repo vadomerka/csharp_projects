@@ -1,8 +1,8 @@
 ﻿using HW_CPS_HSEZoo_2.Domain.Interfaces;
 
-namespace HW_CPS_HSEZoo_2.Domain.Aggregates
+namespace HW_CPS_HSEZoo_2.Domain.Repositories
 {
-    internal class EnclosureRepository : IEnclosureRepository
+    public class EnclosureRepository : IEnclosureRepository
     {
         private List<IEnclosure> enclosures = new List<IEnclosure>();
 
@@ -17,11 +17,13 @@ namespace HW_CPS_HSEZoo_2.Domain.Aggregates
             return res;
         }
 
-        public void AddEntity(IEnclosure enclosure) {
+        public void AddEntity(IEnclosure enclosure)
+        {
             enclosures.Add(enclosure);
         }
 
-        public void RemoveEntity(IEnclosure enclosure) {
+        public void RemoveEntity(IEnclosure enclosure)
+        {
             enclosures.Remove(enclosure);
         }
     }

@@ -1,5 +1,4 @@
-﻿using HW_CPS_HSEZoo_2.Domain.Entities;
-using HW_CPS_HSEZoo_2.Domain.Interfaces;
+﻿using HW_CPS_HSEZoo_2.Domain.Interfaces;
 using HW_CPS_HSEZoo_2.Domain.ValueObjects;
 using HW_CPS_HSEZoo_2.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
     [Route("[controller]")]
     public class AnimalController : ControllerBase
     {
-        [HttpGet(Name = "GetEnclosureAnimal")]
+        [HttpGet("/get/{enclosureId}/{animalId}", Name = "GetEnclosureAnimal")]
         public ActionResult<IEnclosable> Get(int enclosureId, int animalId)
         {
             try
@@ -33,7 +32,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             
         }
 
-        [HttpPost(Name = "CreateAnimalInEnclosure")]
+        [HttpPost("/create/{enclosureId}", Name = "CreateAnimalInEnclosure")]
         public ActionResult Post(int enclosureId, AnimalDTO dto)
         {
             try
@@ -51,7 +50,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             }
         }
 
-        [HttpPut(Name = "MoveAnimal")]
+        [HttpPut("/move/{fromId}/{animalId}/{toId}", Name = "MoveAnimal")]
         public ActionResult Move(int fromId, int animalId, int toId)
         {
             try
@@ -69,7 +68,7 @@ namespace HW_CPS_HSEZoo_2.Controllers
             }
         }
 
-        [HttpDelete(Name = "DeleteAnimal")]
+        [HttpDelete("/delete/{enclosureId}/{animalId}", Name = "DeleteAnimal")]
         public ActionResult Delete(int enclosureId, int animalId)
         {
             try
