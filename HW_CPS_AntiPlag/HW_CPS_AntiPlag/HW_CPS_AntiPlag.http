@@ -1,0 +1,6 @@
+@HW_CPS_AntiPlag_HostAddress = http://localhost:5063
+
+GET {{HW_CPS_AntiPlag_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
