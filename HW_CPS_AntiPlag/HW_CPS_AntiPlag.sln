@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW_CPS_AntiPlag", "HW_CPS_AntiPlag\HW_CPS_AntiPlag.csproj", "{7CE22568-8C0A-4C64-81ED-528F6FA39333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesStoringService", "FilesStoringService\FilesStoringService.csproj", "{B2FEFECA-4275-4C2B-A6D7-42721B500916}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7CE22568-8C0A-4C64-81ED-528F6FA39333}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CE22568-8C0A-4C64-81ED-528F6FA39333}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CE22568-8C0A-4C64-81ED-528F6FA39333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
