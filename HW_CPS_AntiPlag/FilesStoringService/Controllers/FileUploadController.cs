@@ -21,14 +21,32 @@ namespace FilesStoringService.Controllers
         public ActionResult<IEnumerable<UserFile>> Get()
         {
             var ur = new UserFileFacade(_context);
-            return Ok(ur.GetUserFiles());
+            var files = ur.GetUserFiles().Select(e => new { e.Id, e.Name, e.AuthorId } ).ToList();
+            return Ok(files);
         }
 
         [HttpGet("/file/{id}")]
         public ActionResult<UserFile> Get(int id)
         {
             var ur = new UserFileFacade(_context);
-            return Ok(ur.GetUserFile(id));
+            var fcf = new FileContentsFacade(_context);
+            try
+            {
+                var res = fcf.GetContents(id);
+                return Ok(res);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost("/file")]
@@ -42,8 +60,6 @@ namespace FilesStoringService.Controllers
             var facade = new UserFileFacade(_context);
             try
             {
-                //var uf = facade.AddDBUserFile(dto);
-                //await facade.AddFile(dto, uf);
                 var uf = await facade.SaveUserFileAsync(dto);
 
                 return Ok(new { uf.Id });

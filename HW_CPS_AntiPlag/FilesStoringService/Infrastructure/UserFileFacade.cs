@@ -59,24 +59,5 @@ namespace FilesStoringService.Infrastructure
             var ufile = fs.CreateUserFile(dto, location, hash);
             return ufile;
         }
-
-        // Добавляет файл в базу данных
-        public UserFile AddDBUserFile(FileDTO dto)
-        {
-            var fs = new UserFileService(_dbContext);
-            var fths = new FileToHashService();
-            var ufcf = new UserFileCheckFacade(_dbContext);
-
-            if (ufcf.CheckEmpty(dto)) throw new ArgumentNullException();
-
-            var ufile = CreateFileFromDTO(dto);
-
-            if (!ufcf.CheckFile(ufile)) throw new ArgumentException();
-
-            int id = fs.AddUserFile(ufile);
-            ufile.Id = id;
-
-            return ufile;
-        }
     }
 }

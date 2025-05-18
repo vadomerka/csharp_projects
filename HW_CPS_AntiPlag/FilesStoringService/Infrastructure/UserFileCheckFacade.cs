@@ -13,12 +13,12 @@ namespace FilesStoringService.Infrastructure
         }
 
         public bool CheckEmpty(FileDTO dto) {
-            var service = new FileCheckService(_dbContext);
+            var service = new UserFileCheckService(_dbContext);
             return service.CheckEmpty(dto);
         }
 
         public bool CheckFile(UserFile file) {
-            var service = new FileCheckService(_dbContext);
+            var service = new UserFileCheckService(_dbContext);
             if (service.CheckExists(file)) { return false; }
             return true;
         }
