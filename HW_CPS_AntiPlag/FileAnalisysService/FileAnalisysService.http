@@ -1,0 +1,6 @@
+@FileAnalisysService_HostAddress = http://localhost:5056
+
+GET {{FileAnalisysService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW_CPS_AntiPlag", "HW_CPS_A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesStoringService", "FilesStoringService\FilesStoringService.csproj", "{B2FEFECA-4275-4C2B-A6D7-42721B500916}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileAnalisysService", "FileAnalisysService\FileAnalisysService.csproj", "{BA543730-CC11-4727-AE9A-524C63D547A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2FEFECA-4275-4C2B-A6D7-42721B500916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA543730-CC11-4727-AE9A-524C63D547A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA543730-CC11-4727-AE9A-524C63D547A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA543730-CC11-4727-AE9A-524C63D547A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA543730-CC11-4727-AE9A-524C63D547A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
