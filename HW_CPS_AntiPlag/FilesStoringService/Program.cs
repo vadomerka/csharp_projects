@@ -27,8 +27,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FileDBContext>();
-    dbContext.Database.EnsureDeleted();
-    dbContext.Database.EnsureCreated();  // База создается один раз при старте приложения
+    //dbContext.Database.EnsureDeleted();
+    dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }
 

@@ -1,5 +1,8 @@
-﻿namespace FileAnalisysService.Models
+﻿namespace FileAnaliseService.Models
 {
+    /// <summary>
+    /// Результат сравнения двух файлов.
+    /// </summary>
     public class FileCompare
     {
         public int Id { get; set; }

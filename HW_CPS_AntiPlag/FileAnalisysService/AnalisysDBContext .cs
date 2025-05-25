@@ -1,7 +1,7 @@
-﻿using FileAnalisysService.Models;
+﻿using FileAnaliseService.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FilesAnaliseService
+namespace FileAnaliseService
 {
     public class AnalisysDBContext : DbContext
     {
@@ -26,6 +26,7 @@ namespace FilesAnaliseService
             .ValueGeneratedOnAdd();
         }
 
+        // БД хранит результаты анализа.
         public DbSet<FileStatistics> FileStatistics { get; set; } = null!;
         public DbSet<FileCompare> FileCompare { get; set; } = null!;
     }

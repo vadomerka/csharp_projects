@@ -2,14 +2,12 @@
 
 namespace FilesStoringService.Services
 {
+    /// <summary>
+    /// Сервис для нахождения содержания файла.
+    /// </summary>
     public class FileFindService
     {
-        private readonly FileDBContext _dbContext;
-
-        public FileFindService(FileDBContext context)
-        {
-            _dbContext = context;
-        }
+        public FileFindService() { }
 
         public string FindFileContents(UserFile file) {
             var location = file.Location;

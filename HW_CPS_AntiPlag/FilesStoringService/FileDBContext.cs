@@ -20,7 +20,6 @@ namespace FilesStoringService
             modelBuilder.Entity<UserFile>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
-            // Other configurations
         }
 
         public DbSet<UserFile> UserFiles { get; set; } = null!;

@@ -1,18 +1,19 @@
-﻿using FileAnalisysService.Models;
-using System.Net;
-using System;
+﻿using FileAnaliseService.Models;
 
-namespace FileAnalisysService.Infrastructure
+namespace FileAnaliseService.Infrastructure
 {
-    public class FileContentsFacade
+    /// <summary>
+    /// Сервис для получения содержания файла по id.
+    /// </summary>
+    public class FileContentsService
     {
-        public FileContentsFacade() { }
+        private readonly string _root = "";
+        public FileContentsService(string root = "https://localhost:7147") { _root = root; }
 
-        public async Task<FileContents> GetFileContents(int id) {
+        public async Task<FileContents> GetFileContents(HttpClient httpClient, int id) {
             var res = new FileContents();
 
-            string uri = $"https://localhost:7147/file/{id}";
-            using HttpClient httpClient = new HttpClient();
+            string uri = _root + $"/file/{id}";
             try
             {
                 HttpResponseMessage response = await httpClient.GetAsync(uri);

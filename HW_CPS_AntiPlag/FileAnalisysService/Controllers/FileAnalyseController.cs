@@ -1,9 +1,8 @@
-﻿using FileAnalisysService.Models;
-using FilesAnaliseService.Infrastructure;
+﻿using FileAnaliseService.Application;
+using FileAnaliseService.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace FilesAnaliseService.Controllers
+namespace FileAnaliseService.Controllers
 {
     [ApiController]
     [Route("/api")]
@@ -16,21 +15,13 @@ namespace FilesAnaliseService.Controllers
             _context = context;
         }
 
-        //[HttpGet("/statistics")]
-        //public ActionResult<IEnumerable<AnalisysResult>> GetAllResults()
-        //{
-        //    var ur = new AnalisysResultFacade(_context);
-        //    var files = ur.GetUserFiles().Select(e => new { e.Id } ).ToList();
-        //    return Ok(files);
-        //}
-
         [HttpGet("/statistics/{id}")]
         public async Task<ActionResult<FileStatistics>> GetStatResult(int id)
         {
             try
             {
                 var arf = new AnalisysResultFacade(_context);
-                var res = await arf.GetResults(id);
+                var res = await arf.GetStatsResults(id);
                 return Ok(res);
             }
             catch (HttpRequestException ex)
@@ -57,7 +48,7 @@ namespace FilesAnaliseService.Controllers
             try
             {
                 var arf = new AnalisysResultFacade(_context);
-                var res = await arf.Get(id);
+                var res = await arf.GetCompareResults(id1, id2);
                 return Ok(res);
             }
             catch (HttpRequestException ex)

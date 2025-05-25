@@ -7,6 +7,7 @@ namespace FilesStoringService.Services
     {
         public FileToHashService() { }
 
+        // Метод возвращает хеш строки.
         public static string MD5Hash(string input) {
             using (var md5 = MD5.Create())
             {

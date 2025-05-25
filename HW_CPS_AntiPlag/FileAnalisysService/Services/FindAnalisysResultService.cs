@@ -1,8 +1,10 @@
-﻿using FileAnalisysService.Models;
-using FilesAnaliseService;
+﻿using FileAnaliseService.Models;
 
-namespace FileAnalisysService.Services
+namespace FileAnaliseService.Services
 {
+    /// <summary>
+    /// Сервис занимается поиском уже существующих результатов по свойствам объектов.
+    /// </summary>
     public class FindAnalisysResultService
     {
         private readonly AnalisysDBContext _dbContext;

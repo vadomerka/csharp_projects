@@ -13,7 +13,7 @@ namespace FilesStoringService.Infrastructure
 
         public string GetContents(int id) {
             var uffs = new UserFileFindService(_dbContext);
-            var ffs = new FileFindService(_dbContext);
+            var ffs = new FileFindService();
             var file = uffs.FindById(id);
             if (file == null) throw new ArgumentException();
 

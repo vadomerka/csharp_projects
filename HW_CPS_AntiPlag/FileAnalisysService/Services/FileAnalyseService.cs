@@ -1,8 +1,10 @@
-﻿using FileAnalisysService.Models;
-using FilesAnaliseService;
+﻿using FileAnaliseService.Models;
 
-namespace FileAnalisysService.Services
+namespace FileAnaliseService.Services
 {
+    /// <summary>
+    /// Сервис анализирует FileContents и сохраняет результаты.
+    /// </summary>
     public class FileAnalyseService
     {
         private readonly AnalisysDBContext _dbContext;
@@ -36,7 +38,6 @@ namespace FileAnalisysService.Services
 
             res = _dbContext.FileCompare.Add(res).Entity;
             _dbContext.SaveChanges();
-
             return res;
         }
     }
