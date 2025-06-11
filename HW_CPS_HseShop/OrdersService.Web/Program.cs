@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PaymentsService.Infrastructure;
-using PaymentsService.Infrastructure.Repositories;
+using OrdersService.Infrastructure;
+using OrdersService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +10,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Host=localhost;Database=userfiles_db;Username=postgres;Password=postgres";
-builder.Services.AddDbContext<AccountDBContext>(options =>
+    ?? "Host=localhost;Database=orders_db;Username=postgres;Password=postgres";
+builder.Services.AddDbContext<OrderDBContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddScoped<AccountRepository>();
+builder.Services.AddScoped<OrderRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,8 +25,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
-    //dbContext.Database.EnsureDeleted();
+    var dbContext = scope.ServiceProvider.GetRequiredService<OrderDBContext>();
+    dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }

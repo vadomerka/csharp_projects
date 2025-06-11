@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PaymentsService.Entities.Common;
+using OrdersService.Entities.Common;
 
-namespace PaymentsService.Infrastructure
+namespace OrdersService.Infrastructure
 {
-    public class AccountDBContext : DbContext
+    public class OrderDBContext : DbContext
     {
-        public AccountDBContext(DbContextOptions<AccountDBContext> options) : base(options)
+        public OrderDBContext(DbContextOptions<OrderDBContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
@@ -17,11 +17,11 @@ namespace PaymentsService.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>()
+            modelBuilder.Entity<Order>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
         }
 
-        public DbSet<Account> Accounts { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
     }
 }
