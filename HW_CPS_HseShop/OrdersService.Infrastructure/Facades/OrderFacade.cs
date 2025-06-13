@@ -1,4 +1,5 @@
 ﻿using OrdersService.Entities.Common;
+using OrdersService.Infrastructure.Notifications;
 using OrdersService.Infrastructure.Repositories;
 using OrdersService.UseCases.Orders;
 
@@ -7,7 +8,12 @@ namespace OrdersService.Infrastructure.Facades
     public class OrderFacade
     {
         private readonly OrderDBContext _dbContext;
-        public OrderFacade(OrderDBContext context) { _dbContext = context; }
+        private readonly CancellationToken _cancellationToken;
+
+        public OrderFacade(OrderDBContext context, CancellationToken cancellationToken) { 
+            _dbContext = context; 
+            _cancellationToken = cancellationToken;
+        }
 
         public IEnumerable<Order> GetAll()
         {
@@ -24,28 +30,19 @@ namespace OrdersService.Infrastructure.Facades
             return res;
         }
 
-        public Order AddOrder(OrderDTO dto)
+        public async Task<Order> AddOrder(OrderDTO dto)
         {
-            var rep = new OrderRepository(_dbContext);
-            //var faf = new FindOrderFacade(_dbContext);
+            var orp = new OrderRepository(_dbContext);
+            var osr = new OrderStatusRepository(_dbContext);
+            var son = new SendNotificationService(_dbContext);
             var fac = new OrderFactory();
 
-            //var check = faf.FindOrderByUserId(dto.UserId);
-            //if (check != null) { throw new ArgumentException("Этот пользователь уже владеет аккаунтом."); }
+            var order = fac.Create(dto);
+            orp.Add(order);
 
-            var res = fac.Create(dto);
-            rep.Add(res);
-            return res;
+            await son.SendOrderNotificationAsync(order, _cancellationToken);
+
+            return order;
         }
-
-        //public Order AddToOrder(Guid id, Decimal money)
-        //{
-        //    var rep = new OrderRepository(_dbContext);
-        //    var res = rep.Get(id);
-        //    if (res == null) { throw new ArgumentException(); }
-        //    res.Balance += money;
-        //    rep.Update(res);
-        //    return res;
-        //}
     }
 }

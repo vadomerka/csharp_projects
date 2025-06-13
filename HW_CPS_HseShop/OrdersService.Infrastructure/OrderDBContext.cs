@@ -20,8 +20,13 @@ namespace OrdersService.Infrastructure
             modelBuilder.Entity<Order>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<OrderStatus>()
+            .Property(u => u.Id)
+            .ValueGeneratedOnAdd();
         }
 
         public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
     }
 }
