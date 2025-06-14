@@ -29,6 +29,8 @@ namespace PaymentsService.Infrastructure.Notifications
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Yield();
+
             _consumer.Subscribe(_topic);
 
             while (!stoppingToken.IsCancellationRequested)

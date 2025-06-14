@@ -20,11 +20,10 @@ builder.Services.AddDbContext<AccountDBContext>(options =>
 builder.Services.AddHostedService<NotificationProcessor>();
 
 builder.Services.AddSingleton(sp =>
-{;
+{
     var configuration = sp.GetRequiredService<IConfiguration>();
     var config = new ConsumerConfig
     {
-
         BootstrapServers = configuration.GetSection("Kafka:BootstrapServers").Value,
         GroupId = configuration.GetSection("Kafka:GroupId").Value, // context.Configuration["Kafka:GroupId"],
         EnableAutoCommit = false,
@@ -56,7 +55,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
-    dbContext.Database.EnsureDeleted();
+    //dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }
@@ -72,5 +71,4 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-Console.WriteLine("MEGA LOG!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 app.Run();
