@@ -81,7 +81,7 @@ namespace OrdersService.Infrastructure.Notifications
                     );
             }
 
-            Console.WriteLine("Notification sent");
+            //Console.WriteLine("Notification sent");
 
             return notifications.Count == 1
                 ? SendResult.AllSent

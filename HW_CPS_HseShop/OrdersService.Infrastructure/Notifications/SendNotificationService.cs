@@ -1,4 +1,5 @@
-﻿using OrdersService.Entities.Common;
+﻿using HseShopTransactions;
+using OrdersService.Entities.Common;
 using System.Text.Json;
 
 namespace OrdersService.Infrastructure.Notifications

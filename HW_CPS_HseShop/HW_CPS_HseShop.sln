@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW_CPS_HseShop", "HW_CPS_HseShop\HW_CPS_HseShop.csproj", "{1A3481EE-9878-4FA6-A1F1-B8B271025ED3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentsService", "PaymentsService", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsService.Entities", "PaymentsService.Entities\PaymentsService.Entities.csproj", "{3374DB63-432F-40D0-95FB-284178E2C3EE}"
@@ -25,16 +23,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersService.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersService.Web", "OrdersService.Web\OrdersService.Web.csproj", "{1E9C244A-925B-4EEC-A6CD-FC311A097632}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B6441E2C-9730-4116-B098-54B80A666B77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HseShopTransactions", "HseShopTransactions\HseShopTransactions.csproj", "{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1A3481EE-9878-4FA6-A1F1-B8B271025ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A3481EE-9878-4FA6-A1F1-B8B271025ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A3481EE-9878-4FA6-A1F1-B8B271025ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A3481EE-9878-4FA6-A1F1-B8B271025ED3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3374DB63-432F-40D0-95FB-284178E2C3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3374DB63-432F-40D0-95FB-284178E2C3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3374DB63-432F-40D0-95FB-284178E2C3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,6 +65,10 @@ Global
 		{1E9C244A-925B-4EEC-A6CD-FC311A097632}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E9C244A-925B-4EEC-A6CD-FC311A097632}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E9C244A-925B-4EEC-A6CD-FC311A097632}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +82,7 @@ Global
 		{0DE78EB5-4B77-49D2-9E81-7729046D2752} = {F9F5DF45-B9A5-4FBE-8DAB-AFF8BB414A75}
 		{F62EBBF2-A8C8-41AB-B624-EEE0979E8171} = {F9F5DF45-B9A5-4FBE-8DAB-AFF8BB414A75}
 		{1E9C244A-925B-4EEC-A6CD-FC311A097632} = {F9F5DF45-B9A5-4FBE-8DAB-AFF8BB414A75}
+		{5F7EF034-F2B2-428F-9F04-4B07F2A8AA61} = {B6441E2C-9730-4116-B098-54B80A666B77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2D37B8E0-C05E-4EBE-8275-7530A2CEE87B}

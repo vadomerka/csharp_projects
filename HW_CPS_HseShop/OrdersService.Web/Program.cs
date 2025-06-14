@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using OrdersService.Infrastructure;
 using OrdersService.Infrastructure.Notifications;
 using OrdersService.Infrastructure.Repositories;

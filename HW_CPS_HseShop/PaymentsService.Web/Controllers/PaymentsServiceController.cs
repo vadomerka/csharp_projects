@@ -72,7 +72,7 @@ namespace FilesStoringService.Controllers
         }
 
         [HttpPost("/account")]
-        public async Task<IActionResult> Post([FromForm] AccountDTO dto)
+        public IActionResult Post([FromForm] AccountDTO dto)
         {
             var facade = new AccountFacade(_context);
             try

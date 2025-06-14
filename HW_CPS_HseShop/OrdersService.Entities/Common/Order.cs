@@ -1,4 +1,6 @@
-﻿namespace OrdersService.Entities.Common
+﻿using HseShopTransactions;
+
+namespace OrdersService.Entities.Common
 {
     public class Order
     {
