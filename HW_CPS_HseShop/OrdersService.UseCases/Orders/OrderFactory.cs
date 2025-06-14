@@ -12,6 +12,7 @@ namespace OrdersService.UseCases.Orders
             res.Amount = dto.Amount;
             res.Description = dto.Description;
             res.Status = dto.Status;
+            res.CreatedAt = DateTime.UtcNow;
             return res;
         }
     }

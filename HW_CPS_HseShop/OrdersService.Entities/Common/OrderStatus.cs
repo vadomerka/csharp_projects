@@ -2,10 +2,17 @@
 {
     public class OrderStatus
     {
-        public Guid Id { get; set; }
-        //public Guid OrderId { get; set; }
-        public string Payload { get; set; } = null!;
-        public bool IsSent { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public Guid Id { get; }
+        public string Payload { get; }
+        public bool IsSent { get; }
+        public DateTimeOffset CreatedAt { get; }
+
+        public OrderStatus(Guid id, string payload, bool isSent, DateTimeOffset createdAt)
+        {
+            Id = id;
+            Payload = payload;
+            IsSent = isSent;
+            CreatedAt = createdAt;
+        }
     }
 }

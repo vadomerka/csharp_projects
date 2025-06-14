@@ -10,24 +10,26 @@ namespace OrdersService.Controllers
     public class OrdersServiceController : ControllerBase
     {
         private readonly OrderDBContext _context;
+        //private readonly CancellationToken _cancellationToken;
 
         public OrdersServiceController(OrderDBContext context)
         {
             _context = context;
+            //_cancellationToken = cancellationToken;
         }
 
         [HttpGet("/orders")]
-        public ActionResult<IEnumerable<Order>> Get()
+        public ActionResult<IEnumerable<Order>> Get(CancellationToken _cancellationToken)
         {
-            var ur = new OrderFacade(_context);
+            var ur = new OrderFacade(_context, _cancellationToken);
             var accs = ur.GetAll();
             return Ok(accs);
         }
 
         [HttpGet("/order/{id}")]
-        public ActionResult<Order> Get(Guid id)
+        public ActionResult<Order> Get(CancellationToken _cancellationToken, Guid id)
         {
-            var ur = new OrderFacade(_context);
+            var ur = new OrderFacade(_context, _cancellationToken);
             try
             {
                 var res = ur.GetOrder(id);
@@ -47,34 +49,10 @@ namespace OrdersService.Controllers
             }
         }
 
-        //[HttpPut("/account/{id}")]
-        //public IActionResult AddMoney(Guid id, Decimal money)
-        //{
-        //    var facade = new OrderFacade(_context);
-        //    try
-        //    {
-        //        var res = facade.AddToOrder(id, money);
-
-        //        return Ok(new { res });
-        //    }
-        //    catch (ArgumentNullException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
-
         [HttpPost("/order")]
-        public async Task<IActionResult> Post([FromForm] OrderDTO dto)
+        public IActionResult Post(CancellationToken _cancellationToken, [FromForm] OrderDTO dto)
         {
-            var facade = new OrderFacade(_context);
+            var facade = new OrderFacade(_context, _cancellationToken);
             try
             {
                 var res = facade.AddOrder(dto);

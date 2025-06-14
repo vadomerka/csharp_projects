@@ -7,5 +7,6 @@
         public decimal Amount { get; set; }
         public string Description { get; set; } = null!;
         public OrderState Status { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

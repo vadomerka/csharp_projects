@@ -21,12 +21,30 @@ namespace OrdersService.Infrastructure
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<OrderStatus>()
-            .Property(u => u.Id)
-            .ValueGeneratedOnAdd();
+            //modelBuilder.Entity<OrderStatus>()
+            //.Property(u => u.Id)
+            //.ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<OrderStatus>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .IsRequired();
+
+                entity.Property(e => e.Payload)
+                    .IsRequired();
+
+                entity.Property(e => e.IsSent)
+                    .IsRequired();
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired();
+            });
         }
 
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
+        //public DbSet<OrderChangeNotification> OrderChangeNotifications { get; set; } = null!; 
     }
 }

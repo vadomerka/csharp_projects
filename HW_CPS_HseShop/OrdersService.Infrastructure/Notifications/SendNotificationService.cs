@@ -14,37 +14,25 @@ namespace OrdersService.Infrastructure.Notifications
 
         public async Task SendOrderNotificationAsync(Order order, CancellationToken cancellationToken)
         {
-            var payload = new OrderDTO(
-                transaction.Id,
-                transaction.SubjectId,
-                transaction.PeerId,
-                transaction.Amount,
-                ToContractStatus(status),
-                transaction.CreatedAt
+            var payload = new OrderChange(
+                order.Id,
+                order.UserId,
+                order.Amount,
+                order.Status,
+                order.CreatedAt
             );
 
             var payloadJson = JsonSerializer.Serialize(payload);
 
-            var notification = new TransactionChangeNotification(
+            var notification = new OrderStatus(
                 Guid.NewGuid(),
                 payloadJson,
                 isSent: false,
                 DateTimeOffset.UtcNow
             );
 
-            await _context.TransactionChangeNotifications.AddAsync(notification, cancellationToken);
+            await _context.OrderStatuses.AddAsync(notification, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        private static ContractsStatus ToContractStatus(ModelsStatus status)
-        {
-            return status switch
-            {
-                ModelsStatus.Hold => ContractsStatus.Hold,
-                ModelsStatus.Charge => ContractsStatus.Charge,
-                ModelsStatus.Cancel => ContractsStatus.Cancel,
-                _ => throw new ArgumentException($"Invalid transaction status: {status}", nameof(status))
-            };
         }
     }
 
