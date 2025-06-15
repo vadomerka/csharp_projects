@@ -1,8 +1,8 @@
-﻿using PaymentsService.Entities.Common;
-using PaymentsService.Infrastructure.Repositories;
-using PaymentsService.UseCases.Accounts;
+﻿using HseShopTransactions.Entities.Common;
+using HseShopTransactions.Infrastructure.Repositories;
+using HseShopTransactions.UseCases.Accounts;
 
-namespace PaymentsService.Infrastructure.Facades
+namespace HseShopTransactions.Infrastructure.Facades
 {
     public class AccountFacade
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HseShopTransactions;
+using Microsoft.EntityFrameworkCore;
 using OrdersService.Entities.Common;
 
 namespace OrdersService.Infrastructure
@@ -41,10 +42,27 @@ namespace OrdersService.Infrastructure
                 entity.Property(e => e.CreatedAt)
                     .IsRequired();
             });
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .IsRequired();
+
+                entity.Property(e => e.Payload)
+                    .IsRequired();
+
+                entity.Property(e => e.IsProcessed)
+                    .IsRequired();
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired();
+            });
         }
 
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
-        //public DbSet<OrderChangeNotification> OrderChangeNotifications { get; set; } = null!; 
+        public DbSet<Notification> Notifications { get; set; } = null!;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PaymentsService.Entities.Common;
+using HseShopTransactions.Entities.Common;
 
-namespace PaymentsService.Infrastructure.Repositories
+namespace HseShopTransactions.Infrastructure.Repositories
 {
     public class AccountRepository
     {

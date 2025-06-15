@@ -3,21 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using HseShopTransactions.Infrastructure;
-using HseShopTransactions.Infrastructure.Facades;
+using OrdersService.Infrastructure.Facades;
+using OrdersService.Infrastructure.Repositories;
 using System.Text.Json;
-using System.Threading;
 
-namespace HseShopTransactions.Infrastructure.Notifications
+namespace OrdersService.Infrastructure.Notifications
 {
-    public class NotificationProcessor : BackgroundService
+    public class PaymentStatusProcessor : BackgroundService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly ILogger<NotificationProcessor> _logger;
+        private readonly ILogger<PaymentStatusProcessor> _logger;
 
-        public NotificationProcessor(
+        public PaymentStatusProcessor(
             IServiceScopeFactory serviceScopeFactory,
-            ILogger<NotificationProcessor> logger)
+            ILogger<PaymentStatusProcessor> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _logger = logger;
@@ -33,7 +32,7 @@ namespace HseShopTransactions.Infrastructure.Notifications
 
                     if (result == ProcessResult.AllProcessed)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                        await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                         continue;
                     }
                 }
@@ -48,8 +47,8 @@ namespace HseShopTransactions.Infrastructure.Notifications
         private async Task<ProcessResult> ProcessNotificationAsync(CancellationToken cancellationToken)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
-            var son = new SendNotificationService(context);
+            var context = scope.ServiceProvider.GetRequiredService<OrderDBContext>();
+            var faf = new FindOrderFacade(context);
 
             var notifications = await context.Notifications
                 .Where(n => !n.IsProcessed)
@@ -67,10 +66,12 @@ namespace HseShopTransactions.Infrastructure.Notifications
             _logger.LogInformation("Processing notification {NotificationId}: {Payload}", notification.Id, notification.Payload);
 
             var orderChange = JsonSerializer.Deserialize<OrderChange>(notification.Payload) ?? throw new ArgumentException();
-            var oex = new OrderExecuter(context);
-            orderChange = oex.ExecuteOrder(orderChange);
-
-            await son.SendOrderNotificationAsync(orderChange, cancellationToken);
+            var orp = new OrderRepository(context);
+            var order = faf.FindOrderByOrderId(orderChange.OrderId);
+            if (order != null) {
+                order.Status = orderChange.Status;
+                orp.Update(order);
+            }
 
 
             await context.Notifications

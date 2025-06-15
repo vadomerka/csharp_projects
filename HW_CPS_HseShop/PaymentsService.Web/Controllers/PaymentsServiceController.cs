@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PaymentsService.Entities.Common;
-using PaymentsService.Infrastructure;
-using PaymentsService.Infrastructure.Facades;
+using HseShopTransactions.Entities.Common;
+using HseShopTransactions.Infrastructure;
+using HseShopTransactions.Infrastructure.Facades;
 
 namespace FilesStoringService.Controllers
 {

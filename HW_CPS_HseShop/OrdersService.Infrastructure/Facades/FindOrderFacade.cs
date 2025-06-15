@@ -14,5 +14,12 @@ namespace OrdersService.Infrastructure.Facades
             var res =  rep.GetAll().FirstOrDefault(x => x.UserId == userId);
             return res;
         }
+
+        public Order? FindOrderByOrderId(Guid OrderId)
+        {
+            var rep = new OrderRepository(_dbContext);
+            var res = rep.GetAll().FirstOrDefault(x => x.Id == OrderId);
+            return res;
+        }
     }
 }

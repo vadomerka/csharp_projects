@@ -1,4 +1,4 @@
-﻿namespace OrdersService.Entities.Common
+﻿namespace HseShopTransactions
 {
     public class OrderStatus
     {

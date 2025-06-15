@@ -3,21 +3,20 @@ using HseShopTransactions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using HseShopTransactions.Entities.Common;
 using System.Text.Json;
 
-namespace HseShopTransactions.Infrastructure.Notifications
+namespace OrdersService.Infrastructure.Notifications
 {
-    public class NotificationConsumer : BackgroundService
+    public class PaymentStatusConsumer : BackgroundService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly ILogger<NotificationConsumer> _logger;
+        private readonly ILogger<PaymentStatusConsumer> _logger;
         private readonly IConsumer<string, string> _consumer;
         private readonly string _topic;
 
-        public NotificationConsumer(
+        public PaymentStatusConsumer(
             IServiceScopeFactory serviceScopeFactory,
-            ILogger<NotificationConsumer> logger,
+            ILogger<PaymentStatusConsumer> logger,
             IConsumer<string, string> consumer,
             string topic)
         {
@@ -54,7 +53,6 @@ namespace HseShopTransactions.Infrastructure.Notifications
 
                     await ProcessMessageAsync(orderChange, stoppingToken);
 
-                    // Ручной коммит оффсета после успешной обработки сообщения
                     _consumer.Commit(result);
                 }
                 catch (Exception ex)
@@ -68,7 +66,7 @@ namespace HseShopTransactions.Infrastructure.Notifications
         private async Task ProcessMessageAsync(OrderChange orderChange, CancellationToken cancellationToken)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
+            var context = scope.ServiceProvider.GetRequiredService<OrderDBContext>();
 
             var notification = new Notification(
                 payload: JsonSerializer.Serialize(orderChange),

@@ -1,4 +1,4 @@
-﻿namespace PaymentsService.Entities.Common
+﻿namespace HseShopTransactions.Entities.Common
 {
     public class AccountDTO
     {

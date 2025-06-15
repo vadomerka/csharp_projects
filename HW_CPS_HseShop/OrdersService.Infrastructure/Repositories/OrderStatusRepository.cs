@@ -1,4 +1,4 @@
-﻿using OrdersService.Entities.Common;
+﻿using HseShopTransactions;
 
 namespace OrdersService.Infrastructure.Repositories
 {

@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PaymentsService.Entities.Common;
+﻿using HseShopTransactions;
+using Microsoft.EntityFrameworkCore;
+using HseShopTransactions.Entities.Common;
 
-namespace PaymentsService.Infrastructure
+namespace HseShopTransactions.Infrastructure
 {
     public class AccountDBContext : DbContext
     {
@@ -28,9 +29,6 @@ namespace PaymentsService.Infrastructure
                 entity.Property(e => e.Id)
                     .IsRequired();
 
-                entity.Property(e => e.NotificationKey)
-                    .IsRequired();
-
                 entity.Property(e => e.Payload)
                     .IsRequired();
 
@@ -43,9 +41,27 @@ namespace PaymentsService.Infrastructure
                 //entity.HasIndex(e => e.NotificationKey)
                     //.IsRequired();
             });
+
+            modelBuilder.Entity<OrderStatus>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .IsRequired();
+
+                entity.Property(e => e.Payload)
+                    .IsRequired();
+
+                entity.Property(e => e.IsSent)
+                    .IsRequired();
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired();
+            });
         }
 
         public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
+        public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
     }
 }

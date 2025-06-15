@@ -1,6 +1,6 @@
-﻿using PaymentsService.Entities.Common;
+﻿using HseShopTransactions.Entities.Common;
 
-namespace PaymentsService.UseCases.Accounts
+namespace HseShopTransactions.UseCases.Accounts
 {
     public class AccountFactory
     {

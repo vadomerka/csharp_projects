@@ -19,6 +19,36 @@ builder.Services.AddDbContext<OrderDBContext>(options => {
     options.LogTo(_ => { });
 });
 
+
+// Добавляем Consumer для получения сообщений о статусе платежа
+builder.Services.AddSingleton(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var config = new ConsumerConfig
+    {
+        BootstrapServers = configuration.GetSection("Kafka:BootstrapServers").Value,
+        GroupId = configuration.GetSection("Kafka:GroupId").Value,
+        EnableAutoCommit = false,
+    };
+    return new ConsumerBuilder<string, string>(config).Build();
+});
+
+builder.Services.AddHostedService<PaymentStatusProcessor>();
+
+// Добавляем сервис для обработки уведомлений о статусе платежа
+builder.Services.AddHostedService(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    return new PaymentStatusConsumer(
+        sp.GetRequiredService<IServiceScopeFactory>(),
+        sp.GetRequiredService<ILogger<PaymentStatusConsumer>>(),
+        sp.GetRequiredService<IConsumer<string, string>>(),
+        configuration.GetSection("Kafka:PaymentStatusTopic").Value
+            ?? throw new InvalidOperationException("Kafka payment status topic is not configured")
+    );
+});
+
+
 builder.Services.AddSingleton(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
@@ -54,7 +84,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<OrderDBContext>();
-    dbContext.Database.EnsureDeleted();
+    //dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }

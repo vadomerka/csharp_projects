@@ -1,10 +1,8 @@
 ﻿using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using PaymentsService.Infrastructure;
-using PaymentsService.Infrastructure.Notifications;
-using PaymentsService.Infrastructure.Repositories;
-using PaymentsService.UseCases.Notifications;
+using HseShopTransactions.Infrastructure;
+using HseShopTransactions.Infrastructure.Notifications;
+using HseShopTransactions.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +45,29 @@ builder.Services.AddHostedService(sp =>
     );
 });
 
+builder.Services.AddSingleton(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var producerConfig = new ProducerConfig
+    {
+        BootstrapServers = config.GetSection("Kafka:BootstrapServers").Value
+    };
+    return new ProducerBuilder<string, string>(producerConfig).Build();
+});
+
+builder.Services.AddHostedService(sp =>
+{
+    var producer = sp.GetRequiredService<IProducer<string, string>>();
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    return new NotificationSender(
+        sp.GetRequiredService<IServiceScopeFactory>(),
+        sp.GetRequiredService<ILogger<NotificationSender>>(),
+        producer,
+        configuration.GetSection("Kafka:PaymentStatusTopic").Value
+            ?? throw new InvalidOperationException("Kafka topic is not configured")
+    );
+});
+
 builder.Services.AddScoped<AccountRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -59,7 +80,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
-    dbContext.Database.EnsureDeleted();
+    //dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }

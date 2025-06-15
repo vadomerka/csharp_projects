@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using HseShopTransactions.Infrastructure;
 
-namespace OrdersService.Infrastructure.Notifications
+namespace HseShopTransactions.Infrastructure.Notifications
 {
     public class NotificationSender : BackgroundService
     {
@@ -36,14 +37,14 @@ namespace OrdersService.Infrastructure.Notifications
 
                     if (result == SendResult.AllSent)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                        await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                         continue;
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error occurred while sending notifications");
-                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
                 }
             }
         }
@@ -51,7 +52,7 @@ namespace OrdersService.Infrastructure.Notifications
         private async Task<SendResult> SendNotificationAsync(CancellationToken cancellationToken)
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<OrderDBContext>();
+            var context = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
 
             var notifications = await context.OrderStatuses
                 .Where(n => !n.IsSent)
