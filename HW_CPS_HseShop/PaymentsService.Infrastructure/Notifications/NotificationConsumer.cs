@@ -71,7 +71,7 @@ namespace PaymentsService.Infrastructure.Notifications
             var context = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
 
             var notification = new Notification(
-                Guid.NewGuid(),
+                //Guid.NewGuid(),
                 orderChange.Status,
                 payload: JsonSerializer.Serialize(orderChange),
                 isProcessed: false,

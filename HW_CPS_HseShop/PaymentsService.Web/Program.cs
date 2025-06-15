@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PaymentsService.Infrastructure;
 using PaymentsService.Infrastructure.Notifications;
 using PaymentsService.Infrastructure.Repositories;
@@ -14,8 +15,11 @@ builder.Services.AddControllers();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Host=localhost;Database=userfiles_db;Username=postgres;Password=postgres";
-builder.Services.AddDbContext<AccountDBContext>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<AccountDBContext>(options => {
+    options.UseNpgsql(connectionString);
+    options.EnableSensitiveDataLogging(false);
+    options.LogTo(_ => { });
+});
 
 builder.Services.AddHostedService<NotificationProcessor>();
 
@@ -55,7 +59,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AccountDBContext>();
-    //dbContext.Database.EnsureDeleted();
+    dbContext.Database.EnsureDeleted();
     dbContext.Database.EnsureCreated();
     dbContext.SaveChanges();
 }

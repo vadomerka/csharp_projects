@@ -59,7 +59,8 @@ namespace PaymentsService.UseCases.Notifications
 
             var notification = notifications.First();
 
-            _logger.LogInformation("Processing notification {NotificationId}: {Payload}", notification.Id, notification.Payload);
+            //_logger.LogInformation("Processing notification {NotificationId}: {Payload}", notification.Id, notification.Payload);
+            Console.WriteLine($"!!!!!!!!!!!!!!!!!Processing notification {notification.Id}: {notification.Payload}");
 
             await context.Notifications
                 .Where(n => n.Id == notification.Id)

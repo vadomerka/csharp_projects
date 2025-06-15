@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using OrdersService.Infrastructure;
 using OrdersService.Infrastructure.Notifications;
 using OrdersService.Infrastructure.Repositories;
@@ -14,8 +13,11 @@ builder.Services.AddControllers();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Host=localhost;Database=orders_db;Username=postgres;Password=postgres";
-builder.Services.AddDbContext<OrderDBContext>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<OrderDBContext>(options => {
+    options.UseNpgsql(connectionString);
+    options.EnableSensitiveDataLogging(false);
+    options.LogTo(_ => { });
+});
 
 builder.Services.AddSingleton(sp =>
 {

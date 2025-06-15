@@ -40,8 +40,8 @@ namespace PaymentsService.Infrastructure
                 entity.Property(e => e.CreatedAt)
                     .IsRequired();
 
-                entity.HasIndex(e => e.NotificationKey)
-                    .IsUnique();
+                //entity.HasIndex(e => e.NotificationKey)
+                    //.IsRequired();
             });
         }
 
