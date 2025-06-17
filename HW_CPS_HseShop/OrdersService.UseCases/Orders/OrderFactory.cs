@@ -1,4 +1,5 @@
-﻿using OrdersService.Entities.Common;
+﻿using HseShopTransactions;
+using OrdersService.Entities.Common;
 
 namespace OrdersService.UseCases.Orders
 {
@@ -11,7 +12,7 @@ namespace OrdersService.UseCases.Orders
             res.UserId = dto.UserId;
             res.Amount = dto.Amount;
             res.Description = dto.Description;
-            res.Status = dto.Status;
+            res.Status = new OrderState();
             res.CreatedAt = DateTime.UtcNow;
             return res;
         }

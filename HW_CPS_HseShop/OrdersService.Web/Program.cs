@@ -29,6 +29,12 @@ builder.Services.AddSingleton(sp =>
         BootstrapServers = configuration.GetSection("Kafka:BootstrapServers").Value,
         GroupId = configuration.GetSection("Kafka:GroupId").Value,
         EnableAutoCommit = false,
+
+        SocketTimeoutMs = 60000,
+        SessionTimeoutMs = 30000,
+        MaxPollIntervalMs = 300000,
+        ReconnectBackoffMs = 1000,
+        ReconnectBackoffMaxMs = 10000
     };
     return new ConsumerBuilder<string, string>(config).Build();
 });
